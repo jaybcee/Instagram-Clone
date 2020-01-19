@@ -21,4 +21,4 @@ This repo is for our SOEN 341 class, where we will be creating a web-app that mi
 
 ## Methodology
 
-Issues are to be open for new features, bug fixes or releases. Branches are to be named as follows: `<sprint_number>/<type_of_commit>/<short_description>`. For example: `sprint1/feature/readme_update`. Messages in our Facebook Messenger groupchat are to be accompanied with hashtags describing the category of message or conversation being had. This is to ensure messages are more easily searched and found afterwards. Example: "Please review my PR `#codereview`".
+Issues are to be open for new features, bug fixes or releases. Branches are to be named as follows: `<sprint_number>/<type_of_commit>/<short_description>`. For example: `sprint1/feature/readme_update`. Messages within the scope of this project should be sent over our Slack workspace, in respective channels.
