@@ -31,6 +31,7 @@ func GetAuth(r *gin.Engine) (*gin.Engine, *gin.RouterGroup) {
 		//Name
 		Realm: "instagram",
 		//Secret signing key
+		//TODO: CHANGE KEY
 		Key: []byte("CHANGE THIS :)"),
 		//JWT key timeout for one year
 		Timeout:     time.Hour * 24 * 365,
