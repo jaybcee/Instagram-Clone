@@ -8,8 +8,8 @@ import (
 
 func api() {
 	r := createRoutes()
-
-	if err := endless.ListenAndServe("localhost:3030", r); err != nil {
-		log.Fatal(err)
-	}
+	r.run(":3030")
+	//if err := endless.ListenAndServe("localhost:3030", r); err != nil {
+	//	log.Fatal(err)
+	//}
 }
