@@ -21,8 +21,9 @@ This repo is for our SOEN 341 class, where the objective will be to create a web
 * Vue.js
 
 ## How to run
-You need docker to be installed and running
-In your goroot directory
+You need Go, Node and Docker installed and running.
+
+Then, in your goroot directory:
 
 ```console
 foo@bar:~$ npm install -g prisma
@@ -32,8 +33,17 @@ foo@bar:~$ docker-compose up -d
 foo@bar:~$ prisma deploy
 foo@bar:~$ go run *.go
 ```
-The backend will be running at http://localhost:3030/
-and the database admin panel can be viewed at http://localhost:4466/_admin
+
+Open a new console window and run:
+
+```console
+foo@bar:~$ cd SOEN341/frontend
+foo@bar:~$ npm i
+foo@bar:~$ npm run serve
+```
+
+The backend will be running at http://localhost:3030/ and the database admin panel can be viewed at http://localhost:4466/_admin.
+The frontend can be seen at http://localhost:8080/
 
 ## Methodology
 
