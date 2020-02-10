@@ -20,6 +20,21 @@ This repo is for our SOEN 341 class, where the objective will be to create a web
 * MySQL
 * Vue.js
 
+## How to run
+You need docker to be installed and running
+In your goroot directory
+
+```console
+foo@bar:~$ npm install -g prisma
+foo@bar:~$ git clone https://github.com/Nicolas-MacBeth/SOEN341.git
+foo@bar:~$ cd SOEN341/goBackend/backend
+foo@bar:~$ docker-compose up -d
+foo@bar:~$ prisma deploy
+foo@bar:~$ go run *.go
+```
+The backend will be running at http://localhost:3030/
+and the database admin panel can be viewed at http://localhost:4466/_admin
+
 ## Methodology
 
 `Issues` are to be open for **every** new feature, bug fix or release. They are to be assigned to a `milestone` (4 milestones will be made, one for every sprint). Commit messages are to be **meaningful** (they correctly describe the commit) and **include** "`fixes #xxx`" or "`closes #xxx`" to have them automatically close the related issue (`xxx` should be replaced with the correct issue number). For example, here's a *fake* commit message for issue #54: "*Fixed the bug showing users a weird grey bar, closes #54*". `Branches` are to be named as follows: `<sprint_number>/<type_of_commit>/<short_description>`. For example: `sprint1/feature/readme_update` or `sprint1/bug_fix/grey_bar`. Messages/meetings within the scope of this project should be sent/done over our Slack workspace, in respective channels, and then **documented** in our [wiki](https://github.com/Nicolas-MacBeth/SOEN341/wiki) page. Also, always assign **yourself** to your own PRs when they are created, as well as assign **labels** and the correct **milestone** to it.
