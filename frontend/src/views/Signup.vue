@@ -204,22 +204,22 @@ export default {
       this.loginError = false;
 
        axios.post("http://localhost:3030/signup", this.login)
-       .then(() => {
-         this.loading=false
-         axios.post("http://localhost:3030/login", this.login)
-       .then(r => {
-         this.loading=false
-         console.log(r)
-         this.$cookies.set('token',r.data.token)
-         this.$router.push('/')
-       })
-       .catch(e => {
-         this.loginError = true
-         this.loading = false
-         console.error(e)
-        //  alert('email and/or pass no good use user:admin and password:password')
-       })
-       })
+        .then(() => {
+          this.loading=false
+          axios.post("http://localhost:3030/login", this.login)
+                .then(r => {
+                  this.loading=false
+                  console.log(r)
+                  this.$cookies.set('token',r.data.token)
+                  this.$router.push('/')
+                })
+                .catch(e => {
+                  this.loginError = true
+                  this.loading = false
+                  console.error(e)
+                  //  alert('email and/or pass no good use user:admin and password:password')
+                })
+              })
        .catch(e => {
          this.loginError = true
          this.loading = false
