@@ -9,6 +9,8 @@ func createRoutes() *gin.Engine {
 	r := gin.Default()
 	//Import cors for now
 	r.Use(CORSMiddleware())
+
+	r.POST("/signup", signupRoute)
 	//Example unsecure route
 	r.POST("/api/test", testRoute)
 	//Secure Routes
