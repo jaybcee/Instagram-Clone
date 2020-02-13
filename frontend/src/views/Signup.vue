@@ -35,14 +35,14 @@
                 <v-card-text>
                   <span>Sign up Below! </span>
                   <v-container>
-                     <v-text-field
-                      v-model="login.username"
+                    <v-text-field
+                      v-model="login.name"
                       prepend-icon="mdi-account"
                       :error-messages="userErrors"
-                      label="username"
+                      label="name"
                       required
-                      @input="$v.login.username.$touch();"
-                      @blur="$v.login.username.$touch();"
+                      @input="$v.login.name.$touch();"
+                      @blur="$v.login.name.$touch();"
                     />
                     <v-text-field
                       v-model="login.email"
@@ -92,7 +92,7 @@
                       row
                       justify-center
                     >
-                     <v-btn
+                      <v-btn
                         color="primary"
                         class="mr-1"
                         @click="submit"
@@ -148,15 +148,15 @@ export default {
     login: {
       email: "",
       password: "",
-      username:""
+      name:""
     }
   }),
   computed: {
     userErrors() {
       const errors = [];
-      if (!this.$v.login.username.$dirty) return errors;
-      !this.$v.login.username.required &&
-        errors.push("Username is required");
+      if (!this.$v.login.name.$dirty) return errors;
+      !this.$v.login.name.required &&
+        errors.push("name is required");
       return errors;
     },
     emailErrors() {
@@ -185,7 +185,7 @@ export default {
       password: {
         required
       },
-      username: {
+      name: {
         required
       }
     }
@@ -204,11 +204,21 @@ export default {
       this.loginError = false;
 
        axios.post("http://localhost:3030/signup", this.login)
+       .then(() => {
+         this.loading=false
+         axios.post("http://localhost:3030/login", this.login)
        .then(r => {
          this.loading=false
          console.log(r)
          this.$cookies.set('token',r.data.token)
          this.$router.push('/')
+       })
+       .catch(e => {
+         this.loginError = true
+         this.loading = false
+         console.error(e)
+        //  alert('email and/or pass no good use user:admin and password:password')
+       })
        })
        .catch(e => {
          this.loginError = true
