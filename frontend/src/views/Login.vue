@@ -157,6 +157,7 @@ export default {
     }
   },
   mounted() {
+    console.log(process.env.VUE_APP_ROOT_API)
        this.$cookies.get('token') !== null ? this.$router.push('/') : null
      },
   validations: {
@@ -182,7 +183,7 @@ export default {
       this.loading = true;
       this.loginError = false;
 
-       axios.post("http://localhost:3030/login", this.login)
+       axios.post(`${process.env.VUE_APP_ROOT_API}/login`, this.login)
        .then(r => {
          this.loading=false
          console.log(r)

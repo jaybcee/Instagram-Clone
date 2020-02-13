@@ -203,10 +203,10 @@ export default {
       this.loading = true;
       this.loginError = false;
 
-       axios.post("http://localhost:3030/signup", this.login)
+       axios.post(`${process.env.VUE_APP_ROOT_API}/signup`, this.login)
         .then(() => {
           this.loading=false
-          axios.post("http://localhost:3030/login", this.login)
+          axios.post(`${process.env.VUE_APP_ROOT_API}/login`, this.login)
                 .then(r => {
                   this.loading=false
                   console.log(r)
