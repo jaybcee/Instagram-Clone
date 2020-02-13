@@ -9,6 +9,27 @@ import (
 	"github.com/google/uuid"
 )
 
+
+func signupRoute(c *gin.Context) {
+	var req struct {
+		Name string `json:"Name"`
+		Email    string `json:"Email"`
+		Password string `json:"Password"`
+	}
+
+	err := c.BindJSON(&req)
+	check(err)
+
+	_,addingUserError:=AddUser(req.Name, req.Email,req.Password)
+	
+	check(addingUserError)
+
+
+	c.JSON(200, struct {
+		Status  int    `json:"status"`
+	}{200})
+}
+
 func testRoute(c *gin.Context) {
 	var req struct {
 		Name string `json:"name"`

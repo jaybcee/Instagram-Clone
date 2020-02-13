@@ -504,6 +504,26 @@ type PostWhereInput struct {
 	And                   []PostWhereInput `json:"AND,omitempty"`
 	Or                    []PostWhereInput `json:"OR,omitempty"`
 	Not                   []PostWhereInput `json:"NOT,omitempty"`
+type UserCreateInput struct {
+	ID       *string `json:"id,omitempty"`
+	Name     string  `json:"name"`
+	Email    string  `json:"email"`
+	Password string  `json:"password"`
+	Phone    string  `json:"phone"`
+}
+
+type UserUpdateInput struct {
+	Name     *string `json:"name,omitempty"`
+	Email    *string `json:"email,omitempty"`
+	Password *string `json:"password,omitempty"`
+	Phone    *string `json:"phone,omitempty"`
+}
+
+type UserUpdateManyMutationInput struct {
+	Name     *string `json:"name,omitempty"`
+	Email    *string `json:"email,omitempty"`
+	Password *string `json:"password,omitempty"`
+	Phone    *string `json:"phone,omitempty"`
 }
 
 type UserWhereInput struct {
@@ -872,6 +892,17 @@ func (instance *UserExec) Posts(params *PostsParamsExec) *PostExecArray {
 
 func (instance UserExec) Exec(ctx context.Context) (*User, error) {
 	var v User
+type UserWhereUniqueInput struct {
+	ID    *string `json:"id,omitempty"`
+	Email *string `json:"email,omitempty"`
+}
+
+type UserPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousValues, error) {
+	var v UserPreviousValues
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -882,16 +913,16 @@ func (instance UserExec) Exec(ctx context.Context) (*User, error) {
 	return &v, nil
 }
 
-func (instance UserExec) Exists(ctx context.Context) (bool, error) {
+func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserExecArray struct {
+type UserPreviousValuesExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
-	var v []User
+func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
+	var v []UserPreviousValues
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
@@ -899,6 +930,9 @@ func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
 var UserFields = []string{"id", "name", "email", "password", "phone"}
 
 type User struct {
+var UserPreviousValuesFields = []string{"id", "name", "email", "password", "phone"}
+
+type UserPreviousValues struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
 	Email    string `json:"email"`
@@ -946,14 +980,26 @@ func (instance *PostConnectionExec) Aggregate(ctx context.Context) (*Aggregate, 
 		[2]string{"", "AggregatePost"},
 		"aggregate",
 		[]string{"count"})
+type UserEdgeExec struct {
+	exec *prisma.Exec
+}
 
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return &v, err
+func (instance *UserEdgeExec) Node() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserExec{ret}
 }
 
 func (instance PostConnectionExec) Exec(ctx context.Context) (*PostConnection, error) {
 	edges, err := instance.Edges().Exec(ctx)
+func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
+	var v UserEdge
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
@@ -979,6 +1025,16 @@ type PostConnectionExecArray struct {
 
 func (instance PostConnectionExecArray) Exec(ctx context.Context) ([]PostConnection, error) {
 	var v []PostConnection
+func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
+	var v []UserEdge
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
@@ -988,14 +1044,41 @@ var PostConnectionFields = []string{}
 type PostConnection struct {
 	PageInfo PageInfo   `json:"pageInfo"`
 	Edges    []PostEdge `json:"edges"`
+var UserEdgeFields = []string{"cursor"}
+
+type UserEdge struct {
+	Node   User   `json:"node"`
+	Cursor string `json:"cursor"`
 }
 
-type PageInfoExec struct {
+type UserSubscriptionPayloadExec struct {
 	exec *prisma.Exec
 }
 
-func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
-	var v PageInfo
+func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserExec{ret}
+}
+
+func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "UserPreviousValues"},
+		"previousValues",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserPreviousValuesExec{ret}
+}
+
+func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubscriptionPayload, error) {
+	var v UserSubscriptionPayload
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1006,16 +1089,16 @@ func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
 	return &v, nil
 }
 
-func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
+func (instance UserSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type PageInfoExecArray struct {
+type UserSubscriptionPayloadExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
-	var v []PageInfo
+func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]UserSubscriptionPayload, error) {
+	var v []UserSubscriptionPayload
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
@@ -1163,21 +1246,20 @@ type UserConnection struct {
 
 type UserEdgeExec struct {
 	exec *prisma.Exec
+var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
+type UserSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *User        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
-func (instance *UserEdgeExec) Node() *UserExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "User"},
-		"node",
-		[]string{"id", "name", "email", "password", "phone"})
-
-	return &UserExec{ret}
+type UserExec struct {
+	exec *prisma.Exec
 }
 
-func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
-	var v UserEdge
+func (instance UserExec) Exec(ctx context.Context) (*User, error) {
+	var v User
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1188,16 +1270,16 @@ func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
 	return &v, nil
 }
 
-func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
+func (instance UserExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserEdgeExecArray struct {
+type UserExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
-	var v []UserEdge
+func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
+	var v []User
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
@@ -1308,53 +1390,89 @@ type PostPreviousValues struct {
 }
 
 type UserSubscriptionPayloadExec struct {
+var UserFields = []string{"id", "name", "email", "password", "phone"}
+
+type User struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Phone    string `json:"phone"`
+}
+
+type UserConnectionExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
+func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *UserConnectionExec) Edges() *UserEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"UserWhereInput", "UserOrderByInput", "UserEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
 		nil,
 		[2]string{"", "User"},
 		"node",
-		[]string{"id", "name", "email", "password", "phone"})
+		UserFields)
 
-	return &UserExec{ret}
+	return &UserEdgeExecArray{nodes}
 }
 
-func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValuesExec {
+func (instance *UserConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "UserPreviousValues"},
-		"previousValues",
-		[]string{"id", "name", "email", "password", "phone"})
+		[2]string{"", "AggregateUser"},
+		"aggregate",
+		[]string{"count"})
 
-	return &UserPreviousValuesExec{ret}
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
 }
 
-func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubscriptionPayload, error) {
-	var v UserSubscriptionPayload
-	ok, err := instance.exec.Exec(ctx, &v)
+func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if !ok {
-		return nil, ErrNoResult
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
 	}
-	return &v, nil
+
+	return &UserConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
 }
 
-func (instance UserSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserSubscriptionPayloadExecArray struct {
+type UserConnectionExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]UserSubscriptionPayload, error) {
-	var v []UserSubscriptionPayload
+func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnection, error) {
+	var v []UserConnection
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
@@ -1365,14 +1483,19 @@ type UserSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
 	Node          *User        `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
+var UserConnectionFields = []string{}
+
+type UserConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []UserEdge `json:"edges"`
 }
 
-type UserPreviousValuesExec struct {
+type PageInfoExec struct {
 	exec *prisma.Exec
 }
 
-func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousValues, error) {
-	var v UserPreviousValues
+func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
+	var v PageInfo
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1383,16 +1506,16 @@ func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousV
 	return &v, nil
 }
 
-func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserPreviousValuesExecArray struct {
+type PageInfoExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
-	var v []UserPreviousValues
+func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
+	var v []PageInfo
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
@@ -1405,4 +1528,11 @@ type UserPreviousValues struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Phone    string `json:"phone"`
+var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
+
+type PageInfo struct {
+	HasNextPage     bool    `json:"hasNextPage"`
+	HasPreviousPage bool    `json:"hasPreviousPage"`
+	StartCursor     *string `json:"startCursor,omitempty"`
+	EndCursor       *string `json:"endCursor,omitempty"`
 }
