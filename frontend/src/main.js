@@ -14,6 +14,7 @@ Vue.config.productionTip = false;
 Vue.component('Navbar', Navbar)
 
 
+
 new Vue({
   router,
   vuetify,

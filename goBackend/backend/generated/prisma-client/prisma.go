@@ -525,6 +525,59 @@ type UserUpdateManyMutationInput struct {
 	Password *string `json:"password,omitempty"`
 	Phone    *string `json:"phone,omitempty"`
 }
+type PostWhereUniqueInput struct {
+	ID       *string `json:"id,omitempty"`
+	FileName *string `json:"fileName,omitempty"`
+}
+
+type PostWhereInput struct {
+	ID                    *string          `json:"id,omitempty"`
+	IDNot                 *string          `json:"id_not,omitempty"`
+	IDIn                  []string         `json:"id_in,omitempty"`
+	IDNotIn               []string         `json:"id_not_in,omitempty"`
+	IDLt                  *string          `json:"id_lt,omitempty"`
+	IDLte                 *string          `json:"id_lte,omitempty"`
+	IDGt                  *string          `json:"id_gt,omitempty"`
+	IDGte                 *string          `json:"id_gte,omitempty"`
+	IDContains            *string          `json:"id_contains,omitempty"`
+	IDNotContains         *string          `json:"id_not_contains,omitempty"`
+	IDStartsWith          *string          `json:"id_starts_with,omitempty"`
+	IDNotStartsWith       *string          `json:"id_not_starts_with,omitempty"`
+	IDEndsWith            *string          `json:"id_ends_with,omitempty"`
+	IDNotEndsWith         *string          `json:"id_not_ends_with,omitempty"`
+	FileName              *string          `json:"fileName,omitempty"`
+	FileNameNot           *string          `json:"fileName_not,omitempty"`
+	FileNameIn            []string         `json:"fileName_in,omitempty"`
+	FileNameNotIn         []string         `json:"fileName_not_in,omitempty"`
+	FileNameLt            *string          `json:"fileName_lt,omitempty"`
+	FileNameLte           *string          `json:"fileName_lte,omitempty"`
+	FileNameGt            *string          `json:"fileName_gt,omitempty"`
+	FileNameGte           *string          `json:"fileName_gte,omitempty"`
+	FileNameContains      *string          `json:"fileName_contains,omitempty"`
+	FileNameNotContains   *string          `json:"fileName_not_contains,omitempty"`
+	FileNameStartsWith    *string          `json:"fileName_starts_with,omitempty"`
+	FileNameNotStartsWith *string          `json:"fileName_not_starts_with,omitempty"`
+	FileNameEndsWith      *string          `json:"fileName_ends_with,omitempty"`
+	FileNameNotEndsWith   *string          `json:"fileName_not_ends_with,omitempty"`
+	Caption               *string          `json:"caption,omitempty"`
+	CaptionNot            *string          `json:"caption_not,omitempty"`
+	CaptionIn             []string         `json:"caption_in,omitempty"`
+	CaptionNotIn          []string         `json:"caption_not_in,omitempty"`
+	CaptionLt             *string          `json:"caption_lt,omitempty"`
+	CaptionLte            *string          `json:"caption_lte,omitempty"`
+	CaptionGt             *string          `json:"caption_gt,omitempty"`
+	CaptionGte            *string          `json:"caption_gte,omitempty"`
+	CaptionContains       *string          `json:"caption_contains,omitempty"`
+	CaptionNotContains    *string          `json:"caption_not_contains,omitempty"`
+	CaptionStartsWith     *string          `json:"caption_starts_with,omitempty"`
+	CaptionNotStartsWith  *string          `json:"caption_not_starts_with,omitempty"`
+	CaptionEndsWith       *string          `json:"caption_ends_with,omitempty"`
+	CaptionNotEndsWith    *string          `json:"caption_not_ends_with,omitempty"`
+	Owner                 *UserWhereInput  `json:"owner,omitempty"`
+	And                   []PostWhereInput `json:"AND,omitempty"`
+	Or                    []PostWhereInput `json:"OR,omitempty"`
+	Not                   []PostWhereInput `json:"NOT,omitempty"`
+}
 
 type UserWhereInput struct {
 	ID                    *string          `json:"id,omitempty"`
@@ -803,6 +856,217 @@ type UserSubscriptionWhereInput struct {
 	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
+type UserWhereUniqueInput struct {
+	ID    *string `json:"id,omitempty"`
+	Email *string `json:"email,omitempty"`
+}
+
+type PostCreateInput struct {
+	ID       *string                        `json:"id,omitempty"`
+	FileName string                         `json:"fileName"`
+	Caption  string                         `json:"caption"`
+	Owner    UserCreateOneWithoutPostsInput `json:"owner"`
+}
+
+type UserCreateOneWithoutPostsInput struct {
+	Create  *UserCreateWithoutPostsInput `json:"create,omitempty"`
+	Connect *UserWhereUniqueInput        `json:"connect,omitempty"`
+}
+
+type UserCreateWithoutPostsInput struct {
+	ID       *string `json:"id,omitempty"`
+	Name     string  `json:"name"`
+	Email    string  `json:"email"`
+	Password string  `json:"password"`
+	Phone    string  `json:"phone"`
+}
+
+type PostUpdateInput struct {
+	FileName *string                                 `json:"fileName,omitempty"`
+	Caption  *string                                 `json:"caption,omitempty"`
+	Owner    *UserUpdateOneRequiredWithoutPostsInput `json:"owner,omitempty"`
+}
+
+type UserUpdateOneRequiredWithoutPostsInput struct {
+	Create  *UserCreateWithoutPostsInput     `json:"create,omitempty"`
+	Update  *UserUpdateWithoutPostsDataInput `json:"update,omitempty"`
+	Upsert  *UserUpsertWithoutPostsInput     `json:"upsert,omitempty"`
+	Connect *UserWhereUniqueInput            `json:"connect,omitempty"`
+}
+
+type UserUpdateWithoutPostsDataInput struct {
+	Name     *string `json:"name,omitempty"`
+	Email    *string `json:"email,omitempty"`
+	Password *string `json:"password,omitempty"`
+	Phone    *string `json:"phone,omitempty"`
+}
+
+type UserUpsertWithoutPostsInput struct {
+	Update UserUpdateWithoutPostsDataInput `json:"update"`
+	Create UserCreateWithoutPostsInput     `json:"create"`
+}
+
+type PostUpdateManyMutationInput struct {
+	FileName *string `json:"fileName,omitempty"`
+	Caption  *string `json:"caption,omitempty"`
+}
+
+type UserCreateInput struct {
+	ID       *string                          `json:"id,omitempty"`
+	Name     string                           `json:"name"`
+	Email    string                           `json:"email"`
+	Password string                           `json:"password"`
+	Phone    string                           `json:"phone"`
+	Posts    *PostCreateManyWithoutOwnerInput `json:"posts,omitempty"`
+}
+
+type PostCreateManyWithoutOwnerInput struct {
+	Create  []PostCreateWithoutOwnerInput `json:"create,omitempty"`
+	Connect []PostWhereUniqueInput        `json:"connect,omitempty"`
+}
+
+type PostCreateWithoutOwnerInput struct {
+	ID       *string `json:"id,omitempty"`
+	FileName string  `json:"fileName"`
+	Caption  string  `json:"caption"`
+}
+
+type UserUpdateInput struct {
+	Name     *string                          `json:"name,omitempty"`
+	Email    *string                          `json:"email,omitempty"`
+	Password *string                          `json:"password,omitempty"`
+	Phone    *string                          `json:"phone,omitempty"`
+	Posts    *PostUpdateManyWithoutOwnerInput `json:"posts,omitempty"`
+}
+
+type PostUpdateManyWithoutOwnerInput struct {
+	Create     []PostCreateWithoutOwnerInput                `json:"create,omitempty"`
+	Delete     []PostWhereUniqueInput                       `json:"delete,omitempty"`
+	Connect    []PostWhereUniqueInput                       `json:"connect,omitempty"`
+	Set        []PostWhereUniqueInput                       `json:"set,omitempty"`
+	Disconnect []PostWhereUniqueInput                       `json:"disconnect,omitempty"`
+	Update     []PostUpdateWithWhereUniqueWithoutOwnerInput `json:"update,omitempty"`
+	Upsert     []PostUpsertWithWhereUniqueWithoutOwnerInput `json:"upsert,omitempty"`
+	DeleteMany []PostScalarWhereInput                       `json:"deleteMany,omitempty"`
+	UpdateMany []PostUpdateManyWithWhereNestedInput         `json:"updateMany,omitempty"`
+}
+
+type PostUpdateWithWhereUniqueWithoutOwnerInput struct {
+	Where PostWhereUniqueInput            `json:"where"`
+	Data  PostUpdateWithoutOwnerDataInput `json:"data"`
+}
+
+type PostUpdateWithoutOwnerDataInput struct {
+	FileName *string `json:"fileName,omitempty"`
+	Caption  *string `json:"caption,omitempty"`
+}
+
+type PostUpsertWithWhereUniqueWithoutOwnerInput struct {
+	Where  PostWhereUniqueInput            `json:"where"`
+	Update PostUpdateWithoutOwnerDataInput `json:"update"`
+	Create PostCreateWithoutOwnerInput     `json:"create"`
+}
+
+type PostScalarWhereInput struct {
+	ID                    *string                `json:"id,omitempty"`
+	IDNot                 *string                `json:"id_not,omitempty"`
+	IDIn                  []string               `json:"id_in,omitempty"`
+	IDNotIn               []string               `json:"id_not_in,omitempty"`
+	IDLt                  *string                `json:"id_lt,omitempty"`
+	IDLte                 *string                `json:"id_lte,omitempty"`
+	IDGt                  *string                `json:"id_gt,omitempty"`
+	IDGte                 *string                `json:"id_gte,omitempty"`
+	IDContains            *string                `json:"id_contains,omitempty"`
+	IDNotContains         *string                `json:"id_not_contains,omitempty"`
+	IDStartsWith          *string                `json:"id_starts_with,omitempty"`
+	IDNotStartsWith       *string                `json:"id_not_starts_with,omitempty"`
+	IDEndsWith            *string                `json:"id_ends_with,omitempty"`
+	IDNotEndsWith         *string                `json:"id_not_ends_with,omitempty"`
+	FileName              *string                `json:"fileName,omitempty"`
+	FileNameNot           *string                `json:"fileName_not,omitempty"`
+	FileNameIn            []string               `json:"fileName_in,omitempty"`
+	FileNameNotIn         []string               `json:"fileName_not_in,omitempty"`
+	FileNameLt            *string                `json:"fileName_lt,omitempty"`
+	FileNameLte           *string                `json:"fileName_lte,omitempty"`
+	FileNameGt            *string                `json:"fileName_gt,omitempty"`
+	FileNameGte           *string                `json:"fileName_gte,omitempty"`
+	FileNameContains      *string                `json:"fileName_contains,omitempty"`
+	FileNameNotContains   *string                `json:"fileName_not_contains,omitempty"`
+	FileNameStartsWith    *string                `json:"fileName_starts_with,omitempty"`
+	FileNameNotStartsWith *string                `json:"fileName_not_starts_with,omitempty"`
+	FileNameEndsWith      *string                `json:"fileName_ends_with,omitempty"`
+	FileNameNotEndsWith   *string                `json:"fileName_not_ends_with,omitempty"`
+	Caption               *string                `json:"caption,omitempty"`
+	CaptionNot            *string                `json:"caption_not,omitempty"`
+	CaptionIn             []string               `json:"caption_in,omitempty"`
+	CaptionNotIn          []string               `json:"caption_not_in,omitempty"`
+	CaptionLt             *string                `json:"caption_lt,omitempty"`
+	CaptionLte            *string                `json:"caption_lte,omitempty"`
+	CaptionGt             *string                `json:"caption_gt,omitempty"`
+	CaptionGte            *string                `json:"caption_gte,omitempty"`
+	CaptionContains       *string                `json:"caption_contains,omitempty"`
+	CaptionNotContains    *string                `json:"caption_not_contains,omitempty"`
+	CaptionStartsWith     *string                `json:"caption_starts_with,omitempty"`
+	CaptionNotStartsWith  *string                `json:"caption_not_starts_with,omitempty"`
+	CaptionEndsWith       *string                `json:"caption_ends_with,omitempty"`
+	CaptionNotEndsWith    *string                `json:"caption_not_ends_with,omitempty"`
+	And                   []PostScalarWhereInput `json:"AND,omitempty"`
+	Or                    []PostScalarWhereInput `json:"OR,omitempty"`
+	Not                   []PostScalarWhereInput `json:"NOT,omitempty"`
+}
+
+type PostUpdateManyWithWhereNestedInput struct {
+	Where PostScalarWhereInput    `json:"where"`
+	Data  PostUpdateManyDataInput `json:"data"`
+}
+
+type PostUpdateManyDataInput struct {
+	FileName *string `json:"fileName,omitempty"`
+	Caption  *string `json:"caption,omitempty"`
+}
+
+type UserUpdateManyMutationInput struct {
+	Name     *string `json:"name,omitempty"`
+	Email    *string `json:"email,omitempty"`
+	Password *string `json:"password,omitempty"`
+	Phone    *string `json:"phone,omitempty"`
+}
+
+type PostSubscriptionWhereInput struct {
+	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                     `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                     `json:"updatedFields_contains_some,omitempty"`
+	Node                       *PostWhereInput              `json:"node,omitempty"`
+	And                        []PostSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []PostSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []PostSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type UserSubscriptionWhereInput struct {
+	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                     `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                     `json:"updatedFields_contains_some,omitempty"`
+	Node                       *UserWhereInput              `json:"node,omitempty"`
+	And                        []UserSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []UserSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type PostExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *PostExec) Owner() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"owner",
+		[]string{"id", "name", "email", "password", "phone"})
+func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousValues, error) {
+	var v UserPreviousValues
 type PostExec struct {
 	exec *prisma.Exec
 }
@@ -850,6 +1114,212 @@ type Post struct {
 	ID       string `json:"id"`
 	FileName string `json:"fileName"`
 	Caption  string `json:"caption"`
+}
+
+type UserExec struct {
+	exec *prisma.Exec
+}
+
+type PostsParamsExec struct {
+	Where   *PostWhereInput
+	OrderBy *PostOrderByInput
+	Skip    *int32
+	After   *string
+	Before  *string
+	First   *int32
+	Last    *int32
+}
+
+func (instance *UserExec) Posts(params *PostsParamsExec) *PostExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"PostWhereInput", "PostOrderByInput", "Post"},
+		"posts",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExecArray{ret}
+}
+
+func (instance PostExec) Exec(ctx context.Context) (*Post, error) {
+	var v Post
+func (instance UserExec) Exec(ctx context.Context) (*User, error) {
+	var v User
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PostExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostExecArray) Exec(ctx context.Context) ([]Post, error) {
+	var v []Post
+func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
+	var v []UserPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var PostFields = []string{"id", "fileName", "caption"}
+
+type Post struct {
+	ID       string `json:"id"`
+	FileName string `json:"fileName"`
+	Caption  string `json:"caption"`
+var UserPreviousValuesFields = []string{"id", "name", "email", "password", "phone"}
+
+type UserPreviousValues struct {
+var UserFields = []string{"id", "name", "email", "password", "phone"}
+
+type User struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Phone    string `json:"phone"`
+}
+
+type UserEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *UserEdgeExec) Node() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		[]string{"id", "name", "email", "password", "phone"})
+type PostConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *PostConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *PostConnectionExec) Edges() *PostEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"PostWhereInput", "PostOrderByInput", "PostEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "Post"},
+		"node",
+		PostFields)
+
+	return &PostEdgeExecArray{nodes}
+}
+
+func (instance *PostConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregatePost"},
+		"aggregate",
+		[]string{"count"})
+
+	return &UserExec{ret}
+}
+
+func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
+	var v UserEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+func (instance PostConnectionExec) Exec(ctx context.Context) (*PostConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &PostConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
+	var v []UserEdge
+func (instance PostConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostConnectionExecArray) Exec(ctx context.Context) ([]PostConnection, error) {
+	var v []PostConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var UserEdgeFields = []string{"cursor"}
+
+type UserEdge struct {
+	Node   User   `json:"node"`
+	Cursor string `json:"cursor"`
+var PostConnectionFields = []string{}
+
+type PostConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []PostEdge `json:"edges"`
 }
 
 type UserExec struct {
@@ -1252,6 +1722,149 @@ type UserSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
 	Node          *User        `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
+var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
+
+type PageInfo struct {
+	HasNextPage     bool    `json:"hasNextPage"`
+	HasPreviousPage bool    `json:"hasPreviousPage"`
+	StartCursor     *string `json:"startCursor,omitempty"`
+	EndCursor       *string `json:"endCursor,omitempty"`
+}
+
+type PostEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *PostEdgeExec) Node() *PostExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Post"},
+		"node",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExec{ret}
+}
+
+func (instance PostEdgeExec) Exec(ctx context.Context) (*PostEdge, error) {
+	var v PostEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PostEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostEdgeExecArray) Exec(ctx context.Context) ([]PostEdge, error) {
+	var v []PostEdge
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var PostEdgeFields = []string{"cursor"}
+
+type PostEdge struct {
+	Node   Post   `json:"node"`
+	Cursor string `json:"cursor"`
+}
+
+type UserConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *UserConnectionExec) Edges() *UserEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"UserWhereInput", "UserOrderByInput", "UserEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		UserFields)
+
+	return &UserEdgeExecArray{nodes}
+}
+
+func (instance *UserConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateUser"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &UserConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnection, error) {
+	var v []UserConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var UserConnectionFields = []string{}
+
+type UserConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []UserEdge `json:"edges"`
+}
+
+type UserEdgeExec struct {
+	exec *prisma.Exec
 }
 
 type UserExec struct {
@@ -1401,6 +2014,112 @@ type User struct {
 }
 
 type UserConnectionExec struct {
+var UserEdgeFields = []string{"cursor"}
+
+type UserEdge struct {
+	Node   User   `json:"node"`
+	Cursor string `json:"cursor"`
+}
+
+type PostSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *PostSubscriptionPayloadExec) Node() *PostExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Post"},
+		"node",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExec{ret}
+}
+
+func (instance *PostSubscriptionPayloadExec) PreviousValues() *PostPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PostPreviousValues"},
+		"previousValues",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostPreviousValuesExec{ret}
+}
+
+func (instance PostSubscriptionPayloadExec) Exec(ctx context.Context) (*PostSubscriptionPayload, error) {
+	var v PostSubscriptionPayload
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PostSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostSubscriptionPayloadExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]PostSubscriptionPayload, error) {
+	var v []PostSubscriptionPayload
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var PostSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
+type PostSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *Post        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type PostPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance PostPreviousValuesExec) Exec(ctx context.Context) (*PostPreviousValues, error) {
+	var v PostPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PostPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostPreviousValuesExecArray) Exec(ctx context.Context) ([]PostPreviousValues, error) {
+	var v []PostPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var PostPreviousValuesFields = []string{"id", "fileName", "caption"}
+
+type PostPreviousValues struct {
+	ID       string `json:"id"`
+	FileName string `json:"fileName"`
+	Caption  string `json:"caption"`
+}
+
+type UserSubscriptionPayloadExec struct {
 	exec *prisma.Exec
 }
 
@@ -1488,6 +2207,12 @@ var UserConnectionFields = []string{}
 type UserConnection struct {
 	PageInfo PageInfo   `json:"pageInfo"`
 	Edges    []UserEdge `json:"edges"`
+var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
+type UserSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *User        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
 type PageInfoExec struct {
@@ -1535,4 +2260,12 @@ type PageInfo struct {
 	HasPreviousPage bool    `json:"hasPreviousPage"`
 	StartCursor     *string `json:"startCursor,omitempty"`
 	EndCursor       *string `json:"endCursor,omitempty"`
+var UserPreviousValuesFields = []string{"id", "name", "email", "password", "phone"}
+
+type UserPreviousValues struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Phone    string `json:"phone"`
 }
