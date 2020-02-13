@@ -1,7 +1,8 @@
 <template>
-  <div
+  <v-card
     class="mx-auto"
-    max-width="500"
+    max-width="700"
+    tile
   >
     <v-container fluid>
       <v-row>
@@ -10,7 +11,10 @@
           :key="card.title"
           :cols="card.flex"
         >
-          <v-card class="my-6" min-height="400px">
+          <v-card
+            class="my-6"
+            min-height="400px"
+          >
             <v-img
               :src="card.src"
               class="white--text align-end"
@@ -43,7 +47,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </div>
+  </v-card>
 </template>
 
 <script>
