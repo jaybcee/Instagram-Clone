@@ -8,6 +8,7 @@
         fluid
       >
         <v-row
+          class="mx-auto"
           align="center"
           justify="center"
         >

@@ -5,6 +5,9 @@ import './registerServiceWorker';
 import router from './router';
 import vuetify from './plugins/vuetify';
 import Navbar from "./components/Navbar"
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
+
 
 Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
