@@ -35,11 +35,9 @@
 
         <v-list>
           <v-list-item
-            v-for="n in 5"
-            :key="n"
-            @click="() => {}"
+            @click="signOut"
           >
-            <v-list-item-title>Option {{ n }}</v-list-item-title>
+            <v-list-item-title>Sign out</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -49,7 +47,26 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-    props :['page']
+    props :['page'],
+    methods : {
+      signOut () {
+        // console.log('signout')
+         axios.post("http://localhost:3030/signout")
+       .then(r => {
+         console.log(r)
+         
+       })
+       .catch(e => {
+         console.error(e)
+       })
+       .finally( () => {
+         this.$cookies.remove('token')
+         this.$router.push('/login')
+       })
+      }
+    }
 }
 </script>

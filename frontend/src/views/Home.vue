@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="mx-auto"
-    max-width="700"
+    max-width="500"
     tile
   >
     <v-container fluid>
@@ -18,7 +18,6 @@
             <v-img
               :src="card.src"
               class="white--text align-end"
-              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               aspect-ratio="1"
             >
               <v-card-title v-text="card.user" />
