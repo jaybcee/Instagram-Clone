@@ -50,7 +50,7 @@ export default {
     signOut() {
       // console.log('signout')
       axios
-        .post("http://localhost:3030/signout")
+        .post(`${process.env.VUE_APP_ROOT_API}/signout`)
         .then(r => {
           console.log(r);
         })
