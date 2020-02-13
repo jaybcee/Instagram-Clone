@@ -5,24 +5,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func signupRoute(c *gin.Context) {
 	var req struct {
-		Name string `json:"Name"`
-		Email    string `json:"Email"`
-		Password string `json:"Password"`
+		Name     string `json:"name"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
 
 	err := c.BindJSON(&req)
 	check(err)
 
-	_,addingUserError:=AddUser(req.Name, req.Email,req.Password)
-	
+	_, addingUserError := AddUser(req.Name, req.Email, req.Password)
+
 	check(addingUserError)
 
-
 	c.JSON(200, struct {
-		Status  int    `json:"status"`
+		Status int `json:"status"`
 	}{200})
 }
 

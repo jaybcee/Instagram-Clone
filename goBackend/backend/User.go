@@ -12,17 +12,17 @@ func AuthenticateUser(u struct {
 	Email    string `json:"Email"`
 	Password string `json:"Password"`
 }) (string, error) {
-	user,err := GetUser(u.Email)
+	user, err := GetUser(u.Email)
 
 	// Verify if email exists in DB and check if password is correct
-	if(user.Email != "" && user.Password == u.Password){
+	if user.Email != "" && CheckHash(u.Password, user.Password) {
 		return user.Email, nil
 	}
 
 	if err != nil {
 		panic(err)
 	}
-	
+
 	return "", jwt.ErrFailedAuthentication
 }
 
@@ -36,21 +36,21 @@ func GetUser(email string) (*prisma.User, error) {
 		Email: &email,
 	}).Exec(ctx)
 
-
 	return user, err
 
 }
 
-func AddUser(name string,email string, password string) (*prisma.User, error) {
+func AddUser(name string, email string, password string) (*prisma.User, error) {
 	client := prisma.New(nil)
 	ctx := context.TODO()
 
-	newUser, err := client.CreateUser(prisma.UserCreateInput{
-		Name: name,
-		Email: email,
-		Password : password,
-	  }).Exec(ctx)
+	hashedPw, _ := Bhash(password)
 
+	newUser, err := client.CreateUser(prisma.UserCreateInput{
+		Name:     name,
+		Email:    email,
+		Password: hashedPw,
+	}).Exec(ctx)
 
 	return newUser, err
 
