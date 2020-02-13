@@ -157,7 +157,6 @@ export default {
     }
   },
   mounted() {
-    console.log(process.env.VUE_APP_ROOT_API)
        this.$cookies.get('token') !== null ? this.$router.push('/') : null
      },
   validations: {
