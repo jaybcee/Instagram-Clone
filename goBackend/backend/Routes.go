@@ -19,9 +19,7 @@ func signupRoute(c *gin.Context) {
 
 	check(addingUserError)
 
-	c.JSON(200, struct {
-		Status int `json:"status"`
-	}{200})
+	c.String(200, "Success")
 }
 
 func testRoute(c *gin.Context) {
