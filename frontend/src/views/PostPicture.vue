@@ -1,21 +1,36 @@
 <template>
   <div>
-    <div id="uploadPic"> <br><br>
-        <h2>Upload an image</h2> <br>
-        <div v-if="!image" class="postBox">
-            <div class="chooseFile">
-            <input type="file"  accept="image/x-png,image/jpeg"
-            ref="file" v-on:change="fileUpload()">
-            </div>
-        </div>
-        <div>
-            <input type="text" v-on:input="caption = $event.target.value"
-            placeholder="Enter your Caption">
-        </div>
-        <div class="submit">
-            <button v-on:click="submitFile()" class="submitButton">Submit</button>
-        </div>
-    </div>
+      <v-card
+    class="mx-auto"
+    max-width="500"
+    tile
+  >
+    <v-container fluid>
+      <v-row>
+        <v-col>
+          <v-card class="my-6" height="450">
+              <h2 class="uploadPictureHeader">Upload a picture</h2>
+              <div v-if="!image" class="mainCard">
+                <input type="file"  id="fileUpload" accept="image/x-png,image/jpeg" ref="file" hidden v-on:click="submitFile()">
+                <v-btn icon @click="fileUpload()">
+                  <v-icon class="plus">mdi-plus</v-icon>
+                </v-btn>
+              </div>
+              <v-card-text class="text--primary">
+                  <v-divider class="my-4" />
+                    <div class="caption">
+                      <input type="text" v-on:input="caption = $event.target.value"
+                      placeholder="Enter your Caption">
+                    </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+      <div class="submit">
+        <v-btn v-on:click="submitFile()" class="submitButton">Submit</v-btn>
+      </div>
+  </v-card>
   </div>
 </template>
 
@@ -56,6 +71,7 @@ export default {
     fileUpload() {
       const file = this.$refs.file.files[0];
       this.file = file;
+      document.getElementById("fileUpload").click()
     },
     async submitFile() {
       const formData = new FormData();
@@ -85,41 +101,13 @@ export default {
 </script>
 
 <style scoped>
-#uploadPic{
-    text-align: center;
-    align-content: center;
-    margin-left: auto;
-}
 .submitButton{
     border: 1px solid;
-    padding: 5px;
-    transition-duration: 0.4s;
     border-radius: 4px;
 }
-.submit{
-    text-align: right;
-    margin-right: 650px;
-}
-.submitButton:hover{
-    background-color: #4f79db;
-    color:white;
-}
-.postBox{
-    padding: 50px;
-    border: solid;
-    height: 400px;
-    margin-left: 650px;
-    margin-right: 650px;
-    border: 1.5px solid;
-    border-radius: 2px;
-    border-color: #4f79db;
-    margin-bottom: 10px;
-}
 
-.chooseFile{
-    margin-top: 130px;
-    margin-left: 40px;
-
+.uploadPictureHeader{
+  margin-bottom: 30%;
 }
 
 </style>

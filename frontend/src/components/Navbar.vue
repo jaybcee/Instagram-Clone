@@ -1,5 +1,5 @@
 <template>
-  <div v-if="page === 'Home'">
+  <div v-if="page === 'Home' || page === 'PostPicture'">
     <v-app-bar app>
       <v-icon class="mr-2">
         mdi-camera
@@ -14,6 +14,9 @@
         <v-icon>mdi-account</v-icon>
       </v-btn>
 
+      <v-btn icon @click="postPic()">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
@@ -61,6 +64,9 @@ export default {
           this.$cookies.remove("token");
           this.$router.push("/login");
         });
+    },
+    postPic() {
+      this.$router.push("/post-picture")
     }
   }
 };

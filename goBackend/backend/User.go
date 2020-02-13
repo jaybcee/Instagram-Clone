@@ -15,11 +15,7 @@ func AuthenticateUser(u struct {
 	user, err := GetUser(u.Email)
 
 	// Verify if email exists in DB and check if password is correct
-<<<<<<< HEAD
-	if user.Email != "" && user.Password == u.Password {
-=======
 	if user.Email != "" && CheckHash(u.Password, user.Password) {
->>>>>>> added pw hashing
 		return user.Email, nil
 	}
 
@@ -69,44 +65,14 @@ func postPicture(email string, fileName string, caption string) error {
 func AddUser(name string, email string, password string) (*prisma.User, error) {
 	client := prisma.New(nil)
 	ctx := context.TODO()
-func AddUser(name string, email string, password string) (*prisma.User, error) {
-	client := prisma.New(nil)
-	ctx := context.TODO()
 
 	hashedPw, _ := Bhash(password)
 
 	newUser, err := client.CreateUser(prisma.UserCreateInput{
 		Name:     name,
 		Email:    email,
-<<<<<<< HEAD
-		Password: password,
-=======
 		Password: hashedPw,
->>>>>>> added pw hashing
 	}).Exec(ctx)
 
 	return newUser, err
-}
-
-func postPicture(email string, fileName string, caption string) error {
-	client := prisma.New(nil)
-	ctx := context.TODO()
-
-	_, err := client.UpdateUser(prisma.UserUpdateParams{
-		Where: prisma.UserWhereUniqueInput{
-			Email: &email,
-		},
-		Data: prisma.UserUpdateInput{
-			Posts: &prisma.PostUpdateManyWithoutOwnerInput{
-				Create: []prisma.PostCreateWithoutOwnerInput{
-					{
-						FileName: fileName,
-						Caption:  caption,
-					},
-				},
-			},
-		},
-	}).Exec(ctx)
-
-	return err
 }
