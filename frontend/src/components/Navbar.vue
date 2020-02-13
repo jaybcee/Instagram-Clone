@@ -1,13 +1,11 @@
 <template>
-  <div
-    v-if="page === 'Home'"
-  >
-    <v-app-bar
-      app
-    >
-      <v-icon>mdi-camera</v-icon>
+  <div v-if="page === 'Home'">
+    <v-app-bar app>
+      <v-icon class="mr-2">
+        mdi-camera
+      </v-icon>
 
-      <v-toolbar-title>Instagram Clone </v-toolbar-title>
+      <v-toolbar-title>Instagram Clone</v-toolbar-title>
       <!-- TODO better name -->
 
       <v-spacer />
@@ -34,9 +32,7 @@
         </template>
 
         <v-list>
-          <v-list-item
-            @click="signOut"
-          >
+          <v-list-item @click="signOut">
             <v-list-item-title>Sign out</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -49,23 +45,23 @@
 import axios from "axios";
 
 export default {
-    props :['page'],
-    methods : {
-      signOut () {
-        // console.log('signout')
-         axios.post("http://localhost:3030/signout")
-       .then(r => {
-         console.log(r)
-         
-       })
-       .catch(e => {
-         console.error(e)
-       })
-       .finally( () => {
-         this.$cookies.remove('token')
-         this.$router.push('/login')
-       })
-      }
+  props: ["page"],
+  methods: {
+    signOut() {
+      // console.log('signout')
+      axios
+        .post("http://localhost:3030/signout")
+        .then(r => {
+          console.log(r);
+        })
+        .catch(e => {
+          console.error(e);
+        })
+        .finally(() => {
+          this.$cookies.remove("token");
+          this.$router.push("/login");
+        });
     }
-}
+  }
+};
 </script>
