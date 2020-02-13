@@ -7,29 +7,40 @@
   >
     <v-container fluid>
       <v-row>
-        <v-col>
-          <v-card class="my-6" height="450">
+        <v-col class="mainContainer">
               <h2 class="uploadPictureHeader">Upload a picture</h2>
-              <div v-if="!image" class="mainCard">
-                <input type="file"  id="fileUpload" accept="image/x-png,image/jpeg" ref="file" hidden v-on:click="submitFile()">
-                <v-btn icon @click="fileUpload()">
-                  <v-icon class="plus">mdi-plus</v-icon>
-                </v-btn>
+              <div
+                class="base-image-input"
+                :style="{ 'background-image': `url(${imageData})` }"
+                @click="chooseImage"
+              >
+                <span
+                  v-if="!imageData"
+                  class="placeholder"
+                >
+                  Choose an Image
+                </span>
+                <input
+                  class="file-input"
+                  ref="fileInput"
+                  type="file"
+                  @input="onSelectFile"
+                >
               </div>
+
               <v-card-text class="text--primary">
-                  <v-divider class="my-4" />
                     <div class="caption">
                       <input type="text" v-on:input="caption = $event.target.value"
                       placeholder="Enter your Caption">
                     </div>
             </v-card-text>
-          </v-card>
+
+          <div class="submit">
+            <v-btn v-on:click="submitFile()" class="submitButton">Submit</v-btn>
+          </div>
         </v-col>
       </v-row>
     </v-container>
-      <div class="submit">
-        <v-btn v-on:click="submitFile()" class="submitButton">Submit</v-btn>
-      </div>
   </v-card>
   </div>
 </template>
@@ -65,19 +76,34 @@ export default {
     return {
       file: '',
       caption: '',
+      imageData: null,
     };
   },
+  mounted() {
+      this.$cookies.get('token') === null ? this.$router.push('/login') : null
+    },
   methods: {
-    fileUpload() {
-      const file = this.$refs.file.files[0];
-      this.file = file;
-      document.getElementById("fileUpload").click()
+    chooseImage () {
+      this.$refs.fileInput.click()
+    },
+    onSelectFile () {
+      const input = this.$refs.fileInput
+      const files = input.files
+      this.file = files[0]
+      if (files && files[0]) {
+        const reader = new FileReader
+        reader.onload = e => {
+          this.imageData = e.target.result
+        }
+        reader.readAsDataURL(files[0])
+        this.$emit('input', files[0])
+      }
     },
     async submitFile() {
       const formData = new FormData();
       formData.append('file', this.file);
       formData.append('caption', this.caption);
-      setCookie('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiZXhwIjoxNjEzMDk3OTg3LCJvcmlnX2lhdCI6MTU4MTU2MTk4N30.79ko3o7zMggCUAPjAurWg-SdBdSHw8CY3r8DFgPoehk', 365);
+      setCookie('nothing', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiZXhwIjoxNjEzMDk3OTg3LCJvcmlnX2lhdCI6MTU4MTU2MTk4N30.79ko3o7zMggCUAPjAurWg-SdBdSHw8CY3r8DFgPoehk', 365);
 
       if (this.file !== '') {
         axios.post('http://localhost:3030/secure/api/uploadPhoto',
@@ -85,10 +111,13 @@ export default {
           {
             headers: {
               'Content-Type': 'multipart/form-data',
-              Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiZXhwIjoxNjEzMDk3OTg3LCJvcmlnX2lhdCI6MTU4MTU2MTk4N30.79ko3o7zMggCUAPjAurWg-SdBdSHw8CY3r8DFgPoehk',
+              Authorization: `Bearer ${this.$cookies.get('token')}`,
             },
-          }).then(() => {
-          console.log('Success');
+          }).then((res) => {
+            if(res.status == 200){
+              alert('You have successfully posted! ☺️')
+              this.$router.push('/')
+            }
         }).catch(() => {
           console.log('Error sending picture to server');
         });
@@ -101,13 +130,56 @@ export default {
 </script>
 
 <style scoped>
+
+.caption input{
+  border-bottom: solid 1px gray;
+  width: 100%;
+  padding-bottom: 4px;
+  text-align: center;
+}
+
+.caption input::placeholder{
+  text-align: center;
+}
+
 .submitButton{
     border: 1px solid;
     border-radius: 4px;
 }
 
 .uploadPictureHeader{
-  margin-bottom: 30%;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}
+
+.base-image-input {
+  display: block;
+  width: 400px;
+  height: 400px;
+  border-radius: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
+  background-size: cover;
+  background-position: center center;
+}
+.placeholder {
+  background: #F0F0F0;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+  font-size: 18px;
+  font-family: Helvetica;
+}
+.placeholder:hover {
+  background: #E0E0E0;
+}
+.file-input {
+  display: none;
 }
 
 </style>
