@@ -4,4 +4,12 @@ type User {
   email: String! @unique
   password: String!
   phone: String!
+  posts: [Post!]!
+}
+
+type Post {
+  id: ID! @id
+  fileName: String! @unique
+  caption: String!
+  owner: User! @relation(link: INLINE)
 }

@@ -1,8 +1,12 @@
 package main
 
 import (
+	"io"
+	"os"
+
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func testRoute(c *gin.Context) {
@@ -54,4 +58,36 @@ func protectedTestRoute(c *gin.Context) {
 		Status  string `json:"status"`
 		Message string `json:"message"`
 	}{"This route is protected", "Hello " + recipient})
+}
+
+type postBody struct {
+	Photo   string `json:"photo"`
+	Caption string `json:"caption"`
+}
+
+func postPhoto(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+
+	email := claims["email"].(string)
+
+	if email == "" {
+		c.String(400, "Token not valid.")
+		return
+	}
+
+	file, _, err := c.Request.FormFile("file")
+	caption := c.PostForm("caption")
+
+	randomId := uuid.New().String()
+
+	out, err := os.Create("./photos/" + randomId)
+	check(err)
+	defer out.Close()
+	_, err = io.Copy(out, file)
+
+	postPicture(email, randomId, caption)
+
+	c.JSON(200, struct {
+		Message string `json:"message"`
+	}{"Thank you photo"})
 }
