@@ -1,5 +1,5 @@
 <template>
-  <v-card
+  <div
     class="mx-auto"
     max-width="500"
   >
@@ -10,7 +10,7 @@
           :key="card.title"
           :cols="card.flex"
         >
-          <v-card min-height="400px">
+          <v-card class="my-6" min-height="400px">
             <v-img
               :src="card.src"
               class="white--text align-end"
@@ -43,7 +43,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -55,5 +55,9 @@
         { user:'Lettuce69', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',description:'kar', likes:19,flex: 12 },
       ],
     }),
+    mounted() {
+       this.$cookies.get('token') === null ? this.$router.push('login') : null
+     },
   }
 </script>
+
