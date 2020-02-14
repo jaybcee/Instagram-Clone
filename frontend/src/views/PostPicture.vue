@@ -116,7 +116,7 @@ export default {
 <style scoped>
 .checkbox{
   margin-right: 20px;
-  margin-left: 40px;
+  margin-left: 50px;
 }
 .caption input{
   margin-top: 10px;
