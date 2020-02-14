@@ -55,3 +55,26 @@ func AddUser(name string, email string, password string) (*prisma.User, error) {
 	return newUser, err
 
 }
+
+func postPicture(email string, fileName string, caption string) error {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	_, err := client.UpdateUser(prisma.UserUpdateParams{
+		Where: prisma.UserWhereUniqueInput{
+			Email: &email,
+		},
+		Data: prisma.UserUpdateInput{
+			Posts: &prisma.PostUpdateManyWithoutOwnerInput{
+				Create: []prisma.PostCreateWithoutOwnerInput{
+					{
+						FileName: fileName,
+						Caption:  caption,
+					},
+				},
+			},
+		},
+	}).Exec(ctx)
+
+	return err
+}
