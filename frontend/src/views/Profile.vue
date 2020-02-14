@@ -69,7 +69,6 @@ export default {
     info: {},
   }),
   mounted() {
-      console.log(this.$router)
     axios
   .get(`${process.env.VUE_APP_ROOT_API}/user/${this.$route.params.username}`)
   .then(response => {
