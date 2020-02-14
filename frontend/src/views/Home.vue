@@ -25,7 +25,7 @@
             <v-card-text class="text--primary">
               <div>Description: {{ card.description }}</div>
               <v-divider class="my-4" />
-              <div> Comments go here</div>
+              <Comments/>
             </v-card-text>
             <v-card-actions>
               <v-spacer />
@@ -58,9 +58,9 @@
         { user:'Lettuce69', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',description:'kar', likes:19,flex: 12 },
       ],
     }),
-    mounted() {
-       this.$cookies.get('token') === null ? this.$router.push('login') : null
-     },
+    //mounted() {
+    //   this.$cookies.get('token') === null ? this.$router.push('login') : null
+    // },
   }
 </script>
 
