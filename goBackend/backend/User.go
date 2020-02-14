@@ -40,6 +40,17 @@ func GetUser(email string) (*prisma.User, error) {
 
 }
 
+func getPostsByName(name string) ([]prisma.Post, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	posts, err := client.User(prisma.UserWhereUniqueInput{
+		Name: &name,
+	}).Posts(nil).Exec(ctx)
+
+	return posts, err
+}
+
 func AddUser(name string, email string, password string) (*prisma.User, error) {
 	client := prisma.New(nil)
 	ctx := context.TODO()

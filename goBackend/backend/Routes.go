@@ -1,6 +1,8 @@
 package main
 
 import (
+	"Nicolas-MacBeth/main/backend/generated/prisma-client"
+
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
@@ -20,6 +22,24 @@ func signupRoute(c *gin.Context) {
 	check(addingUserError)
 
 	c.String(200, "Success")
+}
+
+func userRoute(c *gin.Context) {
+	username := c.Param("id")
+
+	posts, err := getPostsByName(username)
+
+	if err != nil || posts == nil {
+		c.JSON(404, struct {
+			UserNotFound bool `json:"userNotFound"`
+		}{true})
+		return
+	}
+
+	c.JSON(200, struct {
+		Posts        []prisma.Post `json:"posts"`
+		UserNotFound bool          `json:"userNotFound"`
+	}{posts, false})
 }
 
 func testRoute(c *gin.Context) {
