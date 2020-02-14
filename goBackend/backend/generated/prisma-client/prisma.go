@@ -117,25 +117,6 @@ type PostsConnectionParams struct {
 	Last    *int32            `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *PostConnection) Nodes() []Post {
-	var nodes []Post
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *PostConnection) NodesPtr() []*Post {
-	var nodes []*Post
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
 func (client *Client) PostsConnection(params *PostsConnectionParams) *PostConnectionExec {
 	var wparams *prisma.WhereParams
 	if params != nil {
@@ -213,25 +194,6 @@ type UsersConnectionParams struct {
 	Before  *string           `json:"before,omitempty"`
 	First   *int32            `json:"first,omitempty"`
 	Last    *int32            `json:"last,omitempty"`
-}
-
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *UserConnection) Nodes() []User {
-	var nodes []User
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *UserConnection) NodesPtr() []*User {
-	var nodes []*User
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
 }
 
 func (client *Client) UsersConnection(params *UsersConnectionParams) *UserConnectionExec {
@@ -452,6 +414,7 @@ const (
 	MutationTypeDeleted MutationType = "DELETED"
 )
 
+
 type UserCreateInput struct {
 	ID       *string `json:"id,omitempty"`
 	Name     string  `json:"name"`
@@ -472,6 +435,8 @@ type UserUpdateManyMutationInput struct {
 	Email    *string `json:"email,omitempty"`
 	Password *string `json:"password,omitempty"`
 	Phone    *string `json:"phone,omitempty"`
+
+425b660... Add gray filter and Sobel filter to backend and frontend
 type PostWhereUniqueInput struct {
 	ID       *string `json:"id,omitempty"`
 	FileName *string `json:"fileName,omitempty"`
@@ -803,10 +768,10 @@ type UserSubscriptionWhereInput struct {
 	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
-type UserWhereUniqueInput struct {
-	ID    *string `json:"id,omitempty"`
-	Email *string `json:"email,omitempty"`
+type PostExec struct {
+	exec *prisma.Exec
 }
+
 
 type UserPreviousValuesExec struct {
 	exec *prisma.Exec
@@ -818,6 +783,8 @@ type PostExec struct {
 	exec *prisma.Exec
 }
 
+
+425b660... Add gray filter and Sobel filter to backend and frontend
 func (instance *PostExec) Owner() *UserExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
@@ -855,8 +822,11 @@ func (instance PostExecArray) Exec(ctx context.Context) ([]Post, error) {
 	return v, err
 }
 
+
 var PostFields = []string{"id", "fileName", "caption"}
 
+
+425b660... Add gray filter and Sobel filter to backend and frontend
 type Post struct {
 	ID       string `json:"id"`
 	FileName string `json:"fileName"`
@@ -913,6 +883,7 @@ func (instance UserExec) Exec(ctx context.Context) (*User, error) {
 	return &v, nil
 }
 
+
 func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
@@ -923,15 +894,30 @@ type UserPreviousValuesExecArray struct {
 
 func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
 	var v []UserPreviousValues
+
+func (instance UserExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
+	var v []User
+425b660... Add gray filter and Sobel filter to backend and frontend
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
+
 
 var UserPreviousValuesFields = []string{"id", "name", "email", "password", "phone"}
 
 type UserPreviousValues struct {
 var UserFields = []string{"id", "name", "email", "password", "phone"}
 
+
+425b660... Add gray filter and Sobel filter to backend and frontend
 type User struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
@@ -939,6 +925,7 @@ type User struct {
 	Password string `json:"password"`
 	Phone    string `json:"phone"`
 }
+
 
 type UserEdgeExec struct {
 	exec *prisma.Exec
@@ -951,6 +938,8 @@ func (instance *UserEdgeExec) Node() *UserExec {
 		[2]string{"", "User"},
 		"node",
 		[]string{"id", "name", "email", "password", "phone"})
+
+425b660... Add gray filter and Sobel filter to backend and frontend
 type PostConnectionExec struct {
 	exec *prisma.Exec
 }
@@ -974,12 +963,21 @@ func (instance *PostConnectionExec) Edges() *PostEdgeExecArray {
 		"edges",
 		[]string{"cursor"})
 
+
 	nodes := edges.Client.GetOne(
 		edges,
 		nil,
 		[2]string{"", "Post"},
 		"node",
 		PostFields)
+
+	nodes := edges.Client.GetMany(
+		edges,
+		nil,
+		[3]string{"", "", "Post"},
+		"node",
+		[]string{"id", "createdAt", "updatedAt", "name", "desc"})
+425b660... Add gray filter and Sobel filter to backend and frontend
 
 	return &PostEdgeExecArray{nodes}
 }
@@ -991,6 +989,7 @@ func (instance *PostConnectionExec) Aggregate(ctx context.Context) (*Aggregate, 
 		[2]string{"", "AggregatePost"},
 		"aggregate",
 		[]string{"count"})
+
 
 	return &UserExec{ret}
 }
@@ -1035,9 +1034,74 @@ type PostConnectionExecArray struct {
 
 func (instance PostConnectionExecArray) Exec(ctx context.Context) ([]PostConnection, error) {
 	var v []PostConnection
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance PostConnectionExec) Exec(ctx context.Context) (*PostConnection, error) {
+	var v PostConnection
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PostConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostConnectionExecArray) Exec(ctx context.Context) ([]PostConnection, error) {
+	var v []PostConnection
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
+
+type PostConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []PostEdge `json:"edges"`
+}
+
+type PageInfoExec struct {
+	exec *prisma.Exec
+}
+
+func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
+	var v PageInfo
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PageInfoExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
+	var v []PageInfo
+425b660... Add gray filter and Sobel filter to backend and frontend
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
 
 var UserEdgeFields = []string{"cursor"}
 
@@ -1111,6 +1175,8 @@ type UserSubscriptionPayload struct {
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
 var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
 
+
+425b660... Add gray filter and Sobel filter to backend and frontend
 type PageInfo struct {
 	HasNextPage     bool    `json:"hasNextPage"`
 	HasPreviousPage bool    `json:"hasPreviousPage"`
@@ -1159,8 +1225,6 @@ func (instance PostEdgeExecArray) Exec(ctx context.Context) ([]PostEdge, error) 
 	return v, err
 }
 
-var PostEdgeFields = []string{"cursor"}
-
 type PostEdge struct {
 	Node   Post   `json:"node"`
 	Cursor string `json:"cursor"`
@@ -1189,12 +1253,12 @@ func (instance *UserConnectionExec) Edges() *UserEdgeExecArray {
 		"edges",
 		[]string{"cursor"})
 
-	nodes := edges.Client.GetOne(
+	nodes := edges.Client.GetMany(
 		edges,
 		nil,
-		[2]string{"", "User"},
+		[3]string{"", "", "User"},
 		"node",
-		UserFields)
+		[]string{"id", "createdAt", "updatedAt", "name", "desc"})
 
 	return &UserEdgeExecArray{nodes}
 }
@@ -1213,20 +1277,15 @@ func (instance *UserConnectionExec) Aggregate(ctx context.Context) (*Aggregate, 
 }
 
 func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
+	var v UserConnection
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
+	if !ok {
+		return nil, ErrNoResult
 	}
-
-	return &UserConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
+	return &v, nil
 }
 
 func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
@@ -1243,8 +1302,6 @@ func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnect
 	return v, err
 }
 
-var UserConnectionFields = []string{}
-
 type UserConnection struct {
 	PageInfo PageInfo   `json:"pageInfo"`
 	Edges    []UserEdge `json:"edges"`
@@ -1254,12 +1311,28 @@ type UserEdgeExec struct {
 	exec *prisma.Exec
 }
 
+
 type UserExec struct {
 	exec *prisma.Exec
 }
 
 func (instance UserExec) Exec(ctx context.Context) (*User, error) {
 	var v User
+
+func (instance *UserEdgeExec) Node() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserExec{ret}
+}
+
+func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
+	var v UserEdge
+425b660... Add gray filter and Sobel filter to backend and frontend
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1269,6 +1342,7 @@ func (instance UserExec) Exec(ctx context.Context) (*User, error) {
 	}
 	return &v, nil
 }
+
 
 func (instance UserExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
@@ -1280,9 +1354,22 @@ type UserExecArray struct {
 
 func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
 	var v []User
+
+func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
+	var v []UserEdge
+425b660... Add gray filter and Sobel filter to backend and frontend
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
+
 
 var UserFields = []string{"id", "name", "email", "password", "phone"}
 
@@ -1297,6 +1384,8 @@ type User struct {
 type UserConnectionExec struct {
 var UserEdgeFields = []string{"cursor"}
 
+
+425b660... Add gray filter and Sobel filter to backend and frontend
 type UserEdge struct {
 	Node   User   `json:"node"`
 	Cursor string `json:"cursor"`
@@ -1354,8 +1443,6 @@ func (instance PostSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]Po
 	return v, err
 }
 
-var PostSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
 type PostSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
 	Node          *Post        `json:"node,omitempty"`
@@ -1392,8 +1479,6 @@ func (instance PostPreviousValuesExecArray) Exec(ctx context.Context) ([]PostPre
 	return v, err
 }
 
-var PostPreviousValuesFields = []string{"id", "fileName", "caption"}
-
 type PostPreviousValues struct {
 	ID       string `json:"id"`
 	FileName string `json:"fileName"`
@@ -1404,98 +1489,30 @@ type UserSubscriptionPayloadExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *UserConnectionExec) PageInfo() *PageInfoExec {
+func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
-		nil,
-		[2]string{"", "PageInfo"},
-		"pageInfo",
-		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
-
-	return &PageInfoExec{ret}
-}
-
-func (instance *UserConnectionExec) Edges() *UserEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
-		instance.exec,
-		nil,
-		[3]string{"UserWhereInput", "UserOrderByInput", "UserEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	nodes := edges.Client.GetOne(
-		edges,
 		nil,
 		[2]string{"", "User"},
 		"node",
-		UserFields)
+		[]string{"id", "name", "email", "password", "phone"})
 
-	return &UserEdgeExecArray{nodes}
+	return &UserExec{ret}
 }
 
-func (instance *UserConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValuesExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "AggregateUser"},
-		"aggregate",
-		[]string{"count"})
+		[2]string{"", "UserPreviousValues"},
+		"previousValues",
+		[]string{"id", "name", "email", "password", "phone"})
 
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return &v, err
+	return &UserPreviousValuesExec{ret}
 }
 
-func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return &UserConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
-}
-
-func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type UserConnectionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnection, error) {
-	var v []UserConnection
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var UserConnectionFields = []string{}
-
-type UserConnection struct {
-	PageInfo PageInfo   `json:"pageInfo"`
-	Edges    []UserEdge `json:"edges"`
-var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
-
-type UserSubscriptionPayload struct {
-	Mutation      MutationType `json:"mutation"`
-	Node          *User        `json:"node,omitempty"`
-	UpdatedFields []string     `json:"updatedFields,omitempty"`
-}
-
-type PageInfoExec struct {
-	exec *prisma.Exec
-}
-
-func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
-	var v PageInfo
+func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubscriptionPayload, error) {
+	var v UserSubscriptionPayload
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1506,19 +1523,66 @@ func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
 	return &v, nil
 }
 
-func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
+func (instance UserSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type PageInfoExecArray struct {
+type UserSubscriptionPayloadExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
-	var v []PageInfo
+func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]UserSubscriptionPayload, error) {
+	var v []UserSubscriptionPayload
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
+
+
+var UserConnectionFields = []string{}
+
+type UserConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []UserEdge `json:"edges"`
+var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
+
+425b660... Add gray filter and Sobel filter to backend and frontend
+type UserSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *User        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type UserPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousValues, error) {
+	var v UserPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
+	var v []UserPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
 
 var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
 
@@ -1529,6 +1593,8 @@ type PageInfo struct {
 	EndCursor       *string `json:"endCursor,omitempty"`
 var UserPreviousValuesFields = []string{"id", "name", "email", "password", "phone"}
 
+
+425b660... Add gray filter and Sobel filter to backend and frontend
 type UserPreviousValues struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
