@@ -1,7 +1,25 @@
+type Comment {
+  id: ID! @id
+  uniqueName: String!
+  commentText: String!
+  user: User! @relation(link: INLINE)
+  Post: Post! @relation(link: INLINE)
+}
+
+type Post {
+  id: ID! @id
+  uniqueName: String!
+  caption: String!
+  file : String!
+  owner: User! @relation(link: INLINE)
+  comments: [Comment!]
+}
+
 type User {
   id: ID! @id
-  name: String!
+  name: String! @unique
   email: String! @unique
   password: String!
   phone: String!
+  posts: [Post!]!
 }
