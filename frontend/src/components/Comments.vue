@@ -20,7 +20,7 @@
     <v-container>
       <v-row>
         <v-col cols="8">
-          <v-text-field label="Filled" single-line filled v-model="comment"></v-text-field>
+          <v-text-field label="Enter a comment" single-line filled v-model="comment"></v-text-field>
         </v-col>
         <v-col cols="4">
           <v-btn @click="addComment" small color="primary">Primary</v-btn>
