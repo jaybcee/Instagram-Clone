@@ -141,6 +141,7 @@ export default {
   margin-left: 40px;
 }
 .caption input{
+  margin-top: 10px;
   border-bottom: solid 1px gray;
   width: 100%;
   padding-bottom: 4px;
