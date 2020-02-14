@@ -2,6 +2,7 @@
   <v-card
     class="mx-auto"
     max-width="500"
+    v-if="loaded"
   >
     <v-container fluid>
         <v-avatar size="100">
@@ -18,7 +19,7 @@
     </v-list-item>
 
     <v-card-actions>
-      <v-btn text>Follow</v-btn>
+      <v-btn>Follow</v-btn>
     </v-card-actions>
     </v-container>
     <v-container fluid>
@@ -26,7 +27,7 @@
         <v-col
           v-for="card in cards"
           :key="card.src"
-          :cols="card.flex"
+          :cols="12"
         >
           <v-card>
             <v-img
@@ -44,8 +45,8 @@
               <v-btn icon>
                 <v-icon>mdi-heart</v-icon>
               </v-btn>
-
-              <v-btn icon>
+            
+              <v-btn icon v-on:click="showComments">
                 <v-icon>mdi-message-text</v-icon>
               </v-btn>
 
@@ -64,23 +65,23 @@
 import axios from "axios";
 export default {
   data: () => ({
-    loading: false,
-    cards: [
-        { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12, caption: 'adaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaassdddddddddddddddddddddd' },
-        { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 6, caption: 'dsaffffffffffffffffffffffefaaaaaaaaaaaaaaaaaaaaafa' },
-        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6, caption: 'aas' },
-        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6, caption: 'asfdasdfas' },
-      ],
+    loaded: false,
+    info: {},
   }),
   mounted() {
       console.log(this.$router)
     axios
   .get(`${process.env.VUE_APP_ROOT_API}/user/${this.$route.params.username}`)
   .then(response => {
-      this.info = response;
-      this.loading = true;
+      this.info = response.data.posts;
+      this.loaded = true;
   })
   .catch(error => console.log(error))
   },
+//   methods: {
+//     showComments: function () {
+      
+//     }
+//   }
 };
 </script>

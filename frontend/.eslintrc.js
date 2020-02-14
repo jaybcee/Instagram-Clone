@@ -7,7 +7,7 @@ module.exports = {
     rules: {
         // override/add rules settings here, such as:
         // "linebreak-style": ["warn", "windows"]
-
+        "vue/html-self-closing": 0,
     },
     "globals": {
         "process": true
