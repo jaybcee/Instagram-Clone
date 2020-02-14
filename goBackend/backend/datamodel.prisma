@@ -10,7 +10,6 @@ type Post {
   id: ID! @id
   fileName: String!
   caption: String!
-  file : String!
   owner: User! @relation(link: INLINE)
   comments: [Comment!]
 }

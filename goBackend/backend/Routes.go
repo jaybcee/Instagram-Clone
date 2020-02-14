@@ -4,6 +4,7 @@ import (
 	"Nicolas-MacBeth/main/backend/generated/prisma-client"
 	"io"
 	"os"
+	"path/filepath"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
@@ -111,27 +112,31 @@ func postPhoto(c *gin.Context) {
 		return
 	}
 
-	file, _, err := c.Request.FormFile("file")
+	file, header, err := c.Request.FormFile("file")
+	filename := header.Filename
+	extension := filepath.Ext(filename)
 	caption := c.PostForm("caption")
 	filterBnW := c.PostForm("filterBnW")
 	filterSurprise := c.PostForm("filterSurprise")
 
 	randomID := uuid.New().String()
 
-	out, err := os.Create("./photos/" + randomID)
+	newFilename := "./photos/" + randomID + extension
+
+	out, err := os.Create(newFilename)
 	check(err)
 	defer out.Close()
 	_, err = io.Copy(out, file)
 
 	if filterBnW == "true" {
-		image, _ := loadImage("./photos/" + randomID)
+		image, _ := loadImage(newFilename)
 		_, arr := rgbaToGrayArray(image)
 		grayImage := arrayToGray(arr)
-		saveImage("./photos/"+randomID, grayImage)
+		saveImage(newFilename, grayImage)
 	}
 
 	if filterSurprise == "true" {
-		image, _ := loadImage("./photos/" + randomID)
+		image, _ := loadImage(newFilename)
 		_, arr := rgbaToGrayArray(image)
 
 		kernel := createGaussianKernel(5, 1)
@@ -144,11 +149,12 @@ func postPhoto(c *gin.Context) {
 
 		finalImage := arrayToGray(sobelMagnitude)
 
-		saveImage("./photos/"+randomID, finalImage)
+		saveImage(newFilename, finalImage)
 
 	}
 
-	postPicture(email, randomID, caption)
+	err = postPicture(email, randomID+extension, caption)
+	check(err)
 
 	c.JSON(200, struct {
 		Message string `json:"message"`
