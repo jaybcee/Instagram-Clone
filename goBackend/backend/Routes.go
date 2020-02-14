@@ -1,12 +1,9 @@
 package main
 
 import (
-<<<<<<< HEAD
 	"Nicolas-MacBeth/main/backend/generated/prisma-client"
-=======
 	"io"
 	"os"
->>>>>>> fe5e111c4452276b5cd369549d53772b8b072a04
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
