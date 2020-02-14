@@ -95,7 +95,7 @@ export default {
       formData.append('caption', this.caption);
       formData.append('filterBnW', this.filterBnW);
       formData.append('filterSurprise', this.filterSurprise);
-      setCookie('nothing', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiZXhwIjoxNjEzMDk3OTg3LCJvcmlnX2lhdCI6MTU4MTU2MTk4N30.79ko3o7zMggCUAPjAurWg-SdBdSHw8CY3r8DFgPoehk', 365);
+      setCookie('nothing', '', 365);
       if (this.file !== '') {
         axios.post(`${process.env.VUE_APP_ROOT_API}/secure/api/uploadPhoto`,
           formData,
