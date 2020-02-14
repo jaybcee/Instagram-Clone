@@ -113,15 +113,42 @@ func postPhoto(c *gin.Context) {
 
 	file, _, err := c.Request.FormFile("file")
 	caption := c.PostForm("caption")
+	filterBnW := c.PostForm("filterBnW")
+	filterSurprise := c.PostForm("filterSurprise")
 
-	randomId := uuid.New().String()
+	randomID := uuid.New().String()
 
-	out, err := os.Create("./photos/" + randomId)
+	out, err := os.Create("./photos/" + randomID)
 	check(err)
 	defer out.Close()
 	_, err = io.Copy(out, file)
 
-	postPicture(email, randomId, caption)
+	if filterBnW == "true" {
+		image, _ := loadImage("./photos/" + randomID)
+		_, arr := rgbaToGrayArray(image)
+		grayImage := arrayToGray(arr)
+		saveImage("./photos/"+randomID, grayImage)
+	}
+
+	if filterSurprise == "true" {
+		image, _ := loadImage("./photos/" + randomID)
+		_, arr := rgbaToGrayArray(image)
+
+		kernel := createGaussianKernel(5, 1)
+
+		res := conv2d(arr, kernel)
+		kx := conv2d(res, scharrKx)
+		ky := conv2d(res, scharrKy)
+
+		sobelMagnitude, _ := magnitudeOfGradient(kx, ky)
+
+		finalImage := arrayToGray(sobelMagnitude)
+
+		saveImage("./photos/"+randomID, finalImage)
+
+	}
+
+	postPicture(email, randomID, caption)
 
 	c.JSON(200, struct {
 		Message string `json:"message"`
