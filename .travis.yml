@@ -1,1 +1,8 @@
-language: js
+language: node_js
+node_js:
+- 9
+cache:
+  directories:
+    -node_module
+  script:
+  - npm run test
