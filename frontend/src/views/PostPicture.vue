@@ -35,6 +35,12 @@
                     </div>
             </v-card-text>
 
+            <v-row>
+                <v-checkbox class="checkbox" v-model="filterBnW" :label="`Filter Black and White`"></v-checkbox>
+                <v-checkbox v-model="filterSurprise" :label="`Filter Surpise me`"></v-checkbox>
+            </v-row>
+
+
           <div class="submit">
             <v-btn v-on:click="submitFile()" class="submitButton">Submit</v-btn>
           </div>
@@ -75,6 +81,8 @@ export default {
   data() {
     return {
       file: '',
+      filterBnW: false,
+      filterSurprise: false,
       caption: '',
       imageData: null,
     };
@@ -103,6 +111,9 @@ export default {
       const formData = new FormData();
       formData.append('file', this.file);
       formData.append('caption', this.caption);
+      formData.append('filterBnW', this.filterBnW);
+      formData.append('filterSurprise', this.filterSurprise);
+
       setCookie('nothing', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiZXhwIjoxNjEzMDk3OTg3LCJvcmlnX2lhdCI6MTU4MTU2MTk4N30.79ko3o7zMggCUAPjAurWg-SdBdSHw8CY3r8DFgPoehk', 365);
 
       if (this.file !== '') {
@@ -130,6 +141,11 @@ export default {
 </script>
 
 <style scoped>
+
+.checkbox{
+  margin-right: 20px;
+  margin-left: 40px;
+}
 
 .caption input{
   border-bottom: solid 1px gray;
