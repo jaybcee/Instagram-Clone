@@ -62,6 +62,85 @@ func (client *Client) GraphQL(ctx context.Context, query string, variables map[s
 var DefaultEndpoint = "http://localhost:4466"
 var Secret = ""
 
+func (client *Client) Post(params PostWhereUniqueInput) *PostExec {
+	ret := client.Client.GetOne(
+		nil,
+		params,
+		[2]string{"PostWhereUniqueInput!", "Post"},
+		"post",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExec{ret}
+}
+
+type PostsParams struct {
+	Where   *PostWhereInput   `json:"where,omitempty"`
+	OrderBy *PostOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32            `json:"skip,omitempty"`
+	After   *string           `json:"after,omitempty"`
+	Before  *string           `json:"before,omitempty"`
+	First   *int32            `json:"first,omitempty"`
+	Last    *int32            `json:"last,omitempty"`
+}
+
+func (client *Client) Posts(params *PostsParams) *PostExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"PostWhereInput", "PostOrderByInput", "Post"},
+		"posts",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExecArray{ret}
+}
+
+type PostsConnectionParams struct {
+	Where   *PostWhereInput   `json:"where,omitempty"`
+	OrderBy *PostOrderByInput `json:"orderBy,omitempty"`
+	Skip    *int32            `json:"skip,omitempty"`
+	After   *string           `json:"after,omitempty"`
+	Before  *string           `json:"before,omitempty"`
+	First   *int32            `json:"first,omitempty"`
+	Last    *int32            `json:"last,omitempty"`
+}
+
+func (client *Client) PostsConnection(params *PostsConnectionParams) *PostConnectionExec {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := client.Client.GetMany(
+		nil,
+		wparams,
+		[3]string{"PostWhereInput", "PostOrderByInput", "Post"},
+		"postsConnection",
+		[]string{"edges", "pageInfo"})
+
+	return &PostConnectionExec{ret}
+}
+
 func (client *Client) User(params UserWhereUniqueInput) *UserExec {
 	ret := client.Client.GetOne(
 		nil,
@@ -117,25 +196,6 @@ type UsersConnectionParams struct {
 	Last    *int32            `json:"last,omitempty"`
 }
 
-// Nodes return just nodes without cursors. It uses the already fetched edges.
-func (s *UserConnection) Nodes() []User {
-	var nodes []User
-	for _, edge := range s.Edges {
-		nodes = append(nodes, edge.Node)
-	}
-	return nodes
-}
-
-// Nodes return just nodes without cursors, but as a slice of pointers. It uses the already fetched edges.
-func (s *UserConnection) NodesPtr() []*User {
-	var nodes []*User
-	for _, edge := range s.Edges {
-		item := edge
-		nodes = append(nodes, &item.Node)
-	}
-	return nodes
-}
-
 func (client *Client) UsersConnection(params *UsersConnectionParams) *UserConnectionExec {
 	var wparams *prisma.WhereParams
 	if params != nil {
@@ -158,6 +218,86 @@ func (client *Client) UsersConnection(params *UsersConnectionParams) *UserConnec
 		[]string{"edges", "pageInfo"})
 
 	return &UserConnectionExec{ret}
+}
+
+func (client *Client) CreatePost(params PostCreateInput) *PostExec {
+	ret := client.Client.Create(
+		params,
+		[2]string{"PostCreateInput!", "Post"},
+		"createPost",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExec{ret}
+}
+
+type PostUpdateParams struct {
+	Data  PostUpdateInput      `json:"data"`
+	Where PostWhereUniqueInput `json:"where"`
+}
+
+func (client *Client) UpdatePost(params PostUpdateParams) *PostExec {
+	ret := client.Client.Update(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[3]string{"PostUpdateInput!", "PostWhereUniqueInput!", "Post"},
+		"updatePost",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExec{ret}
+}
+
+type PostUpdateManyParams struct {
+	Data  PostUpdateManyMutationInput `json:"data"`
+	Where *PostWhereInput             `json:"where,omitempty"`
+}
+
+func (client *Client) UpdateManyPosts(params PostUpdateManyParams) *BatchPayloadExec {
+	exec := client.Client.UpdateMany(
+		prisma.UpdateParams{
+			Data:  params.Data,
+			Where: params.Where,
+		},
+		[2]string{"PostUpdateManyMutationInput!", "PostWhereInput"},
+		"updateManyPosts")
+	return &BatchPayloadExec{exec}
+}
+
+type PostUpsertParams struct {
+	Where  PostWhereUniqueInput `json:"where"`
+	Create PostCreateInput      `json:"create"`
+	Update PostUpdateInput      `json:"update"`
+}
+
+func (client *Client) UpsertPost(params PostUpsertParams) *PostExec {
+	uparams := &prisma.UpsertParams{
+		Where:  params.Where,
+		Create: params.Create,
+		Update: params.Update,
+	}
+	ret := client.Client.Upsert(
+		uparams,
+		[4]string{"PostWhereUniqueInput!", "PostCreateInput!", "PostUpdateInput!", "Post"},
+		"upsertPost",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExec{ret}
+}
+
+func (client *Client) DeletePost(params PostWhereUniqueInput) *PostExec {
+	ret := client.Client.Delete(
+		params,
+		[2]string{"PostWhereUniqueInput!", "Post"},
+		"deletePost",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExec{ret}
+}
+
+func (client *Client) DeleteManyPosts(params *PostWhereInput) *BatchPayloadExec {
+	exec := client.Client.DeleteMany(params, "PostWhereInput", "deleteManyPosts")
+	return &BatchPayloadExec{exec}
 }
 
 func (client *Client) CreateUser(params UserCreateInput) *UserExec {
@@ -240,6 +380,17 @@ func (client *Client) DeleteManyUsers(params *UserWhereInput) *BatchPayloadExec 
 	return &BatchPayloadExec{exec}
 }
 
+type PostOrderByInput string
+
+const (
+	PostOrderByInputIDAsc        PostOrderByInput = "id_ASC"
+	PostOrderByInputIDDesc       PostOrderByInput = "id_DESC"
+	PostOrderByInputFileNameAsc  PostOrderByInput = "fileName_ASC"
+	PostOrderByInputFileNameDesc PostOrderByInput = "fileName_DESC"
+	PostOrderByInputCaptionAsc   PostOrderByInput = "caption_ASC"
+	PostOrderByInputCaptionDesc  PostOrderByInput = "caption_DESC"
+)
+
 type UserOrderByInput string
 
 const (
@@ -263,6 +414,7 @@ const (
 	MutationTypeDeleted MutationType = "DELETED"
 )
 
+
 type UserCreateInput struct {
 	ID       *string `json:"id,omitempty"`
 	Name     string  `json:"name"`
@@ -283,6 +435,60 @@ type UserUpdateManyMutationInput struct {
 	Email    *string `json:"email,omitempty"`
 	Password *string `json:"password,omitempty"`
 	Phone    *string `json:"phone,omitempty"`
+
+425b660... Add gray filter and Sobel filter to backend and frontend
+type PostWhereUniqueInput struct {
+	ID       *string `json:"id,omitempty"`
+	FileName *string `json:"fileName,omitempty"`
+}
+
+type PostWhereInput struct {
+	ID                    *string          `json:"id,omitempty"`
+	IDNot                 *string          `json:"id_not,omitempty"`
+	IDIn                  []string         `json:"id_in,omitempty"`
+	IDNotIn               []string         `json:"id_not_in,omitempty"`
+	IDLt                  *string          `json:"id_lt,omitempty"`
+	IDLte                 *string          `json:"id_lte,omitempty"`
+	IDGt                  *string          `json:"id_gt,omitempty"`
+	IDGte                 *string          `json:"id_gte,omitempty"`
+	IDContains            *string          `json:"id_contains,omitempty"`
+	IDNotContains         *string          `json:"id_not_contains,omitempty"`
+	IDStartsWith          *string          `json:"id_starts_with,omitempty"`
+	IDNotStartsWith       *string          `json:"id_not_starts_with,omitempty"`
+	IDEndsWith            *string          `json:"id_ends_with,omitempty"`
+	IDNotEndsWith         *string          `json:"id_not_ends_with,omitempty"`
+	FileName              *string          `json:"fileName,omitempty"`
+	FileNameNot           *string          `json:"fileName_not,omitempty"`
+	FileNameIn            []string         `json:"fileName_in,omitempty"`
+	FileNameNotIn         []string         `json:"fileName_not_in,omitempty"`
+	FileNameLt            *string          `json:"fileName_lt,omitempty"`
+	FileNameLte           *string          `json:"fileName_lte,omitempty"`
+	FileNameGt            *string          `json:"fileName_gt,omitempty"`
+	FileNameGte           *string          `json:"fileName_gte,omitempty"`
+	FileNameContains      *string          `json:"fileName_contains,omitempty"`
+	FileNameNotContains   *string          `json:"fileName_not_contains,omitempty"`
+	FileNameStartsWith    *string          `json:"fileName_starts_with,omitempty"`
+	FileNameNotStartsWith *string          `json:"fileName_not_starts_with,omitempty"`
+	FileNameEndsWith      *string          `json:"fileName_ends_with,omitempty"`
+	FileNameNotEndsWith   *string          `json:"fileName_not_ends_with,omitempty"`
+	Caption               *string          `json:"caption,omitempty"`
+	CaptionNot            *string          `json:"caption_not,omitempty"`
+	CaptionIn             []string         `json:"caption_in,omitempty"`
+	CaptionNotIn          []string         `json:"caption_not_in,omitempty"`
+	CaptionLt             *string          `json:"caption_lt,omitempty"`
+	CaptionLte            *string          `json:"caption_lte,omitempty"`
+	CaptionGt             *string          `json:"caption_gt,omitempty"`
+	CaptionGte            *string          `json:"caption_gte,omitempty"`
+	CaptionContains       *string          `json:"caption_contains,omitempty"`
+	CaptionNotContains    *string          `json:"caption_not_contains,omitempty"`
+	CaptionStartsWith     *string          `json:"caption_starts_with,omitempty"`
+	CaptionNotStartsWith  *string          `json:"caption_not_starts_with,omitempty"`
+	CaptionEndsWith       *string          `json:"caption_ends_with,omitempty"`
+	CaptionNotEndsWith    *string          `json:"caption_not_ends_with,omitempty"`
+	Owner                 *UserWhereInput  `json:"owner,omitempty"`
+	And                   []PostWhereInput `json:"AND,omitempty"`
+	Or                    []PostWhereInput `json:"OR,omitempty"`
+	Not                   []PostWhereInput `json:"NOT,omitempty"`
 }
 
 type UserWhereInput struct {
@@ -356,9 +562,199 @@ type UserWhereInput struct {
 	PhoneNotStartsWith    *string          `json:"phone_not_starts_with,omitempty"`
 	PhoneEndsWith         *string          `json:"phone_ends_with,omitempty"`
 	PhoneNotEndsWith      *string          `json:"phone_not_ends_with,omitempty"`
+	PostsEvery            *PostWhereInput  `json:"posts_every,omitempty"`
+	PostsSome             *PostWhereInput  `json:"posts_some,omitempty"`
+	PostsNone             *PostWhereInput  `json:"posts_none,omitempty"`
 	And                   []UserWhereInput `json:"AND,omitempty"`
 	Or                    []UserWhereInput `json:"OR,omitempty"`
 	Not                   []UserWhereInput `json:"NOT,omitempty"`
+}
+
+type UserWhereUniqueInput struct {
+	ID    *string `json:"id,omitempty"`
+	Email *string `json:"email,omitempty"`
+}
+
+type PostCreateInput struct {
+	ID       *string                        `json:"id,omitempty"`
+	FileName string                         `json:"fileName"`
+	Caption  string                         `json:"caption"`
+	Owner    UserCreateOneWithoutPostsInput `json:"owner"`
+}
+
+type UserCreateOneWithoutPostsInput struct {
+	Create  *UserCreateWithoutPostsInput `json:"create,omitempty"`
+	Connect *UserWhereUniqueInput        `json:"connect,omitempty"`
+}
+
+type UserCreateWithoutPostsInput struct {
+	ID       *string `json:"id,omitempty"`
+	Name     string  `json:"name"`
+	Email    string  `json:"email"`
+	Password string  `json:"password"`
+	Phone    string  `json:"phone"`
+}
+
+type PostUpdateInput struct {
+	FileName *string                                 `json:"fileName,omitempty"`
+	Caption  *string                                 `json:"caption,omitempty"`
+	Owner    *UserUpdateOneRequiredWithoutPostsInput `json:"owner,omitempty"`
+}
+
+type UserUpdateOneRequiredWithoutPostsInput struct {
+	Create  *UserCreateWithoutPostsInput     `json:"create,omitempty"`
+	Update  *UserUpdateWithoutPostsDataInput `json:"update,omitempty"`
+	Upsert  *UserUpsertWithoutPostsInput     `json:"upsert,omitempty"`
+	Connect *UserWhereUniqueInput            `json:"connect,omitempty"`
+}
+
+type UserUpdateWithoutPostsDataInput struct {
+	Name     *string `json:"name,omitempty"`
+	Email    *string `json:"email,omitempty"`
+	Password *string `json:"password,omitempty"`
+	Phone    *string `json:"phone,omitempty"`
+}
+
+type UserUpsertWithoutPostsInput struct {
+	Update UserUpdateWithoutPostsDataInput `json:"update"`
+	Create UserCreateWithoutPostsInput     `json:"create"`
+}
+
+type PostUpdateManyMutationInput struct {
+	FileName *string `json:"fileName,omitempty"`
+	Caption  *string `json:"caption,omitempty"`
+}
+
+type UserCreateInput struct {
+	ID       *string                          `json:"id,omitempty"`
+	Name     string                           `json:"name"`
+	Email    string                           `json:"email"`
+	Password string                           `json:"password"`
+	Phone    string                           `json:"phone"`
+	Posts    *PostCreateManyWithoutOwnerInput `json:"posts,omitempty"`
+}
+
+type PostCreateManyWithoutOwnerInput struct {
+	Create  []PostCreateWithoutOwnerInput `json:"create,omitempty"`
+	Connect []PostWhereUniqueInput        `json:"connect,omitempty"`
+}
+
+type PostCreateWithoutOwnerInput struct {
+	ID       *string `json:"id,omitempty"`
+	FileName string  `json:"fileName"`
+	Caption  string  `json:"caption"`
+}
+
+type UserUpdateInput struct {
+	Name     *string                          `json:"name,omitempty"`
+	Email    *string                          `json:"email,omitempty"`
+	Password *string                          `json:"password,omitempty"`
+	Phone    *string                          `json:"phone,omitempty"`
+	Posts    *PostUpdateManyWithoutOwnerInput `json:"posts,omitempty"`
+}
+
+type PostUpdateManyWithoutOwnerInput struct {
+	Create     []PostCreateWithoutOwnerInput                `json:"create,omitempty"`
+	Delete     []PostWhereUniqueInput                       `json:"delete,omitempty"`
+	Connect    []PostWhereUniqueInput                       `json:"connect,omitempty"`
+	Set        []PostWhereUniqueInput                       `json:"set,omitempty"`
+	Disconnect []PostWhereUniqueInput                       `json:"disconnect,omitempty"`
+	Update     []PostUpdateWithWhereUniqueWithoutOwnerInput `json:"update,omitempty"`
+	Upsert     []PostUpsertWithWhereUniqueWithoutOwnerInput `json:"upsert,omitempty"`
+	DeleteMany []PostScalarWhereInput                       `json:"deleteMany,omitempty"`
+	UpdateMany []PostUpdateManyWithWhereNestedInput         `json:"updateMany,omitempty"`
+}
+
+type PostUpdateWithWhereUniqueWithoutOwnerInput struct {
+	Where PostWhereUniqueInput            `json:"where"`
+	Data  PostUpdateWithoutOwnerDataInput `json:"data"`
+}
+
+type PostUpdateWithoutOwnerDataInput struct {
+	FileName *string `json:"fileName,omitempty"`
+	Caption  *string `json:"caption,omitempty"`
+}
+
+type PostUpsertWithWhereUniqueWithoutOwnerInput struct {
+	Where  PostWhereUniqueInput            `json:"where"`
+	Update PostUpdateWithoutOwnerDataInput `json:"update"`
+	Create PostCreateWithoutOwnerInput     `json:"create"`
+}
+
+type PostScalarWhereInput struct {
+	ID                    *string                `json:"id,omitempty"`
+	IDNot                 *string                `json:"id_not,omitempty"`
+	IDIn                  []string               `json:"id_in,omitempty"`
+	IDNotIn               []string               `json:"id_not_in,omitempty"`
+	IDLt                  *string                `json:"id_lt,omitempty"`
+	IDLte                 *string                `json:"id_lte,omitempty"`
+	IDGt                  *string                `json:"id_gt,omitempty"`
+	IDGte                 *string                `json:"id_gte,omitempty"`
+	IDContains            *string                `json:"id_contains,omitempty"`
+	IDNotContains         *string                `json:"id_not_contains,omitempty"`
+	IDStartsWith          *string                `json:"id_starts_with,omitempty"`
+	IDNotStartsWith       *string                `json:"id_not_starts_with,omitempty"`
+	IDEndsWith            *string                `json:"id_ends_with,omitempty"`
+	IDNotEndsWith         *string                `json:"id_not_ends_with,omitempty"`
+	FileName              *string                `json:"fileName,omitempty"`
+	FileNameNot           *string                `json:"fileName_not,omitempty"`
+	FileNameIn            []string               `json:"fileName_in,omitempty"`
+	FileNameNotIn         []string               `json:"fileName_not_in,omitempty"`
+	FileNameLt            *string                `json:"fileName_lt,omitempty"`
+	FileNameLte           *string                `json:"fileName_lte,omitempty"`
+	FileNameGt            *string                `json:"fileName_gt,omitempty"`
+	FileNameGte           *string                `json:"fileName_gte,omitempty"`
+	FileNameContains      *string                `json:"fileName_contains,omitempty"`
+	FileNameNotContains   *string                `json:"fileName_not_contains,omitempty"`
+	FileNameStartsWith    *string                `json:"fileName_starts_with,omitempty"`
+	FileNameNotStartsWith *string                `json:"fileName_not_starts_with,omitempty"`
+	FileNameEndsWith      *string                `json:"fileName_ends_with,omitempty"`
+	FileNameNotEndsWith   *string                `json:"fileName_not_ends_with,omitempty"`
+	Caption               *string                `json:"caption,omitempty"`
+	CaptionNot            *string                `json:"caption_not,omitempty"`
+	CaptionIn             []string               `json:"caption_in,omitempty"`
+	CaptionNotIn          []string               `json:"caption_not_in,omitempty"`
+	CaptionLt             *string                `json:"caption_lt,omitempty"`
+	CaptionLte            *string                `json:"caption_lte,omitempty"`
+	CaptionGt             *string                `json:"caption_gt,omitempty"`
+	CaptionGte            *string                `json:"caption_gte,omitempty"`
+	CaptionContains       *string                `json:"caption_contains,omitempty"`
+	CaptionNotContains    *string                `json:"caption_not_contains,omitempty"`
+	CaptionStartsWith     *string                `json:"caption_starts_with,omitempty"`
+	CaptionNotStartsWith  *string                `json:"caption_not_starts_with,omitempty"`
+	CaptionEndsWith       *string                `json:"caption_ends_with,omitempty"`
+	CaptionNotEndsWith    *string                `json:"caption_not_ends_with,omitempty"`
+	And                   []PostScalarWhereInput `json:"AND,omitempty"`
+	Or                    []PostScalarWhereInput `json:"OR,omitempty"`
+	Not                   []PostScalarWhereInput `json:"NOT,omitempty"`
+}
+
+type PostUpdateManyWithWhereNestedInput struct {
+	Where PostScalarWhereInput    `json:"where"`
+	Data  PostUpdateManyDataInput `json:"data"`
+}
+
+type PostUpdateManyDataInput struct {
+	FileName *string `json:"fileName,omitempty"`
+	Caption  *string `json:"caption,omitempty"`
+}
+
+type UserUpdateManyMutationInput struct {
+	Name     *string `json:"name,omitempty"`
+	Email    *string `json:"email,omitempty"`
+	Password *string `json:"password,omitempty"`
+	Phone    *string `json:"phone,omitempty"`
+}
+
+type PostSubscriptionWhereInput struct {
+	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                     `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                     `json:"updatedFields_contains_some,omitempty"`
+	Node                       *PostWhereInput              `json:"node,omitempty"`
+	And                        []PostSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []PostSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []PostSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
 type UserSubscriptionWhereInput struct {
@@ -372,10 +768,10 @@ type UserSubscriptionWhereInput struct {
 	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
-type UserWhereUniqueInput struct {
-	ID    *string `json:"id,omitempty"`
-	Email *string `json:"email,omitempty"`
+type PostExec struct {
+	exec *prisma.Exec
 }
+
 
 type UserPreviousValuesExec struct {
 	exec *prisma.Exec
@@ -383,6 +779,25 @@ type UserPreviousValuesExec struct {
 
 func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousValues, error) {
 	var v UserPreviousValues
+type PostExec struct {
+	exec *prisma.Exec
+}
+
+
+425b660... Add gray filter and Sobel filter to backend and frontend
+func (instance *PostExec) Owner() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"owner",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserExec{ret}
+}
+
+func (instance PostExec) Exec(ctx context.Context) (*Post, error) {
+	var v Post
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -392,6 +807,82 @@ func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousV
 	}
 	return &v, nil
 }
+
+func (instance PostExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostExecArray) Exec(ctx context.Context) ([]Post, error) {
+	var v []Post
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+
+var PostFields = []string{"id", "fileName", "caption"}
+
+
+425b660... Add gray filter and Sobel filter to backend and frontend
+type Post struct {
+	ID       string `json:"id"`
+	FileName string `json:"fileName"`
+	Caption  string `json:"caption"`
+}
+
+type UserExec struct {
+	exec *prisma.Exec
+}
+
+type PostsParamsExec struct {
+	Where   *PostWhereInput
+	OrderBy *PostOrderByInput
+	Skip    *int32
+	After   *string
+	Before  *string
+	First   *int32
+	Last    *int32
+}
+
+func (instance *UserExec) Posts(params *PostsParamsExec) *PostExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"PostWhereInput", "PostOrderByInput", "Post"},
+		"posts",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExecArray{ret}
+}
+
+func (instance UserExec) Exec(ctx context.Context) (*User, error) {
+	var v User
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
 
 func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
@@ -403,19 +894,38 @@ type UserPreviousValuesExecArray struct {
 
 func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
 	var v []UserPreviousValues
+
+func (instance UserExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
+	var v []User
+425b660... Add gray filter and Sobel filter to backend and frontend
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
+
 var UserPreviousValuesFields = []string{"id", "name", "email", "password", "phone"}
 
 type UserPreviousValues struct {
+var UserFields = []string{"id", "name", "email", "password", "phone"}
+
+
+425b660... Add gray filter and Sobel filter to backend and frontend
+type User struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Phone    string `json:"phone"`
 }
+
 
 type UserEdgeExec struct {
 	exec *prisma.Exec
@@ -429,19 +939,79 @@ func (instance *UserEdgeExec) Node() *UserExec {
 		"node",
 		[]string{"id", "name", "email", "password", "phone"})
 
+425b660... Add gray filter and Sobel filter to backend and frontend
+type PostConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *PostConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *PostConnectionExec) Edges() *PostEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"PostWhereInput", "PostOrderByInput", "PostEdge"},
+		"edges",
+		[]string{"cursor"})
+
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "Post"},
+		"node",
+		PostFields)
+
+	nodes := edges.Client.GetMany(
+		edges,
+		nil,
+		[3]string{"", "", "Post"},
+		"node",
+		[]string{"id", "createdAt", "updatedAt", "name", "desc"})
+425b660... Add gray filter and Sobel filter to backend and frontend
+
+	return &PostEdgeExecArray{nodes}
+}
+
+func (instance *PostConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregatePost"},
+		"aggregate",
+		[]string{"count"})
+
+
 	return &UserExec{ret}
 }
 
 func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
 	var v UserEdge
 	ok, err := instance.exec.Exec(ctx, &v)
+func (instance PostConnectionExec) Exec(ctx context.Context) (*PostConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if !ok {
-		return nil, ErrNoResult
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
 	}
-	return &v, nil
+
+	return &PostConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
 }
 
 func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
@@ -454,15 +1024,95 @@ type UserEdgeExecArray struct {
 
 func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
 	var v []UserEdge
+func (instance PostConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostConnectionExecArray) Exec(ctx context.Context) ([]PostConnection, error) {
+	var v []PostConnection
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance PostConnectionExec) Exec(ctx context.Context) (*PostConnection, error) {
+	var v PostConnection
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PostConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostConnectionExecArray) Exec(ctx context.Context) ([]PostConnection, error) {
+	var v []PostConnection
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
+
+type PostConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []PostEdge `json:"edges"`
+}
+
+type PageInfoExec struct {
+	exec *prisma.Exec
+}
+
+func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
+	var v PageInfo
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PageInfoExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
+	var v []PageInfo
+425b660... Add gray filter and Sobel filter to backend and frontend
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
 
 var UserEdgeFields = []string{"cursor"}
 
 type UserEdge struct {
 	Node   User   `json:"node"`
 	Cursor string `json:"cursor"`
+var PostConnectionFields = []string{}
+
+type PostConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []PostEdge `json:"edges"`
 }
 
 type UserSubscriptionPayloadExec struct {
@@ -523,14 +1173,34 @@ type UserSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
 	Node          *User        `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
+var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
+
+
+425b660... Add gray filter and Sobel filter to backend and frontend
+type PageInfo struct {
+	HasNextPage     bool    `json:"hasNextPage"`
+	HasPreviousPage bool    `json:"hasPreviousPage"`
+	StartCursor     *string `json:"startCursor,omitempty"`
+	EndCursor       *string `json:"endCursor,omitempty"`
 }
 
-type UserExec struct {
+type PostEdgeExec struct {
 	exec *prisma.Exec
 }
 
-func (instance UserExec) Exec(ctx context.Context) (*User, error) {
-	var v User
+func (instance *PostEdgeExec) Node() *PostExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Post"},
+		"node",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExec{ret}
+}
+
+func (instance PostEdgeExec) Exec(ctx context.Context) (*PostEdge, error) {
+	var v PostEdge
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -541,28 +1211,23 @@ func (instance UserExec) Exec(ctx context.Context) (*User, error) {
 	return &v, nil
 }
 
-func (instance UserExec) Exists(ctx context.Context) (bool, error) {
+func (instance PostEdgeExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type UserExecArray struct {
+type PostEdgeExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
-	var v []User
+func (instance PostEdgeExecArray) Exec(ctx context.Context) ([]PostEdge, error) {
+	var v []PostEdge
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var UserFields = []string{"id", "name", "email", "password", "phone"}
-
-type User struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Phone    string `json:"phone"`
+type PostEdge struct {
+	Node   Post   `json:"node"`
+	Cursor string `json:"cursor"`
 }
 
 type UserConnectionExec struct {
@@ -588,12 +1253,12 @@ func (instance *UserConnectionExec) Edges() *UserEdgeExecArray {
 		"edges",
 		[]string{"cursor"})
 
-	nodes := edges.Client.GetOne(
+	nodes := edges.Client.GetMany(
 		edges,
 		nil,
-		[2]string{"", "User"},
+		[3]string{"", "", "User"},
 		"node",
-		UserFields)
+		[]string{"id", "createdAt", "updatedAt", "name", "desc"})
 
 	return &UserEdgeExecArray{nodes}
 }
@@ -612,20 +1277,15 @@ func (instance *UserConnectionExec) Aggregate(ctx context.Context) (*Aggregate, 
 }
 
 func (instance UserConnectionExec) Exec(ctx context.Context) (*UserConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
+	var v UserConnection
+	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
 	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
+	if !ok {
+		return nil, ErrNoResult
 	}
-
-	return &UserConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
+	return &v, nil
 }
 
 func (instance UserConnectionExec) Exists(ctx context.Context) (bool, error) {
@@ -642,19 +1302,37 @@ func (instance UserConnectionExecArray) Exec(ctx context.Context) ([]UserConnect
 	return v, err
 }
 
-var UserConnectionFields = []string{}
-
 type UserConnection struct {
 	PageInfo PageInfo   `json:"pageInfo"`
 	Edges    []UserEdge `json:"edges"`
 }
 
-type PageInfoExec struct {
+type UserEdgeExec struct {
 	exec *prisma.Exec
 }
 
-func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
-	var v PageInfo
+
+type UserExec struct {
+	exec *prisma.Exec
+}
+
+func (instance UserExec) Exec(ctx context.Context) (*User, error) {
+	var v User
+
+func (instance *UserEdgeExec) Node() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserExec{ret}
+}
+
+func (instance UserEdgeExec) Exec(ctx context.Context) (*UserEdge, error) {
+	var v UserEdge
+425b660... Add gray filter and Sobel filter to backend and frontend
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -665,19 +1343,246 @@ func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
 	return &v, nil
 }
 
-func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
+
+func (instance UserExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type PageInfoExecArray struct {
+type UserExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
-	var v []PageInfo
+func (instance UserExecArray) Exec(ctx context.Context) ([]User, error) {
+	var v []User
+
+func (instance UserEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserEdgeExecArray) Exec(ctx context.Context) ([]UserEdge, error) {
+	var v []UserEdge
+425b660... Add gray filter and Sobel filter to backend and frontend
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
+
+
+var UserFields = []string{"id", "name", "email", "password", "phone"}
+
+type User struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Phone    string `json:"phone"`
+}
+
+type UserConnectionExec struct {
+var UserEdgeFields = []string{"cursor"}
+
+
+425b660... Add gray filter and Sobel filter to backend and frontend
+type UserEdge struct {
+	Node   User   `json:"node"`
+	Cursor string `json:"cursor"`
+}
+
+type PostSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *PostSubscriptionPayloadExec) Node() *PostExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Post"},
+		"node",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostExec{ret}
+}
+
+func (instance *PostSubscriptionPayloadExec) PreviousValues() *PostPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PostPreviousValues"},
+		"previousValues",
+		[]string{"id", "fileName", "caption"})
+
+	return &PostPreviousValuesExec{ret}
+}
+
+func (instance PostSubscriptionPayloadExec) Exec(ctx context.Context) (*PostSubscriptionPayload, error) {
+	var v PostSubscriptionPayload
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PostSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostSubscriptionPayloadExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]PostSubscriptionPayload, error) {
+	var v []PostSubscriptionPayload
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type PostSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *Post        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type PostPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance PostPreviousValuesExec) Exec(ctx context.Context) (*PostPreviousValues, error) {
+	var v PostPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PostPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostPreviousValuesExecArray) Exec(ctx context.Context) ([]PostPreviousValues, error) {
+	var v []PostPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+type PostPreviousValues struct {
+	ID       string `json:"id"`
+	FileName string `json:"fileName"`
+	Caption  string `json:"caption"`
+}
+
+type UserSubscriptionPayloadExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *UserSubscriptionPayloadExec) Node() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"node",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserExec{ret}
+}
+
+func (instance *UserSubscriptionPayloadExec) PreviousValues() *UserPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "UserPreviousValues"},
+		"previousValues",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserPreviousValuesExec{ret}
+}
+
+func (instance UserSubscriptionPayloadExec) Exec(ctx context.Context) (*UserSubscriptionPayload, error) {
+	var v UserSubscriptionPayload
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance UserSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserSubscriptionPayloadExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]UserSubscriptionPayload, error) {
+	var v []UserSubscriptionPayload
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+
+var UserConnectionFields = []string{}
+
+type UserConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []UserEdge `json:"edges"`
+var UserSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+
+
+425b660... Add gray filter and Sobel filter to backend and frontend
+type UserSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *User        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type UserPreviousValuesExec struct {
+	exec *prisma.Exec
+}
+
+func (instance UserPreviousValuesExec) Exec(ctx context.Context) (*UserPreviousValues, error) {
+	var v UserPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance UserPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type UserPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance UserPreviousValuesExecArray) Exec(ctx context.Context) ([]UserPreviousValues, error) {
+	var v []UserPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
 
 var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
 
@@ -686,4 +1591,14 @@ type PageInfo struct {
 	HasPreviousPage bool    `json:"hasPreviousPage"`
 	StartCursor     *string `json:"startCursor,omitempty"`
 	EndCursor       *string `json:"endCursor,omitempty"`
+var UserPreviousValuesFields = []string{"id", "name", "email", "password", "phone"}
+
+
+425b660... Add gray filter and Sobel filter to backend and frontend
+type UserPreviousValues struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Phone    string `json:"phone"`
 }

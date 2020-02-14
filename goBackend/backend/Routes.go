@@ -1,10 +1,16 @@
 package main
 
 import (
+<<<<<<< HEAD
 	"Nicolas-MacBeth/main/backend/generated/prisma-client"
+=======
+	"io"
+	"os"
+>>>>>>> fe5e111c4452276b5cd369549d53772b8b072a04
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func signupRoute(c *gin.Context) {
@@ -91,4 +97,63 @@ func protectedTestRoute(c *gin.Context) {
 		Status  string `json:"status"`
 		Message string `json:"message"`
 	}{"This route is protected", "Hello " + recipient})
+}
+
+type postBody struct {
+	Photo   string `json:"photo"`
+	Caption string `json:"caption"`
+}
+
+func postPhoto(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+
+	email := claims["email"].(string)
+
+	if email == "" {
+		c.String(400, "Token not valid.")
+		return
+	}
+
+	file, _, err := c.Request.FormFile("file")
+	caption := c.PostForm("caption")
+	filterBnW := c.PostForm("filterBnW")
+	filterSurprise := c.PostForm("filterSurprise")
+
+	randomID := uuid.New().String()
+
+	out, err := os.Create("./photos/" + randomID)
+	check(err)
+	defer out.Close()
+	_, err = io.Copy(out, file)
+
+	if filterBnW == "true" {
+		image, _ := loadImage("./photos/" + randomID)
+		_, arr := rgbaToGrayArray(image)
+		grayImage := arrayToGray(arr)
+		saveImage("./photos/"+randomID, grayImage)
+	}
+
+	if filterSurprise == "true" {
+		image, _ := loadImage("./photos/" + randomID)
+		_, arr := rgbaToGrayArray(image)
+
+		kernel := createGaussianKernel(5, 1)
+
+		res := conv2d(arr, kernel)
+		kx := conv2d(res, scharrKx)
+		ky := conv2d(res, scharrKy)
+
+		sobelMagnitude, _ := magnitudeOfGradient(kx, ky)
+
+		finalImage := arrayToGray(sobelMagnitude)
+
+		saveImage("./photos/"+randomID, finalImage)
+
+	}
+
+	postPicture(email, randomID, caption)
+
+	c.JSON(200, struct {
+		Message string `json:"message"`
+	}{"Thank you photo"})
 }
