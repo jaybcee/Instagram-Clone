@@ -177,9 +177,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #333;
+  color: #444;
   font-size: 18px;
-  font-family: Helvetica;
 }
 .placeholder:hover {
   background: #E0E0E0;
