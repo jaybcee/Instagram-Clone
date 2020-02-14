@@ -1,8 +1,12 @@
 <template>
+<div>
+    <v-card-text v-if="loaded && userNotFound">
+        Sorry, no user found
+    </v-card-text>
   <v-card
     class="mx-auto"
     max-width="500"
-    v-if="loaded"
+    v-if="loaded && !userNotFound"
   >
     <v-container fluid>
         <v-avatar size="100">
@@ -59,6 +63,7 @@
       </v-row>
     </v-container>
   </v-card>
+  </div>
 </template>
 
 <script>
@@ -66,6 +71,7 @@ import axios from "axios";
 export default {
   data: () => ({
     loaded: false,
+    userNotFound: false,
     info: {},
   }),
   mounted() {
@@ -73,6 +79,7 @@ export default {
   .get(`${process.env.VUE_APP_ROOT_API}/user/${this.$route.params.username}`)
   .then(response => {
       this.info = response.data.posts;
+      this.notFound = response.data.userNotFound;
       this.loaded = true;
   })
   .catch(error => console.log(error))
