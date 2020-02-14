@@ -27,6 +27,8 @@ func createRoutes() *gin.Engine {
 func GetSecureRoutes(auth *gin.RouterGroup) *gin.RouterGroup {
 	//Example secure route
 	auth.POST("/api/secure_test", protectedTestRoute)
+
+	auth.POST("/api/uploadPhoto", postPhoto)
 	//Return secure routes
 	return (auth)
 }

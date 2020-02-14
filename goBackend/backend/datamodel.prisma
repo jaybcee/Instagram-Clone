@@ -8,7 +8,7 @@ type Comment {
 
 type Post {
   id: ID! @id
-  uniqueName: String!
+  fileName: String!
   caption: String!
   file : String!
   owner: User! @relation(link: INLINE)
