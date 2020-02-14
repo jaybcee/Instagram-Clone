@@ -53,9 +53,9 @@
   export default {
     data: () => ({
       cards: [
-        { user:'Jay420', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',description:'foo', likes:9, flex: 12 },
+        { user:'Jay42', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',description:'foo', likes:9, flex: 12 },
         { user:'Sacha102', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg' ,description:'bar', likes:29,flex: 12 },
-        { user:'Lettuce69', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',description:'kar', likes:19,flex: 12 },
+        { user:'Lettuce6', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',description:'kar', likes:19,flex: 12 },
       ],
     }),
     //mounted() {

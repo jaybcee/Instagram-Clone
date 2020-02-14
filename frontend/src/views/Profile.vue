@@ -11,7 +11,7 @@
     <v-container fluid>
         <v-avatar size="100">
         <img
-        src="https://cdn.vuetifyjs.com/images/john.jpg"
+        :src="`${baseUrl}/photos/${this.$route.params.username}.jpg`"
         alt="DP"
       >
     </v-avatar>
@@ -35,7 +35,7 @@
         >
           <v-card>
             <v-img
-              :src="card.src"
+              :src="`${baseUrl}/photos/${card.fileName}`"
               class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               height="200px"
@@ -73,10 +73,11 @@ export default {
     loaded: false,
     userNotFound: false,
     info: {},
+    baseUrl: `${process.env.VUE_APP_ROOT_API}`
   }),
   mounted() {
     axios
-  .get(`${process.env.VUE_APP_ROOT_API}/user/${this.$route.params.username}`)
+  .get(`${this.baseUrl}/user/${this.$route.params.username}`)
   .then(response => {
       this.info = response.data.posts;
       this.notFound = response.data.userNotFound;
