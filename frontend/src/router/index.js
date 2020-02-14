@@ -21,7 +21,7 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup,
-  },
+  }
 ];
 
 const router = new VueRouter({
