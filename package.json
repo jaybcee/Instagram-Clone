@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "SOEN341 base package.json for CI",
   "scripts": {
-    "test": "cd frontend && npm i"
+    "test": "cd frontend && exit 1"
   },
   "repository": {
     "type": "git",
