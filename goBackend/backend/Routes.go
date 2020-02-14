@@ -148,7 +148,8 @@ func postPhoto(c *gin.Context) {
 
 	}
 
-	postPicture(email, randomID, caption)
+	err := postPicture(email, randomID, caption)
+	check(err)
 
 	c.JSON(200, struct {
 		Message string `json:"message"`
