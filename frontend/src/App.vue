@@ -1,5 +1,6 @@
   
 <template>
+
   <v-app>
     <Navbar :page="$route.name" />
     <v-content>
@@ -26,3 +27,4 @@
     </v-footer> -->
   </v-app>
 </template>
+
