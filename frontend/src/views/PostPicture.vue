@@ -97,7 +97,7 @@ export default {
       formData.append('filterSurprise', this.filterSurprise);
       setCookie('nothing', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiZXhwIjoxNjEzMDk3OTg3LCJvcmlnX2lhdCI6MTU4MTU2MTk4N30.79ko3o7zMggCUAPjAurWg-SdBdSHw8CY3r8DFgPoehk', 365);
       if (this.file !== '') {
-        axios.post('http://localhost:3030/secure/api/uploadPhoto',
+        axios.post(`${process.env.VUE_APP_ROOT_API}/secure/api/uploadPhoto`,
           formData,
           {
             headers: {
