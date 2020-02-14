@@ -25,7 +25,7 @@
     <v-container fluid>
       <v-row dense>
         <v-col
-          v-for="card in cards"
+          v-for="card in info"
           :key="card.src"
           :cols="12"
         >
