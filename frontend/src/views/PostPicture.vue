@@ -53,21 +53,6 @@
 
 <script>
 import axios from 'axios';
-// function getCookie(cname) {
-//   const name = `${cname}=`;
-//   const decodedCookie = decodeURIComponent(document.cookie);
-//   const ca = decodedCookie.split(';');
-//   for (let i = 0; i < ca.length; i += 1) {
-//     let c = ca[i];
-//     while (c.charAt(0) === ' ') {
-//       c = c.substring(1);
-//     }
-//     if (c.indexOf(name) === 0) {
-//       return c.substring(name.length, c.length);
-//     }
-//   }
-//   return '';
-// }
 function setCookie(cname, cvalue, exdays) {
   const d = new Date();
   const expires = `expires=${d.toUTCString}`;
@@ -141,6 +126,7 @@ export default {
   margin-left: 40px;
 }
 .caption input{
+  margin-top: 10px;
   border-bottom: solid 1px gray;
   width: 100%;
   padding-bottom: 4px;
@@ -176,9 +162,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #333;
+  color: #444;
   font-size: 18px;
-  font-family: Helvetica;
 }
 .placeholder:hover {
   background: #E0E0E0;
