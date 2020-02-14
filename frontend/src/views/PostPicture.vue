@@ -89,7 +89,6 @@ export default {
       formData.append('caption', this.caption);
       formData.append('filterBnW', this.filterBnW);
       formData.append('filterSurprise', this.filterSurprise);
-      setCookie('nothing', '', 365);
       if (this.file !== '') {
         axios.post(`${process.env.VUE_APP_ROOT_API}/secure/api/uploadPhoto`,
           formData,
