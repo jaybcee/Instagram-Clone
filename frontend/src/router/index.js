@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Signup from '../views/Signup.vue';
 import Profile from '../views/Profile.vue';
+import PostPicture from '../views/PostPicture.vue';
 
 Vue.use(VueRouter);
 
@@ -27,7 +28,12 @@ const routes = [
     path: '/user/:username',
     name: 'Profile',
     component: Profile,
-  }
+  },
+  {
+    path: '/post-picture',
+    name: 'PostPicture',
+    component: PostPicture,
+  },
 ];
 
 const router = new VueRouter({
