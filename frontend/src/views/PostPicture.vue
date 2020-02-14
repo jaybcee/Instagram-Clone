@@ -53,12 +53,6 @@
 
 <script>
 import axios from 'axios';
-function setCookie(cname, cvalue, exdays) {
-  const d = new Date();
-  const expires = `expires=${d.toUTCString}`;
-  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-  document.cookie = `${cname}=${cvalue};${expires};path=/s`;
-}
 export default {
   data() {
     return {
