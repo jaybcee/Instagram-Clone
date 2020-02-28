@@ -13,9 +13,14 @@ func createRoutes() *gin.Engine {
 	//User info route, unprotected
 	r.GET("/user/:id", userRoute)
 
+	r.GET("/getUserFromComment/:id", getUserFromComment)
+
+	r.GET("/comments/:id", getComments)
+
 	r.POST("/signup", signupRoute)
 	//Example unsecure route
 	r.POST("/api/test", testRoute)
+
 	//Secure Routes
 	r, _ = GetAuth(r)
 	//Safety in case of crash
@@ -27,6 +32,12 @@ func createRoutes() *gin.Engine {
 func GetSecureRoutes(auth *gin.RouterGroup) *gin.RouterGroup {
 	//Example secure route
 	auth.POST("/api/secure_test", protectedTestRoute)
+
+	// auth.GET("/api/comments/:postID", getComments)
+
+	auth.POST("/api/comment", postComment)
+
+	auth.GET("/api/getUser", getUserFromEmail)
 
 	auth.POST("/api/uploadPhoto", postPhoto)
 	//Return secure routes

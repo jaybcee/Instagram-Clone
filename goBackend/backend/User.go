@@ -89,3 +89,55 @@ func postPicture(email string, fileName string, caption string) error {
 
 	return err
 }
+
+func addComment(email, comment, post, uniqueName string) error {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	_, err := client.UpdatePost(prisma.PostUpdateParams{
+		Where: prisma.PostWhereUniqueInput{
+			ID: &post,
+		},
+		Data: prisma.PostUpdateInput{
+			Comments: &prisma.CommentUpdateManyWithoutPostInput{
+				Create: []prisma.CommentCreateWithoutPostInput{
+					{
+						UniqueName:  uniqueName,
+						CommentText: comment,
+						User: prisma.UserCreateOneInput{
+							Connect: &prisma.UserWhereUniqueInput{
+								Email: &email,
+							},
+						},
+					},
+				},
+			},
+		},
+	}).Exec(ctx)
+
+	return err
+}
+
+func fetchComments(post string) ([]prisma.Comment, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	comments, err := client.Comments(&prisma.CommentsParams{
+		Where: &prisma.CommentWhereInput{
+			Post: &prisma.PostWhereInput{
+				ID: &post,
+			},
+		},
+	}).Exec(ctx)
+
+	return comments, err
+}
+
+func fetchUserFromComment(id string) (*prisma.User, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	user, err := client.Comment(prisma.CommentWhereUniqueInput{UniqueName: &id}).Post().Owner().Exec(ctx)
+
+	return user, err
+}

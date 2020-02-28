@@ -31,7 +31,7 @@ foo@bar:~$ git clone https://github.com/Nicolas-MacBeth/SOEN341.git
 foo@bar:~$ cd SOEN341/goBackend/backend
 foo@bar:~$ docker-compose up -d
 foo@bar:~$ prisma deploy
-foo@bar:~$ go run *.go
+foo@bar:~$ go run *.go OR go build and run the executable (i.e ./backend.exe)
 ```
 
 Open a new console window and run:

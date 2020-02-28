@@ -9,40 +9,13 @@
         <v-col
           v-for="card in cards"
           :key="card.title"
-          :cols="card.flex"
+          :cols="12"
         >
-          <v-card
-            class="my-6"
-            min-height="400px"
-          >
-            <v-img
-              :src="card.src"
-              class="white--text align-end"
-              aspect-ratio="1"
-            >
-              <v-card-title v-text="card.user" />
-            </v-img>
-            <v-card-text class="text--primary">
-              <div>Description: {{ card.description }}</div>
-              <v-divider class="my-4" />
-              <Comments/>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn icon>
-                <span>{{ card.likes }}</span>
-                <v-icon>mdi-heart</v-icon>
-              </v-btn>
-
-              <v-btn icon>
-                <v-icon>mdi-bookmark</v-icon>
-              </v-btn>
-
-              <v-btn icon>
-                <v-icon>mdi-share-variant</v-icon>
-              </v-btn>
-            </v-card-actions>
-          </v-card>
+          <!-- https://vuejs.org/v2/guide/components-props.html#Prop-Casing-camelCase-vs-kebab-case lol -->
+          <IndividualPost
+            v-bind="card"
+            show-username:true
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -52,15 +25,33 @@
 <script>
   export default {
     data: () => ({
-      cards: [
-        { user:'Jay42', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',description:'foo', likes:9, flex: 12 },
-        { user:'Sacha102', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg' ,description:'bar', likes:29,flex: 12 },
-        { user:'Lettuce6', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',description:'kar', likes:19,flex: 12 },
-      ],
+      // this model of cards is wrong!!!
+      // please refer to Profile data flow
+      cards: [{
+        caption: "Jason is awesome!",
+        username: "Layteesha7",
+        CommentList: [],
+        postID: "-1",
+        src: "https://cdn.vuetifyjs.com/images/cards/house.jpg"
+      }, {
+        caption: "Jason is awesome!",
+        username: "Layteesha7",
+        CommentList: [],
+        postID: "-1",
+        src: "https://cdn.vuetifyjs.com/images/cards/road.jpg"
+      }, {
+        caption: "Jason is awesome!",
+        username: "Layteesha7",
+        CommentList: [],
+        postID: "-1",
+        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg"
+      }, {
+        caption: "Jason is awesome!",
+        username: "Layteesha7",
+        CommentList: [],
+        postID: "-1",
+        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg"
+      }],
     }),
-    //mounted() {
-    //   this.$cookies.get('token') === null ? this.$router.push('login') : null
-    // },
   }
 </script>
-

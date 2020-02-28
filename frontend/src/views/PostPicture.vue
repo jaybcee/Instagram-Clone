@@ -1,64 +1,79 @@
 <template>
   <div>
-      <v-card
-    class="mx-auto"
-    max-width="500"
-    tile
-  >
-    <v-container fluid>
-      <v-row>
-        <v-col class="mainContainer">
-              <h2 class="uploadPictureHeader">Upload a picture</h2>
-              <div
-                class="base-image-input"
-                :style="{ 'background-image': `url(${imageData})` }"
-                @click="chooseImage"
+    <v-card
+      class="mx-auto"
+      max-width="500"
+      tile
+    >
+      <v-container fluid>
+        <v-row>
+          <v-col>
+            <h2 class="uploadPictureHeader">
+              Upload a picture
+            </h2>
+            <div
+              class="base-image-input"
+              :style="{ 'background-image': `url(${imageData})` }"
+              @click="chooseImage"
+            >
+              <span
+                v-if="!imageData"
+                class="placeholder"
               >
-                <span
-                  v-if="!imageData"
-                  class="placeholder"
-                >
-                  Choose an Image
-                </span>
+                Choose an Image
+              </span>
+              <input
+                ref="fileInput"
+                class="file-input"
+                type="file"
+                @input="onSelectFile"
+              >
+            </div>
+
+            <v-card-text class="text--primary">
+              <div class="caption">
                 <input
-                  class="file-input"
-                  ref="fileInput"
-                  type="file"
-                  @input="onSelectFile"
+                  type="text"
+                  placeholder="Enter your Caption"
+                  @input="caption = $event.target.value"
                 >
               </div>
-
-              <v-card-text class="text--primary">
-                    <div class="caption">
-                      <input type="text" v-on:input="caption = $event.target.value"
-                      placeholder="Enter your Caption">
-                    </div>
             </v-card-text>
 
-            <v-row>
-                <v-checkbox class="checkbox" v-model="filterBnW" :label="`Filter Black and White`"></v-checkbox>
-                <v-checkbox v-model="filterSurprise" :label="`Filter Surpise me`"></v-checkbox>
+            <v-row
+              justify="center"
+              align="center"
+            >
+              <v-checkbox
+                v-model="filterBnW"
+                class="pr-2"
+                :label="`Filter Black and White`"
+              />
+              <v-checkbox
+                v-model="filterSurprise"
+                class="pl-2"
+                :label="`Filter Surpise me`"
+              />
             </v-row>
 
 
-          <div class="submit">
-            <v-btn v-on:click="submitFile()" class="submitButton">Submit</v-btn>
-          </div>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-card>
+            <div class="submit">
+              <v-btn
+                class="submitButton"
+                @click="submitFile()"
+              >
+                Submit
+              </v-btn>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-function setCookie(cname, cvalue, exdays) {
-  const d = new Date();
-  const expires = `expires=${d.toUTCString}`;
-  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-  document.cookie = `${cname}=${cvalue};${expires};path=/s`;
-}
 export default {
   data() {
     return {
@@ -69,9 +84,6 @@ export default {
       imageData: null,
     };
   },
-  mounted() {
-      this.$cookies.get('token') === null ? this.$router.push('/login') : null
-    },
   methods: {
     chooseImage () {
       this.$refs.fileInput.click()
@@ -95,7 +107,6 @@ export default {
       formData.append('caption', this.caption);
       formData.append('filterBnW', this.filterBnW);
       formData.append('filterSurprise', this.filterSurprise);
-      setCookie('nothing', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiZXhwIjoxNjEzMDk3OTg3LCJvcmlnX2lhdCI6MTU4MTU2MTk4N30.79ko3o7zMggCUAPjAurWg-SdBdSHw8CY3r8DFgPoehk', 365);
       if (this.file !== '') {
         axios.post('http://localhost:3030/secure/api/uploadPhoto',
           formData,
@@ -121,10 +132,7 @@ export default {
 </script>
 
 <style scoped>
-.checkbox{
-  margin-right: 20px;
-  margin-left: 40px;
-}
+
 .caption input{
   margin-top: 10px;
   border-bottom: solid 1px gray;
@@ -145,7 +153,7 @@ export default {
 }
 .base-image-input {
   display: block;
-  width: 400px;
+  max-width:400px;
   height: 400px;
   border-radius: 15px;
   margin-left: auto;

@@ -96,8 +96,7 @@ export default {
   name: 'HelloWorld',
 
   data: () => ({
-    ecosystem: [
-      {
+    ecosystem: [{
         text: 'vuetify-loader',
         href: 'https://github.com/vuetifyjs/vuetify-loader',
       },
@@ -110,8 +109,7 @@ export default {
         href: 'https://github.com/vuetifyjs/awesome-vuetify',
       },
     ],
-    importantLinks: [
-      {
+    importantLinks: [{
         text: 'Documentation',
         href: 'https://vuetifyjs.com',
       },
@@ -132,8 +130,7 @@ export default {
         href: 'https://medium.com/vuetify',
       },
     ],
-    whatsNext: [
-      {
+    whatsNext: [{
         text: 'Explore components',
         href: 'https://vuetifyjs.com/components/api-explorer',
       },
