@@ -82,6 +82,7 @@ export default {
         .then(()=>{
           this.$emit('addComment')
         })
+        .catch(e=>console.error(e))
       }
     }
   }
