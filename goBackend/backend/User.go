@@ -118,9 +118,12 @@ func addComment(email, comment, post, uniqueName string) error {
 	return err
 }
 
+
 func fetchComments(post string) ([]prisma.Comment, error) {
 	client := prisma.New(nil)
 	ctx := context.TODO()
+
+	orderBy := prisma.CommentOrderByInputCommentedAtAsc
 
 	comments, err := client.Comments(&prisma.CommentsParams{
 		Where: &prisma.CommentWhereInput{
@@ -128,6 +131,7 @@ func fetchComments(post string) ([]prisma.Comment, error) {
 				ID: &post,
 			},
 		},
+		OrderBy: &orderBy,
 	}).Exec(ctx)
 
 	return comments, err
