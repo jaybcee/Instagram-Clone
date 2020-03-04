@@ -118,7 +118,6 @@ func addComment(email, comment, post, uniqueName string) error {
 	return err
 }
 
-
 func fetchComments(post string) ([]prisma.Comment, error) {
 	client := prisma.New(nil)
 	ctx := context.TODO()
@@ -162,7 +161,7 @@ func fetchUserFromComment(id string) (*prisma.User, error) {
 	client := prisma.New(nil)
 	ctx := context.TODO()
 
-	user, err := client.Comment(prisma.CommentWhereUniqueInput{UniqueName: &id}).Post().Owner().Exec(ctx)
+	user, err := client.Comment(prisma.CommentWhereUniqueInput{UniqueName: &id}).User().Exec(ctx)
 
 	return user, err
 }
