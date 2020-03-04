@@ -15,7 +15,7 @@
     <v-card-text class="text--primary">
       <div>Description: {{ caption }}</div>
       <v-divider class="my-4" />
-      <div v-show="showComment"> 
+      <div v-if="showComment"> 
         
         <CommentList
           :comments="comments"
