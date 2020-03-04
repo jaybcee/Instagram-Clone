@@ -33,9 +33,11 @@ func GetSecureRoutes(auth *gin.RouterGroup) *gin.RouterGroup {
 	//Example secure route
 	auth.POST("/api/secure_test", protectedTestRoute)
 
-	// auth.GET("/api/comments/:postID", getComments)
-
 	auth.POST("/api/comment", postComment)
+
+	auth.PUT("/api/comment", updateUserComment)
+
+	auth.DELETE("/api/comment", deleteUserComment)
 
 	auth.GET("/api/getUser", getUserFromEmail)
 

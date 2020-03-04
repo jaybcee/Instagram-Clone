@@ -133,6 +133,27 @@ func fetchComments(post string) ([]prisma.Comment, error) {
 	return comments, err
 }
 
+func deleteComment(uniqueName string) error {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	_, err := client.DeleteComment(prisma.CommentWhereUniqueInput{UniqueName: &uniqueName}).Exec(ctx)
+
+	return err
+}
+
+func updateComment(uniqueName, newComment string) error {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	_, err := client.UpdateComment(prisma.CommentUpdateParams{
+		Where: prisma.CommentWhereUniqueInput{UniqueName: &uniqueName},
+		Data:  prisma.CommentUpdateInput{CommentText: &newComment},
+	}).Exec(ctx)
+
+	return err
+}
+
 func fetchUserFromComment(id string) (*prisma.User, error) {
 	client := prisma.New(nil)
 	ctx := context.TODO()
