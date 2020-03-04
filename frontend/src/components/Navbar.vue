@@ -1,20 +1,32 @@
 <template>
-  <div v-if="page === 'Home' || page === 'PostPicture'">
+  <div v-if="!$route.meta.hideNavigation">
     <v-app-bar app>
-      <v-icon class="mr-2">
-        mdi-camera
-      </v-icon>
+      <v-btn 
+        icon
+        :to=" `/`"
+        class="mr-2"
+      >
+        <v-icon>
+          mdi-camera
+        </v-icon>
+      </v-btn>
 
       <v-toolbar-title>Instagram Clone</v-toolbar-title>
       <!-- TODO better name -->
 
       <v-spacer />
 
-      <v-btn icon>
+      <v-btn
+        icon
+        @click="routeToUser"
+      >
         <v-icon>mdi-account</v-icon>
       </v-btn>
 
-      <v-btn icon @click="postPic()">
+      <v-btn
+        icon
+        :to=" `/post-picture`"
+      >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
       <v-btn icon>
@@ -47,10 +59,11 @@
 <script>
 import axios from "axios";
 export default {
-  props: ["page"],
   methods: {
+    routeToUser () {
+      this.$router.push(`/user/${localStorage.getItem('username')}`)
+    },
     signOut() {
-      // console.log('signout')
       axios
         .post(`${process.env.VUE_APP_ROOT_API}/signout`)
         .then(r => {
@@ -64,9 +77,6 @@ export default {
           this.$router.push("/login");
         });
     },
-    postPic() {
-      this.$router.push("/post-picture")
-    }
   }
 };
 </script>

@@ -135,8 +135,12 @@
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
+import {
+  validationMixin
+} from "vuelidate";
+import {
+  required
+} from "vuelidate/lib/validators";
 import axios from "axios";
 
 export default {
@@ -148,7 +152,7 @@ export default {
     login: {
       email: "",
       password: "",
-      name:""
+      name: ""
     }
   }),
   computed: {
@@ -174,9 +178,6 @@ export default {
       return errors;
     }
   },
-  mounted() {
-       this.$cookies.get('token') !== null ? this.$router.push('/') : null
-     },
   validations: {
     login: {
       email: {
@@ -198,35 +199,33 @@ export default {
         this.auth();
       }
     },
-       auth () {
+    auth() {
 
       this.loading = true;
       this.loginError = false;
 
-       axios.post(`${process.env.VUE_APP_ROOT_API}/signup`, this.login)
+      axios.post(`${process.env.VUE_APP_ROOT_API}/signup`, this.login)
         .then(() => {
-          this.loading=false
+          this.loading = false
           axios.post(`${process.env.VUE_APP_ROOT_API}/login`, this.login)
-                .then(r => {
-                  this.loading=false
-                  console.log(r)
-                  this.$cookies.set('token',r.data.token)
-                  this.$router.push('/')
-                })
-                .catch(e => {
-                  this.loginError = true
-                  this.loading = false
-                  console.error(e)
-                  //  alert('email and/or pass no good use user:admin and password:password')
-                })
-              })
-       .catch(e => {
-         this.loginError = true
-         this.loading = false
-         console.error(e)
-        //  alert('email and/or pass no good use user:admin and password:password')
-       })
-     },
+            .then(r => {
+              this.loading = false
+              this.$cookies.set('token', r.data.token)
+              localStorage.setItem('username', this.login.name)
+              this.$router.push('/')
+            })
+            .catch(e => {
+              this.loginError = true
+              this.loading = false
+              console.error(e)
+            })
+        })
+        .catch(e => {
+          this.loginError = true
+          this.loading = false
+          console.error(e)
+        })
+    },
   }
 };
 </script>

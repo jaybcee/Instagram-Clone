@@ -160,3 +160,179 @@ func postPhoto(c *gin.Context) {
 		Message string `json:"message"`
 	}{"Thank you photo"})
 }
+
+func postComment(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+
+	email := claims["email"].(string)
+
+	if email == "" {
+		c.String(400, "Token not valid.")
+		return
+	}
+
+	var req struct {
+		Comment string `json:"comment"`
+		PostID  string `json:"postID"`
+	}
+
+	err := c.BindJSON(&req)
+	check(err)
+
+	randomID := uuid.New().String()
+
+	err = addComment(email, req.Comment, req.PostID, randomID)
+
+	if err != nil {
+		c.JSON(500, struct {
+			Message string `json:"message"`
+		}{"The comment could not be added"})
+		return
+	}
+
+	c.JSON(200, struct {
+		Message string `json:"message"`
+	}{"Thank you comment"})
+}
+
+func getUserFromEmail(c *gin.Context) {
+
+	claims := jwt.ExtractClaims(c)
+	email := claims["email"].(string)
+
+	user, err := GetUser(email)
+
+	if err != nil {
+		c.JSON(404, struct {
+			UserNotFound bool `json:"userNotFound"`
+		}{true})
+		return
+	}
+	c.JSON(200, struct {
+		Name string `json:"name"`
+	}{user.Name})
+}
+
+func getComments(c *gin.Context) {
+
+	//remove if we decided on not keeping secure
+
+	// claims := jwt.ExtractClaims(c)
+
+	// email := claims["email"].(string)
+
+	// if email == "" {
+	// 	c.String(400, "Token not valid.")
+	// 	return
+	// }
+
+	post := c.Param("id")
+
+	print(post)
+
+	comments, err := fetchComments(post)
+
+	if err != nil {
+		c.JSON(404, struct {
+			Message string `json:"message"`
+		}{"No comments found for this post."})
+		return
+	}
+
+	c.JSON(200, struct {
+		Comments []prisma.Comment `json:"comments"`
+	}{comments})
+}
+
+func getUserFromComment(c *gin.Context) {
+
+	commentID := c.Param("id")
+
+	user, err := fetchUserFromComment(commentID)
+	check(err)
+
+	c.JSON(200, struct {
+		Username string `json:"username"`
+	}{user.Name})
+}
+
+func updateUserComment(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+
+	email := claims["email"].(string)
+
+	if email == "" {
+		c.String(400, "Token not valid.")
+		return
+	}
+
+	var req struct {
+		NewComment        string `json:"newComment"`
+		CommentUniqueName string `json:"CommentUniqueName"`
+	}
+
+	err := c.BindJSON(&req)
+	check(err)
+
+	user, err := fetchUserFromComment(req.CommentUniqueName)
+
+	if user.Email != email {
+		c.JSON(404, struct {
+			Message string `json:"message"`
+		}{"Unauthorized access"})
+		return
+	}
+
+	err = updateComment(req.CommentUniqueName, req.NewComment)
+
+	if err != nil {
+		c.JSON(500, struct {
+			Message string `json:"message"`
+		}{"The comment could not be updated"})
+		return
+	}
+
+	c.JSON(200, struct {
+		Message string `json:"message"`
+	}{"Updated comment"})
+}
+
+func deleteUserComment(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+
+	email := claims["email"].(string)
+
+	if email == "" {
+		c.String(400, "Token not valid.")
+		return
+	}
+
+	var req struct {
+		CommentUniqueName string `json:"CommentUniqueName"`
+	}
+
+	err := c.BindJSON(&req)
+	check(err)
+
+	user, err := fetchUserFromComment(req.CommentUniqueName)
+
+	if user.Email != email {
+		c.JSON(404, struct {
+			Message string `json:"message"`
+		}{"Unauthorized access"})
+		return
+	}
+
+	err = deleteComment(req.CommentUniqueName)
+
+	if err != nil {
+		c.JSON(500, struct {
+			Message string `json:"message"`
+		}{"The comment could not be deleted"})
+		return
+	}
+
+	c.JSON(200, struct {
+		Message string `json:"message"`
+	}{"Deleted comment"})
+}

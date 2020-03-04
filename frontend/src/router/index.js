@@ -13,26 +13,31 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+    meta: { hideNavigation: false }
   },
   {
     path: '/login',
     name: 'Login',
     component: Login,
+    meta: { hideNavigation: true }
   },
   {
     path: '/signup',
     name: 'Signup',
     component: Signup,
+    meta: { hideNavigation: true }
   },
   {
     path: '/user/:username',
     name: 'Profile',
     component: Profile,
+    meta: { hideNavigation: false }
   },
   {
     path: '/post-picture',
     name: 'PostPicture',
     component: PostPicture,
+    meta: { hideNavigation: false }
   },
 ];
 

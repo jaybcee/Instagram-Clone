@@ -125,8 +125,12 @@
 </template>
 
 <script>
-import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
+import {
+  validationMixin
+} from "vuelidate";
+import {
+  required
+} from "vuelidate/lib/validators";
 import axios from "axios";
 
 export default {
@@ -156,9 +160,6 @@ export default {
       return errors;
     }
   },
-  mounted() {
-       this.$cookies.get('token') !== null ? this.$router.push('/') : null
-     },
   validations: {
     login: {
       email: {
@@ -177,25 +178,33 @@ export default {
         this.auth();
       }
     },
-       auth () {
+    auth() {
 
       this.loading = true;
       this.loginError = false;
 
-       axios.post(`${process.env.VUE_APP_ROOT_API}/login`, this.login)
-       .then(r => {
-         this.loading=false
-         console.log(r)
-         this.$cookies.set('token',r.data.token)
-         this.$router.push('/')
-       })
-       .catch(e => {
-         this.loginError = true
-         this.loading = false
-         console.error(e)
-        //  alert('email and/or pass no good use user:admin and password:password')
-       })
-     },
+      axios.post(`${process.env.VUE_APP_ROOT_API}/login`, this.login)
+        .then(r => {
+          this.$cookies.set('token', r.data.token)
+          this.loading = false
+          axios.get(`${process.env.VUE_APP_ROOT_API}/secure/api/getUser`, {
+              headers: {
+                'Authorization': `Bearer ${r.data.token}`,
+              }
+            })
+            .then(r2 => {
+              localStorage.setItem("username", r2.data.name)
+              this.$router.push('/')
+            })
+            .catch(e => console.log(e))
+
+        })
+        .catch(e => {
+          this.loginError = true
+          this.loading = false
+          console.error(e)
+        })
+    },
   }
 };
 </script>
