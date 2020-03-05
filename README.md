@@ -1,4 +1,4 @@
-# SOEN 341 project (Instagram)
+# SOEN 341 project (Instagram)  ![Build Status](https://travis-ci.com/Nicolas-MacBeth/SOEN341.svg?token=oeXpQTjd3iqt491nhsLk&branch=master)
 
 ## Description
 

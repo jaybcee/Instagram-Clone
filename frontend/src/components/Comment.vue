@@ -1,17 +1,116 @@
 <template>
   <div>
+    <!-- this is a modal for updating comments -->
+    <v-dialog
+      v-model="warn"
+      max-width="500"
+    >
+      <v-card>
+        <v-container>
+          <v-row
+            align-center
+            justify-center
+          >
+            <v-col>
+              Are you sure?
+            </v-col>
+            <v-col>
+              <v-btn
+                class="ma-2"
+                color="error"
+                @click="deleteComment"
+              >
+                Yes
+              </v-btn> 
+              <v-btn
+                color="primary"
+                @click="toggleWarn"
+              >
+                No, go back
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card>
+    </v-dialog>
+    <!-- this is a modal for deleting comments -->
+    <v-dialog
+      v-model="dialog"
+      max-width="500"
+    >
+      <v-card>
+        <v-container>
+          <v-text-field
+            v-model="enteredComment"
+            label="Enter new comment"
+            color="primary"
+            @keypress.enter="updateComment"
+          >
+            <template v-slot:append>
+              <v-btn
+                depressed
+                tile
+                color="primary"
+                class="ma-0"
+                @click="updateComment"
+              >
+                Comment
+              </v-btn>
+            </template>
+          </v-text-field>
+          <div v-show="showError"> 
+            Please enter a valid comment 
+          </div>
+        </v-container>
+      </v-card>
+    </v-dialog>
     <v-divider
       :inset="true"
     ></v-divider>
     <v-list-item :key="uniqueName">
-      <v-list-item-avatar>
-        <v-img :src="avatar"></v-img>
-      </v-list-item-avatar>
+      <template>
+        <v-list-item-avatar>
+          <v-img :src="avatar"></v-img>
+        </v-list-item-avatar>
 
-      <v-list-item-content>
-        <v-list-item-title v-text="commenter"></v-list-item-title>
-        <v-list-item-subtitle v-text="commentText"></v-list-item-subtitle>
-      </v-list-item-content>
+        <v-list-item-content>
+          <v-list-item-title
+            class="text-justify"
+            v-text="commenter"
+          ></v-list-item-title>
+          <v-list-item-subtitle
+            class="text-justify"
+            v-text="commentText"
+          ></v-list-item-subtitle>
+        </v-list-item-content>
+        <v-list>
+          <div v-if="commenter === currentUser">
+            <v-list-item-action>
+              <v-btn
+                icon
+                @click="toggleWarn"
+              >
+                <v-icon
+                  color="red"
+                >
+                  mdi-delete
+                </v-icon>
+              </v-btn>
+              
+              <v-btn
+                icon
+                @click="toggleModal"
+              >
+                <v-icon
+                  color="yellow"
+                >
+                  mdi-pencil
+                </v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </div>
+        </v-list>
+      </template>
     </v-list-item>
   </div>
 </template>
@@ -31,26 +130,81 @@ export default {
       type: String,
       default: "Comment goes here"
     },
-    
+
   },
   data: () => ({
     //default avatar for now
     avatar: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png",
-    // if user comments on their own post, we don't fetch name
-    // consequently we just use the username that we stored
-    // this will be overwritten in the event that .get happens
-    commenter: localStorage.getItem("username") || "A Username"
+    enteredComment: "",
+    dialog: false,
+    warn: false,
+    showError: false,
+    commenter: null,
+    get currentUser() {
+      return localStorage.getItem("username")
+    }
   }),
   mounted() {
+
+    axios({
+      method: 'get',
+      url: `${process.env.VUE_APP_ROOT_API}/getUserFromComment/${this.uniqueName}`,
+      headers: {
+        Authorization: `Bearer ${this.$cookies.get('token')}`,
+      },
+    }).then(r => {
+      this.commenter = r.data.username
+    })
+  },
+  methods: {
+    toggleWarn() {
+      this.warn = !this.warn
+    },
+    toggleModal() {
+      this.dialog = !this.dialog
+    },
+    deleteComment() {
       axios({
-        method: 'get',
-        url: `${process.env.VUE_APP_ROOT_API}/getUserFromComment/${this.uniqueName}`,
-        headers: {
-          Authorization: `Bearer ${this.$cookies.get('token')}`,
-        },
-      }).then(r => {
-        this.commenter = r.data.username
-      })
+          method: 'DELETE',
+          url: `${process.env.VUE_APP_ROOT_API}/secure/api/comment`,
+          headers: {
+            Authorization: `Bearer ${this.$cookies.get('token')}`,
+          },
+          data: {
+            CommentUniqueName: this.uniqueName
+          }
+        })
+        .then(() => {
+          this.$emit('commentUpdate')
+          this.toggleWarn()
+        })
+        .catch(e => console.error(e))
+    },
+    updateComment() {
+      if (this.enteredComment.length > 0) {
+        this.showError = false
+        axios({
+            method: 'PUT',
+            url: `${process.env.VUE_APP_ROOT_API}/secure/api/comment`,
+            headers: {
+              Authorization: `Bearer ${this.$cookies.get('token')}`,
+            },
+            data: {
+              newComment: this.enteredComment,
+              CommentUniqueName: this.uniqueName
+            }
+          })
+          .then(() => {
+            this.$emit('commentUpdate')
+          })
+          .catch(e => console.error(e))
+        this.dialog = false
+        this.enteredComment = ""
+      } else {
+        this.showError = true
+      }
+
     }
+  }
 }
 </script>
