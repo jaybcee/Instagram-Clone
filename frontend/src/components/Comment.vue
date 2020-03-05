@@ -135,9 +135,6 @@ export default {
   data: () => ({
     //default avatar for now
     avatar: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png",
-    // if user comments on their own post, we don't fetch name
-    // consequently we just use the username that we stored
-    // this will be overwritten in the event that .get happens
     enteredComment: "",
     dialog: false,
     warn: false,
