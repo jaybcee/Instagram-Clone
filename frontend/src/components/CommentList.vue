@@ -38,35 +38,52 @@
           </v-btn>
         </template>
       </v-text-field>
+      <div v-show="showError"> 
+        Please enter a valid comment 
+      </div>
     </v-container>
   </div>
 </template>
 
 <script>
-import uuid from 'uuid';
+
+import axios from 'axios';
 export default {
   name: "CommentList",
   props: {
+    id: {
+      type: String,
+      default: '-1'
+    },
     comments: {
       type: Array,
       default: () => [{
         uniqueName: 'uniqueName',
         commentText: "commentText",
+        
       }]
     }
   },
   data: () => ({
     enteredComment: "",
+    showError : false,
   }),
   methods: {
     addComment() {
-      let c = {
-        shouldFindUser: false,
-        uniqueName: uuid.v4(),
-        commentText: this.enteredComment
-      };
-      this.$emit('addComment', c)
-
+      
+      if (this.enteredComment.length == 0) {
+        this.showError = true
+      } else {
+        this.showError = false
+        
+        axios({ method: 'POST', url: `${process.env.VUE_APP_ROOT_API}/secure/api/comment`, 
+        headers: {Authorization: `Bearer ${this.$cookies.get('token')}`,}, 
+        data: { comment: this.enteredComment, postID: this.id } })
+        .then(()=>{
+          this.$emit('addComment')
+        })
+        .catch(e=>console.error(e))
+      }
     }
   }
 

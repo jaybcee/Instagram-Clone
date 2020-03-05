@@ -15,18 +15,24 @@
     <v-card-text class="text--primary">
       <div>Description: {{ caption }}</div>
       <v-divider class="my-4" />
-      <CommentList
-        :comments="comments"
-        @addComment="handleAddComment"
-      />
+      <div v-if="showComment"> 
+        
+        <CommentList
+          :comments="comments"
+          :id="id"
+          @addComment="handleAddComment"
+        />
+      </div>
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn icon>
-        <span>0</span>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-      <v-btn icon>
+      <div v-show="!showComment"> 
+        Show Comments-
+      </div>
+      <v-btn
+        icon
+        @click="showComments"
+      >
         <v-icon>mdi-message-text</v-icon>
       </v-btn>
     </v-card-actions>
@@ -60,10 +66,21 @@ export default {
     }
   },
   data: () => ({
-    comments: []
+    comments: [],
+    showComment: false
   }),
   mounted() {
-    axios({
+    this.loadComments()
+  },
+  methods: {
+    showComments() {
+      this.showComment = !this.showComment
+    },
+    handleAddComment() {
+      this.loadComments()
+    },
+    loadComments() {
+      axios({
       method: 'get',
       url: `${process.env.VUE_APP_ROOT_API}/comments/${this.id}`,
       headers: {
@@ -72,14 +89,6 @@ export default {
     }).then(r => {
       this.comments = r.data.comments
     })
-  },
-  methods: {
-    handleAddComment(e) {
-      if (this.comments && this.comments.length > 0) {
-        this.comments.push(e)
-      } else {
-        this.comments = [e]
-      }
     }
   }
 }

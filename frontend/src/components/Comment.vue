@@ -16,6 +16,8 @@
   </div>
 </template>
 
+
+
 <script>
 import axios from 'axios';
 export default {
@@ -29,10 +31,7 @@ export default {
       type: String,
       default: "Comment goes here"
     },
-    shouldFindUser: {
-      type: Boolean,
-      default: true,
-    }
+    
   },
   data: () => ({
     //default avatar for now
@@ -43,7 +42,6 @@ export default {
     commenter: localStorage.getItem("username") || "A Username"
   }),
   mounted() {
-    if (this.shouldFindUser) {
       axios({
         method: 'get',
         url: `${process.env.VUE_APP_ROOT_API}/getUserFromComment/${this.uniqueName}`,
@@ -54,6 +52,5 @@ export default {
         this.commenter = r.data.username
       })
     }
-  }
 }
 </script>
