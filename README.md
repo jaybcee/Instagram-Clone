@@ -21,7 +21,7 @@ This repo is for our SOEN 341 class, where the objective will be to create a web
 * Vue.js
 
 ## How to run
-You need Go, Node and Docker installed and running.
+You need Go, Node and Docker (`docker-machine restart` and VirtualBox VM of Docker running) installed and running.
 
 Then, in your goroot directory:
 

@@ -64,7 +64,10 @@ export default {
     axios
       .get(`${process.env.VUE_APP_ROOT_API}/user/${this.$route.params.username}`)
       .then(response => {
-        response.data.posts.map(p => p.src = `${process.env.VUE_APP_ROOT_API}/photos/${p.fileName}`)
+        console.log(response.data)
+        if (response.data.posts){
+          response.data.posts.map(p => p.src = `${process.env.VUE_APP_ROOT_API}/photos/${p.fileName}`)
+        }
         this.info = response.data.posts
         this.userNotFound = response.data.userNotFound;
         this.loaded = true;
