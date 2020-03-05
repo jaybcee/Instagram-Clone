@@ -15,19 +15,21 @@
     <v-card-text class="text--primary">
       <div>Description: {{ caption }}</div>
       <v-divider class="my-4" />
-      <div v-if="showComment"> 
-        
+      <div v-if="showComment">
         <CommentList
-          :comments="comments"
           :id="id"
+          :comments="comments"
           @addComment="handleAddComment"
         />
       </div>
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <div v-show="!showComment"> 
-        Show Comments-
+      <div
+        v-show="!showComment"
+        class="mr-2"
+      > 
+        Show Comments
       </div>
       <v-btn
         icon

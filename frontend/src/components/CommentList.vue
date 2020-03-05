@@ -3,7 +3,7 @@
     max-width="450"
     class="mx-auto"
   >
-    <v-list three-line>
+    <v-list two-line>
       <v-subheader v-text="'Comments'"></v-subheader>
       <div v-if="comments && comments.length > 0">
         <div
@@ -12,6 +12,7 @@
         >
           <Comment
             v-bind="c"
+            @commentUpdate="commentUpdate"
           />
         </div>
       </div>
@@ -46,7 +47,6 @@
 </template>
 
 <script>
-
 import axios from 'axios';
 export default {
   name: "CommentList",
@@ -60,37 +60,45 @@ export default {
       default: () => [{
         uniqueName: 'uniqueName',
         commentText: "commentText",
-        
+
       }]
     }
   },
   data: () => ({
     enteredComment: "",
-    showError : false,
+    showError: false,
   }),
   methods: {
     addComment() {
-      
       if (this.enteredComment.length == 0) {
         this.showError = true
       } else {
         this.showError = false
-        
-        axios({ method: 'POST', url: `${process.env.VUE_APP_ROOT_API}/secure/api/comment`, 
-        headers: {Authorization: `Bearer ${this.$cookies.get('token')}`,}, 
-        data: { comment: this.enteredComment, postID: this.id } })
-        .then(()=>{
-          this.$emit('addComment')
-        })
-        .catch(e=>console.error(e))
+
+        axios({
+            method: 'POST',
+            url: `${process.env.VUE_APP_ROOT_API}/secure/api/comment`,
+            headers: {
+              Authorization: `Bearer ${this.$cookies.get('token')}`,
+            },
+            data: {
+              comment: this.enteredComment,
+              postID: this.id
+            }
+          })
+          .then(() => {
+            this.$emit('addComment')
+          })
+          .catch(e => console.error(e))
+        this.enteredComment = ""
       }
+    },
+    commentUpdate() {
+      this.$emit('addComment')
     }
+
+
   }
 
 };
 </script>
-
-<style scoped>
-
-
-</style>
