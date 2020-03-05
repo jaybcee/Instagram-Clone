@@ -1,1 +1,19 @@
-language: node_js
+notifications:
+    email: false
+os: linux
+language : go
+matrix:
+    include:
+      - language: node_js
+        node_js: 
+            - 10
+        before_install:
+            - cd frontend
+  
+      - language: go
+        go:
+            - 1.x
+        before_install:
+          - cd goBackend/backend
+        script:
+          - go build
