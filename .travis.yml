@@ -1,6 +1,7 @@
 notifications:
     email: false
 os: linux
+language : go
 matrix:
     include:
       - language: node_js
