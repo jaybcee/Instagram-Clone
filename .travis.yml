@@ -17,3 +17,4 @@ matrix:
           - cd goBackend/backend
         script:
           - go build
+          - go test
