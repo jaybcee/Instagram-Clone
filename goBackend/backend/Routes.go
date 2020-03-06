@@ -2,7 +2,6 @@ package main
 
 import (
 	"Nicolas-MacBeth/main/backend/generated/prisma-client"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -31,17 +30,13 @@ func signupRoute(c *gin.Context) {
 
 func getHome(c *gin.Context) {
 	var req struct {
-		Name string `json:"name"`
+		User string `json:"user"`
 	}
 
 	err := c.BindJSON(&req)
 	check(err)
 
-	fmt.Println(123)
-
-	fmt.Println("my name is")
-	fmt.Println(req.Name)
-	posts, err1 := getPersonalizedPosts(req.Name)
+	posts, err1 := getPersonalizedPosts(req.User)
 
 	if err != nil || err1 != nil {
 		c.String(500, "Posts are unretrievable")
@@ -55,14 +50,14 @@ func getHome(c *gin.Context) {
 
 func userRoute(c *gin.Context) {
 	username := c.Param("id")
+	selfUsername := c.Param("id2")
 
 	posts, err1 := getPostsByName(username)
 	followers, err2 := getFollowersByName(username)
 	following, err3 := getFollowingByName(username)
+	alreadyFollowing, err4 := getAlreadyFollowing(username, selfUsername)
 
-	fmt.Println(followers)
-
-	if err1 != nil || err2 != nil || err3 != nil {
+	if err1 != nil || err2 != nil || err3 != nil || err4 != nil {
 		c.JSON(404, struct {
 			UserNotFound bool `json:"userNotFound"`
 		}{true})
@@ -70,11 +65,12 @@ func userRoute(c *gin.Context) {
 	}
 
 	c.JSON(200, struct {
-		Posts        []prisma.Post `json:"posts"`
-		Followers    int           `json:"followers"`
-		Following    int           `json:"following"`
-		UserNotFound bool          `json:"userNotFound"`
-	}{posts, len(followers), len(following), false})
+		Posts            []prisma.Post `json:"posts"`
+		Followers        int           `json:"followers"`
+		Following        int           `json:"following"`
+		UserNotFound     bool          `json:"userNotFound"`
+		AlreadyFollowing bool          `json:"alreadyFollowing"`
+	}{posts, len(followers), len(following), false, alreadyFollowing})
 }
 
 func testRoute(c *gin.Context) {

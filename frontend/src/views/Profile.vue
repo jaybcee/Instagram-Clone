@@ -96,7 +96,7 @@ export default {
   mounted() {
    this.avatarURL = `${process.env.VUE_APP_ROOT_API}/photos/${this.$route.params.username}.jpg`
     axios
-      .get(`${process.env.VUE_APP_ROOT_API}/user/${this.$route.params.username}`)
+      .get(`${process.env.VUE_APP_ROOT_API}/user/${this.$route.params.username}/${localStorage.getItem("username")}`)
       .then(response => {
         console.log(response.data)
         if (response.data.posts){
@@ -106,6 +106,7 @@ export default {
         this.nbFollowers = response.data.followers;
         this.info = response.data.posts
         this.userNotFound = response.data.userNotFound;
+        this.following = response.data.alreadyFollowing;
         this.loaded = true;
       })
       .catch(error => {
@@ -136,14 +137,14 @@ export default {
             }
           })
           .then(() => {
-            this.following = !this.following;
+          })
+          .catch(e => console.error(e))
+          this.following = !this.following;
             if(this.following){
               this.nbFollowers+=1;
             }else{
               this.nbFollowers-=1;
             }
-          })
-          .catch(e => console.error(e))
       },
       }
     }

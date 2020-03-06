@@ -3,7 +3,6 @@ package main
 import (
 	"Nicolas-MacBeth/main/backend/generated/prisma-client"
 	"context"
-	"fmt"
 	"sort"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -53,7 +52,7 @@ func unfollowAUser(unfollower string, unfollowee string) (*prisma.User, error, e
 		},
 		Data: prisma.UserUpdateInput{
 			Followers: &prisma.UserUpdateManyWithoutFollowingInput{
-				Delete: []prisma.UserWhereUniqueInput{
+				Disconnect: []prisma.UserWhereUniqueInput{
 					{Name: &unfollower},
 				},
 			},
@@ -67,7 +66,7 @@ func unfollowAUser(unfollower string, unfollowee string) (*prisma.User, error, e
 		},
 		Data: prisma.UserUpdateInput{
 			Following: &prisma.UserUpdateManyWithoutFollowersInput{
-				Delete: []prisma.UserWhereUniqueInput{
+				Disconnect: []prisma.UserWhereUniqueInput{
 					{Name: &unfollowee},
 				},
 			},
@@ -120,7 +119,33 @@ func getPostsByName(name string) ([]prisma.Post, error) {
 		Name: &name,
 	}).Posts(nil).Exec(ctx)
 
+	//Sort all the posts
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].PostedAt > posts[j].PostedAt
+	})
+
 	return posts, err
+}
+
+func getAlreadyFollowing(name string, selfName string) (bool, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	users, err := client.Users(&prisma.UsersParams{
+		Where: &prisma.UserWhereInput{
+			FollowersSome: &prisma.UserWhereInput{
+				Name: &selfName,
+			},
+		}}).Exec(ctx)
+
+	alreadyFollowing := false
+	for _, element := range users {
+		if element.Name == name {
+			alreadyFollowing = true
+		}
+	}
+
+	return alreadyFollowing, err
 }
 
 func getPersonalizedPosts(name string) ([]prisma.Post, error) {
@@ -130,15 +155,9 @@ func getPersonalizedPosts(name string) ([]prisma.Post, error) {
 	users, err := client.Users(&prisma.UsersParams{
 		Where: &prisma.UserWhereInput{
 			FollowersSome: &prisma.UserWhereInput{
-				FollowingSome: &prisma.UserWhereInput{
-					Name: &name,
-				},
+				Name: &name,
 			},
-		},
-	}).Exec(ctx)
-
-	fmt.Println("userss")
-	fmt.Println(users)
+		}}).Exec(ctx)
 
 	var posts []prisma.Post
 

@@ -11,7 +11,7 @@ func createRoutes() *gin.Engine {
 	r.Use(CORSMiddleware())
 
 	//User info route, unprotected
-	r.GET("/user/:id", userRoute)
+	r.GET("/user/:id/:id2", userRoute)
 
 	r.GET("/getUserFromComment/:id", getUserFromComment)
 
