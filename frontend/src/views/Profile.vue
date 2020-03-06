@@ -23,12 +23,43 @@
                 class="headline mb-1"
                 v-text="this.$route.params.username"
               ></v-list-item-title>
+            <v-col cols="12">
+              <v-row justify="center">
+                <v-col
+                  cols="6"
+                  md="3"
+                >
+                  <v-text>Followers</v-text>
+                </v-col>
+                <v-col
+                  cols="6"
+                  md="3"
+                >
+                  <v-text>Following</v-text>
+                 </v-col>
+              </v-row>
+              <v-row justify="center">
+                <v-col
+                  cols="6"
+                  md="3"
+                >
+                  <v-text v-text="nbFollowers"></v-text>
+                </v-col>
+                <v-col
+                  cols="6"
+                  md="3"
+                >
+                  <v-text v-text="nbFollowing"></v-text>
+                 </v-col>
+              </v-row>
+            </v-col>
               <v-list-item-subtitle>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
 
-          <v-card-actions>
-            <v-btn>Follow</v-btn>
+          <v-card-actions v-if="notTheSame()">
+            <v-btn v-if="!following" @click="follow(true)">Follow</v-btn>
+            <v-btn v-if="following" @click="follow(false)">Unfollow</v-btn>
           </v-card-actions>
         </v-card>
       </v-container>
@@ -58,6 +89,9 @@ export default {
     loaded: false,
     userNotFound: false,
     info: [{}],
+    following: false,
+    nbFollowers: 0,
+    nbFollowing: 0
   }),
   mounted() {
    this.avatarURL = `${process.env.VUE_APP_ROOT_API}/photos/${this.$route.params.username}.jpg`
@@ -79,7 +113,30 @@ export default {
     methods: {
       useDefaultAvatar () {
         this.avatarURL = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+      },
+      notTheSame(){
+        return (localStorage.getItem("username") !== this.$route.params.username);
+      },
+      follow(follow){
+        axios({
+            method: 'POST',
+            url: `${process.env.VUE_APP_ROOT_API}/api/followUser`,
+            data: {
+              follow,
+              follower: localStorage.getItem("username"),
+              followee: this.$route.params.username
+            }
+          })
+          .then(() => {
+            this.following = !this.following;
+            if(this.following){
+              this.nbFollowers+=1;
+            }else{
+              this.nbFollowers-=1;
+            }
+          })
+          .catch(e => console.error(e))
+      },
       }
     }
-};
 </script>
