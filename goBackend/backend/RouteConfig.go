@@ -11,7 +11,7 @@ func createRoutes() *gin.Engine {
 	r.Use(CORSMiddleware())
 
 	//User info route, unprotected
-	r.GET("/user/:id", userRoute)
+	r.GET("/user/:id/:id2", userRoute)
 
 	r.GET("/getUserFromComment/:id", getUserFromComment)
 
@@ -32,6 +32,10 @@ func createRoutes() *gin.Engine {
 func GetSecureRoutes(auth *gin.RouterGroup) *gin.RouterGroup {
 	//Example secure route
 	auth.POST("/api/secure_test", protectedTestRoute)
+
+	auth.POST("/api/followUser", followOrUnfollowUser)
+
+	auth.POST("/api/infoHome", getHome)
 
 	auth.POST("/api/comment", postComment)
 

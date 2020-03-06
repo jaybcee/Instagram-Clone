@@ -28,12 +28,36 @@ func signupRoute(c *gin.Context) {
 	c.String(200, "Success")
 }
 
+func getHome(c *gin.Context) {
+	var req struct {
+		User string `json:"user"`
+	}
+
+	err := c.BindJSON(&req)
+	check(err)
+
+	posts, err1 := getPersonalizedPosts(req.User)
+
+	if err != nil || err1 != nil {
+		c.String(500, "Posts are unretrievable")
+		return
+	}
+
+	c.JSON(200, struct {
+		Posts []prisma.Post `json:"posts"`
+	}{posts})
+}
+
 func userRoute(c *gin.Context) {
 	username := c.Param("id")
+	selfUsername := c.Param("id2")
 
-	posts, err := getPostsByName(username)
+	posts, err1 := getPostsByName(username)
+	followers, err2 := getFollowersByName(username)
+	following, err3 := getFollowingByName(username)
+	alreadyFollowing, err4 := getAlreadyFollowing(username, selfUsername)
 
-	if err != nil || posts == nil {
+	if err1 != nil || err2 != nil || err3 != nil || err4 != nil {
 		c.JSON(404, struct {
 			UserNotFound bool `json:"userNotFound"`
 		}{true})
@@ -41,9 +65,12 @@ func userRoute(c *gin.Context) {
 	}
 
 	c.JSON(200, struct {
-		Posts        []prisma.Post `json:"posts"`
-		UserNotFound bool          `json:"userNotFound"`
-	}{posts, false})
+		Posts            []prisma.Post `json:"posts"`
+		Followers        int           `json:"followers"`
+		Following        int           `json:"following"`
+		UserNotFound     bool          `json:"userNotFound"`
+		AlreadyFollowing bool          `json:"alreadyFollowing"`
+	}{posts, len(followers), len(following), false, alreadyFollowing})
 }
 
 func testRoute(c *gin.Context) {
@@ -193,6 +220,46 @@ func postComment(c *gin.Context) {
 	c.JSON(200, struct {
 		Message string `json:"message"`
 	}{"Thank you comment"})
+}
+
+func followOrUnfollowUser(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+	email := claims["email"].(string)
+
+	if email == "" {
+		c.JSON(403, struct {
+			Authorized bool `json:"Authorized"`
+		}{false})
+		return
+	}
+
+	var req struct {
+		Follower string `json:"follower"`
+		Followee string `json:"followee"`
+		Follow   bool   `json:"follow"`
+	}
+
+	err := c.BindJSON(&req)
+	check(err)
+
+	var (
+		err2 error
+		err3 error
+	)
+
+	// for follows
+	if req.Follow == true {
+		_, err2, err3 = followAUser(req.Follower, req.Followee)
+	} else if req.Follow == false { // for unfollows
+		_, err2, err3 = unfollowAUser(req.Follower, req.Followee)
+	}
+
+	if err == nil && err2 == nil && err3 == nil {
+		c.String(200, "All good in the hood")
+	} else {
+		c.String(500, "Unable to follow/unfollow")
+		return
+	}
 }
 
 func getUserFromEmail(c *gin.Context) {

@@ -645,11 +645,10 @@ const (
 	MutationTypeDeleted MutationType = "DELETED"
 )
 
-type UserUpdateOneRequiredInput struct {
-	Create  *UserCreateInput       `json:"create,omitempty"`
-	Update  *UserUpdateDataInput   `json:"update,omitempty"`
-	Upsert  *UserUpsertNestedInput `json:"upsert,omitempty"`
-	Connect *UserWhereUniqueInput  `json:"connect,omitempty"`
+type PostUpdateWithoutOwnerDataInput struct {
+	FileName *string                            `json:"fileName,omitempty"`
+	Caption  *string                            `json:"caption,omitempty"`
+	Comments *CommentUpdateManyWithoutPostInput `json:"comments,omitempty"`
 }
 
 type CommentWhereUniqueInput struct {
@@ -657,9 +656,10 @@ type CommentWhereUniqueInput struct {
 	UniqueName *string `json:"uniqueName,omitempty"`
 }
 
-type PostUpdateWithWhereUniqueWithoutOwnerInput struct {
-	Where PostWhereUniqueInput            `json:"where"`
-	Data  PostUpdateWithoutOwnerDataInput `json:"data"`
+type CommentUpdateWithoutPostDataInput struct {
+	UniqueName  *string                     `json:"uniqueName,omitempty"`
+	CommentText *string                     `json:"commentText,omitempty"`
+	User        *UserUpdateOneRequiredInput `json:"user,omitempty"`
 }
 
 type PostWhereInput struct {
@@ -722,10 +722,10 @@ type PostWhereInput struct {
 	Not                   []PostWhereInput   `json:"NOT,omitempty"`
 }
 
-type PostUpdateWithoutOwnerDataInput struct {
-	FileName *string                            `json:"fileName,omitempty"`
-	Caption  *string                            `json:"caption,omitempty"`
-	Comments *CommentUpdateManyWithoutPostInput `json:"comments,omitempty"`
+type CommentUpsertWithWhereUniqueWithoutPostInput struct {
+	Where  CommentWhereUniqueInput           `json:"where"`
+	Update CommentUpdateWithoutPostDataInput `json:"update"`
+	Create CommentCreateWithoutPostInput     `json:"create"`
 }
 
 type CommentWhereInput struct {
@@ -786,21 +786,166 @@ type CommentWhereInput struct {
 	Not                      []CommentWhereInput `json:"NOT,omitempty"`
 }
 
-type CommentCreateManyWithoutPostInput struct {
-	Create  []CommentCreateWithoutPostInput `json:"create,omitempty"`
-	Connect []CommentWhereUniqueInput       `json:"connect,omitempty"`
+type UserCreateOneWithoutPostsInput struct {
+	Create  *UserCreateWithoutPostsInput `json:"create,omitempty"`
+	Connect *UserWhereUniqueInput        `json:"connect,omitempty"`
 }
 
-type PostUpdateManyDataInput struct {
+type UserUpsertWithWhereUniqueWithoutFollowersInput struct {
+	Where  UserWhereUniqueInput                `json:"where"`
+	Update UserUpdateWithoutFollowersDataInput `json:"update"`
+	Create UserCreateWithoutFollowersInput     `json:"create"`
+}
+
+type UserCreateWithoutPostsInput struct {
+	ID        *string                              `json:"id,omitempty"`
+	Name      string                               `json:"name"`
+	Email     string                               `json:"email"`
+	Password  string                               `json:"password"`
+	Phone     string                               `json:"phone"`
+	Followers *UserCreateManyWithoutFollowingInput `json:"followers,omitempty"`
+	Following *UserCreateManyWithoutFollowersInput `json:"following,omitempty"`
+}
+
+type CommentScalarWhereInput struct {
+	ID                       *string                   `json:"id,omitempty"`
+	IDNot                    *string                   `json:"id_not,omitempty"`
+	IDIn                     []string                  `json:"id_in,omitempty"`
+	IDNotIn                  []string                  `json:"id_not_in,omitempty"`
+	IDLt                     *string                   `json:"id_lt,omitempty"`
+	IDLte                    *string                   `json:"id_lte,omitempty"`
+	IDGt                     *string                   `json:"id_gt,omitempty"`
+	IDGte                    *string                   `json:"id_gte,omitempty"`
+	IDContains               *string                   `json:"id_contains,omitempty"`
+	IDNotContains            *string                   `json:"id_not_contains,omitempty"`
+	IDStartsWith             *string                   `json:"id_starts_with,omitempty"`
+	IDNotStartsWith          *string                   `json:"id_not_starts_with,omitempty"`
+	IDEndsWith               *string                   `json:"id_ends_with,omitempty"`
+	IDNotEndsWith            *string                   `json:"id_not_ends_with,omitempty"`
+	UniqueName               *string                   `json:"uniqueName,omitempty"`
+	UniqueNameNot            *string                   `json:"uniqueName_not,omitempty"`
+	UniqueNameIn             []string                  `json:"uniqueName_in,omitempty"`
+	UniqueNameNotIn          []string                  `json:"uniqueName_not_in,omitempty"`
+	UniqueNameLt             *string                   `json:"uniqueName_lt,omitempty"`
+	UniqueNameLte            *string                   `json:"uniqueName_lte,omitempty"`
+	UniqueNameGt             *string                   `json:"uniqueName_gt,omitempty"`
+	UniqueNameGte            *string                   `json:"uniqueName_gte,omitempty"`
+	UniqueNameContains       *string                   `json:"uniqueName_contains,omitempty"`
+	UniqueNameNotContains    *string                   `json:"uniqueName_not_contains,omitempty"`
+	UniqueNameStartsWith     *string                   `json:"uniqueName_starts_with,omitempty"`
+	UniqueNameNotStartsWith  *string                   `json:"uniqueName_not_starts_with,omitempty"`
+	UniqueNameEndsWith       *string                   `json:"uniqueName_ends_with,omitempty"`
+	UniqueNameNotEndsWith    *string                   `json:"uniqueName_not_ends_with,omitempty"`
+	CommentText              *string                   `json:"commentText,omitempty"`
+	CommentTextNot           *string                   `json:"commentText_not,omitempty"`
+	CommentTextIn            []string                  `json:"commentText_in,omitempty"`
+	CommentTextNotIn         []string                  `json:"commentText_not_in,omitempty"`
+	CommentTextLt            *string                   `json:"commentText_lt,omitempty"`
+	CommentTextLte           *string                   `json:"commentText_lte,omitempty"`
+	CommentTextGt            *string                   `json:"commentText_gt,omitempty"`
+	CommentTextGte           *string                   `json:"commentText_gte,omitempty"`
+	CommentTextContains      *string                   `json:"commentText_contains,omitempty"`
+	CommentTextNotContains   *string                   `json:"commentText_not_contains,omitempty"`
+	CommentTextStartsWith    *string                   `json:"commentText_starts_with,omitempty"`
+	CommentTextNotStartsWith *string                   `json:"commentText_not_starts_with,omitempty"`
+	CommentTextEndsWith      *string                   `json:"commentText_ends_with,omitempty"`
+	CommentTextNotEndsWith   *string                   `json:"commentText_not_ends_with,omitempty"`
+	CommentedAt              *string                   `json:"commentedAt,omitempty"`
+	CommentedAtNot           *string                   `json:"commentedAt_not,omitempty"`
+	CommentedAtIn            []string                  `json:"commentedAt_in,omitempty"`
+	CommentedAtNotIn         []string                  `json:"commentedAt_not_in,omitempty"`
+	CommentedAtLt            *string                   `json:"commentedAt_lt,omitempty"`
+	CommentedAtLte           *string                   `json:"commentedAt_lte,omitempty"`
+	CommentedAtGt            *string                   `json:"commentedAt_gt,omitempty"`
+	CommentedAtGte           *string                   `json:"commentedAt_gte,omitempty"`
+	And                      []CommentScalarWhereInput `json:"AND,omitempty"`
+	Or                       []CommentScalarWhereInput `json:"OR,omitempty"`
+	Not                      []CommentScalarWhereInput `json:"NOT,omitempty"`
+}
+
+type CommentUpdateInput struct {
+	UniqueName  *string                                    `json:"uniqueName,omitempty"`
+	CommentText *string                                    `json:"commentText,omitempty"`
+	User        *UserUpdateOneRequiredInput                `json:"user,omitempty"`
+	Post        *PostUpdateOneRequiredWithoutCommentsInput `json:"Post,omitempty"`
+}
+
+type PostSubscriptionWhereInput struct {
+	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
+	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
+	UpdatedFieldsContainsEvery []string                     `json:"updatedFields_contains_every,omitempty"`
+	UpdatedFieldsContainsSome  []string                     `json:"updatedFields_contains_some,omitempty"`
+	Node                       *PostWhereInput              `json:"node,omitempty"`
+	And                        []PostSubscriptionWhereInput `json:"AND,omitempty"`
+	Or                         []PostSubscriptionWhereInput `json:"OR,omitempty"`
+	Not                        []PostSubscriptionWhereInput `json:"NOT,omitempty"`
+}
+
+type UserUpdateOneRequiredInput struct {
+	Create  *UserCreateInput       `json:"create,omitempty"`
+	Update  *UserUpdateDataInput   `json:"update,omitempty"`
+	Upsert  *UserUpsertNestedInput `json:"upsert,omitempty"`
+	Connect *UserWhereUniqueInput  `json:"connect,omitempty"`
+}
+
+type UserUpdateManyMutationInput struct {
+	Name     *string `json:"name,omitempty"`
+	Email    *string `json:"email,omitempty"`
+	Password *string `json:"password,omitempty"`
+	Phone    *string `json:"phone,omitempty"`
+}
+
+type UserUpdateDataInput struct {
+	Name      *string                              `json:"name,omitempty"`
+	Email     *string                              `json:"email,omitempty"`
+	Password  *string                              `json:"password,omitempty"`
+	Phone     *string                              `json:"phone,omitempty"`
+	Posts     *PostUpdateManyWithoutOwnerInput     `json:"posts,omitempty"`
+	Followers *UserUpdateManyWithoutFollowingInput `json:"followers,omitempty"`
+	Following *UserUpdateManyWithoutFollowersInput `json:"following,omitempty"`
+}
+
+type PostUpdateManyMutationInput struct {
 	FileName *string `json:"fileName,omitempty"`
 	Caption  *string `json:"caption,omitempty"`
 }
 
-type CommentCreateWithoutPostInput struct {
-	ID          *string            `json:"id,omitempty"`
-	UniqueName  string             `json:"uniqueName"`
-	CommentText string             `json:"commentText"`
-	User        UserCreateOneInput `json:"user"`
+type PostUpdateManyWithoutOwnerInput struct {
+	Create     []PostCreateWithoutOwnerInput                `json:"create,omitempty"`
+	Delete     []PostWhereUniqueInput                       `json:"delete,omitempty"`
+	Connect    []PostWhereUniqueInput                       `json:"connect,omitempty"`
+	Set        []PostWhereUniqueInput                       `json:"set,omitempty"`
+	Disconnect []PostWhereUniqueInput                       `json:"disconnect,omitempty"`
+	Update     []PostUpdateWithWhereUniqueWithoutOwnerInput `json:"update,omitempty"`
+	Upsert     []PostUpsertWithWhereUniqueWithoutOwnerInput `json:"upsert,omitempty"`
+	DeleteMany []PostScalarWhereInput                       `json:"deleteMany,omitempty"`
+	UpdateMany []PostUpdateManyWithWhereNestedInput         `json:"updateMany,omitempty"`
+}
+
+type PostWhereUniqueInput struct {
+	ID *string `json:"id,omitempty"`
+}
+
+type PostUpdateWithWhereUniqueWithoutOwnerInput struct {
+	Where PostWhereUniqueInput            `json:"where"`
+	Data  PostUpdateWithoutOwnerDataInput `json:"data"`
+}
+
+type CommentUpdateManyMutationInput struct {
+	UniqueName  *string `json:"uniqueName,omitempty"`
+	CommentText *string `json:"commentText,omitempty"`
+}
+
+type PostUpdateWithoutCommentsDataInput struct {
+	FileName *string                                 `json:"fileName,omitempty"`
+	Caption  *string                                 `json:"caption,omitempty"`
+	Owner    *UserUpdateOneRequiredWithoutPostsInput `json:"owner,omitempty"`
+}
+
+type UserWhereUniqueInput struct {
+	ID    *string `json:"id,omitempty"`
+	Name  *string `json:"name,omitempty"`
+	Email *string `json:"email,omitempty"`
 }
 
 type CommentUpdateManyWithoutPostInput struct {
@@ -815,109 +960,18 @@ type CommentUpdateManyWithoutPostInput struct {
 	UpdateMany []CommentUpdateManyWithWhereNestedInput        `json:"updateMany,omitempty"`
 }
 
-type PostCreateOneWithoutCommentsInput struct {
-	Create  *PostCreateWithoutCommentsInput `json:"create,omitempty"`
-	Connect *PostWhereUniqueInput           `json:"connect,omitempty"`
-}
-
-type PostSubscriptionWhereInput struct {
-	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
-	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
-	UpdatedFieldsContainsEvery []string                     `json:"updatedFields_contains_every,omitempty"`
-	UpdatedFieldsContainsSome  []string                     `json:"updatedFields_contains_some,omitempty"`
-	Node                       *PostWhereInput              `json:"node,omitempty"`
-	And                        []PostSubscriptionWhereInput `json:"AND,omitempty"`
-	Or                         []PostSubscriptionWhereInput `json:"OR,omitempty"`
-	Not                        []PostSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type PostCreateWithoutCommentsInput struct {
-	ID       *string                        `json:"id,omitempty"`
-	FileName string                         `json:"fileName"`
-	Caption  string                         `json:"caption"`
-	Owner    UserCreateOneWithoutPostsInput `json:"owner"`
-}
-
-type UserUpdateManyMutationInput struct {
-	Name     *string `json:"name,omitempty"`
-	Email    *string `json:"email,omitempty"`
-	Password *string `json:"password,omitempty"`
-	Phone    *string `json:"phone,omitempty"`
-}
-
-type UserCreateOneWithoutPostsInput struct {
-	Create  *UserCreateWithoutPostsInput `json:"create,omitempty"`
-	Connect *UserWhereUniqueInput        `json:"connect,omitempty"`
-}
-
-type PostUpdateManyMutationInput struct {
-	FileName *string `json:"fileName,omitempty"`
-	Caption  *string `json:"caption,omitempty"`
-}
-
-type UserCreateWithoutPostsInput struct {
-	ID       *string `json:"id,omitempty"`
-	Name     string  `json:"name"`
-	Email    string  `json:"email"`
-	Password string  `json:"password"`
-	Phone    string  `json:"phone"`
-}
-
-type PostUpdateInput struct {
-	FileName *string                                 `json:"fileName,omitempty"`
-	Caption  *string                                 `json:"caption,omitempty"`
-	Owner    *UserUpdateOneRequiredWithoutPostsInput `json:"owner,omitempty"`
-	Comments *CommentUpdateManyWithoutPostInput      `json:"comments,omitempty"`
-}
-
-type CommentUpdateInput struct {
-	UniqueName  *string                                    `json:"uniqueName,omitempty"`
-	CommentText *string                                    `json:"commentText,omitempty"`
-	User        *UserUpdateOneRequiredInput                `json:"user,omitempty"`
-	Post        *PostUpdateOneRequiredWithoutCommentsInput `json:"Post,omitempty"`
-}
-
-type CommentUpdateManyMutationInput struct {
-	UniqueName  *string `json:"uniqueName,omitempty"`
-	CommentText *string `json:"commentText,omitempty"`
-}
-
-type PostUpdateWithoutCommentsDataInput struct {
-	FileName *string                                 `json:"fileName,omitempty"`
-	Caption  *string                                 `json:"caption,omitempty"`
-	Owner    *UserUpdateOneRequiredWithoutPostsInput `json:"owner,omitempty"`
-}
-
-type PostUpsertWithoutCommentsInput struct {
-	Update PostUpdateWithoutCommentsDataInput `json:"update"`
-	Create PostCreateWithoutCommentsInput     `json:"create"`
-}
-
-type UserUpdateDataInput struct {
-	Name     *string                          `json:"name,omitempty"`
-	Email    *string                          `json:"email,omitempty"`
-	Password *string                          `json:"password,omitempty"`
-	Phone    *string                          `json:"phone,omitempty"`
-	Posts    *PostUpdateManyWithoutOwnerInput `json:"posts,omitempty"`
-}
-
 type UserUpdateWithoutPostsDataInput struct {
-	Name     *string `json:"name,omitempty"`
-	Email    *string `json:"email,omitempty"`
-	Password *string `json:"password,omitempty"`
-	Phone    *string `json:"phone,omitempty"`
+	Name      *string                              `json:"name,omitempty"`
+	Email     *string                              `json:"email,omitempty"`
+	Password  *string                              `json:"password,omitempty"`
+	Phone     *string                              `json:"phone,omitempty"`
+	Followers *UserUpdateManyWithoutFollowingInput `json:"followers,omitempty"`
+	Following *UserUpdateManyWithoutFollowersInput `json:"following,omitempty"`
 }
 
-type PostUpdateManyWithoutOwnerInput struct {
-	Create     []PostCreateWithoutOwnerInput                `json:"create,omitempty"`
-	Delete     []PostWhereUniqueInput                       `json:"delete,omitempty"`
-	Connect    []PostWhereUniqueInput                       `json:"connect,omitempty"`
-	Set        []PostWhereUniqueInput                       `json:"set,omitempty"`
-	Disconnect []PostWhereUniqueInput                       `json:"disconnect,omitempty"`
-	Update     []PostUpdateWithWhereUniqueWithoutOwnerInput `json:"update,omitempty"`
-	Upsert     []PostUpsertWithWhereUniqueWithoutOwnerInput `json:"upsert,omitempty"`
-	DeleteMany []PostScalarWhereInput                       `json:"deleteMany,omitempty"`
-	UpdateMany []PostUpdateManyWithWhereNestedInput         `json:"updateMany,omitempty"`
+type CommentUpdateWithWhereUniqueWithoutPostInput struct {
+	Where CommentWhereUniqueInput           `json:"where"`
+	Data  CommentUpdateWithoutPostDataInput `json:"data"`
 }
 
 type UserCreateOneInput struct {
@@ -999,6 +1053,12 @@ type UserWhereInput struct {
 	PostsEvery            *PostWhereInput  `json:"posts_every,omitempty"`
 	PostsSome             *PostWhereInput  `json:"posts_some,omitempty"`
 	PostsNone             *PostWhereInput  `json:"posts_none,omitempty"`
+	FollowersEvery        *UserWhereInput  `json:"followers_every,omitempty"`
+	FollowersSome         *UserWhereInput  `json:"followers_some,omitempty"`
+	FollowersNone         *UserWhereInput  `json:"followers_none,omitempty"`
+	FollowingEvery        *UserWhereInput  `json:"following_every,omitempty"`
+	FollowingSome         *UserWhereInput  `json:"following_some,omitempty"`
+	FollowingNone         *UserWhereInput  `json:"following_none,omitempty"`
 	And                   []UserWhereInput `json:"AND,omitempty"`
 	Or                    []UserWhereInput `json:"OR,omitempty"`
 	Not                   []UserWhereInput `json:"NOT,omitempty"`
@@ -1016,6 +1076,47 @@ type PostUpdateOneRequiredWithoutCommentsInput struct {
 	Connect *PostWhereUniqueInput               `json:"connect,omitempty"`
 }
 
+type CommentCreateManyWithoutPostInput struct {
+	Create  []CommentCreateWithoutPostInput `json:"create,omitempty"`
+	Connect []CommentWhereUniqueInput       `json:"connect,omitempty"`
+}
+
+type UserUpsertNestedInput struct {
+	Update UserUpdateDataInput `json:"update"`
+	Create UserCreateInput     `json:"create"`
+}
+
+type UserCreateManyWithoutFollowingInput struct {
+	Create  []UserCreateWithoutFollowingInput `json:"create,omitempty"`
+	Connect []UserWhereUniqueInput            `json:"connect,omitempty"`
+}
+
+type CommentUpdateManyWithWhereNestedInput struct {
+	Where CommentScalarWhereInput    `json:"where"`
+	Data  CommentUpdateManyDataInput `json:"data"`
+}
+
+type UserCreateManyWithoutFollowersInput struct {
+	Create  []UserCreateWithoutFollowersInput `json:"create,omitempty"`
+	Connect []UserWhereUniqueInput            `json:"connect,omitempty"`
+}
+
+type CommentUpdateManyDataInput struct {
+	UniqueName  *string `json:"uniqueName,omitempty"`
+	CommentText *string `json:"commentText,omitempty"`
+}
+
+type PostCreateOneWithoutCommentsInput struct {
+	Create  *PostCreateWithoutCommentsInput `json:"create,omitempty"`
+	Connect *PostWhereUniqueInput           `json:"connect,omitempty"`
+}
+
+type PostUpsertWithWhereUniqueWithoutOwnerInput struct {
+	Where  PostWhereUniqueInput            `json:"where"`
+	Update PostUpdateWithoutOwnerDataInput `json:"update"`
+	Create PostCreateWithoutOwnerInput     `json:"create"`
+}
+
 type UserSubscriptionWhereInput struct {
 	MutationIn                 []MutationType               `json:"mutation_in,omitempty"`
 	UpdatedFieldsContains      *string                      `json:"updatedFields_contains,omitempty"`
@@ -1025,134 +1126,6 @@ type UserSubscriptionWhereInput struct {
 	And                        []UserSubscriptionWhereInput `json:"AND,omitempty"`
 	Or                         []UserSubscriptionWhereInput `json:"OR,omitempty"`
 	Not                        []UserSubscriptionWhereInput `json:"NOT,omitempty"`
-}
-
-type UserUpsertNestedInput struct {
-	Update UserUpdateDataInput `json:"update"`
-	Create UserCreateInput     `json:"create"`
-}
-
-type UserUpdateInput struct {
-	Name     *string                          `json:"name,omitempty"`
-	Email    *string                          `json:"email,omitempty"`
-	Password *string                          `json:"password,omitempty"`
-	Phone    *string                          `json:"phone,omitempty"`
-	Posts    *PostUpdateManyWithoutOwnerInput `json:"posts,omitempty"`
-}
-
-type CommentUpdateWithWhereUniqueWithoutPostInput struct {
-	Where CommentWhereUniqueInput           `json:"where"`
-	Data  CommentUpdateWithoutPostDataInput `json:"data"`
-}
-
-type PostCreateInput struct {
-	ID       *string                            `json:"id,omitempty"`
-	FileName string                             `json:"fileName"`
-	Caption  string                             `json:"caption"`
-	Owner    UserCreateOneWithoutPostsInput     `json:"owner"`
-	Comments *CommentCreateManyWithoutPostInput `json:"comments,omitempty"`
-}
-
-type CommentUpdateWithoutPostDataInput struct {
-	UniqueName  *string                     `json:"uniqueName,omitempty"`
-	CommentText *string                     `json:"commentText,omitempty"`
-	User        *UserUpdateOneRequiredInput `json:"user,omitempty"`
-}
-
-type UserUpsertWithoutPostsInput struct {
-	Update UserUpdateWithoutPostsDataInput `json:"update"`
-	Create UserCreateWithoutPostsInput     `json:"create"`
-}
-
-type CommentUpsertWithWhereUniqueWithoutPostInput struct {
-	Where  CommentWhereUniqueInput           `json:"where"`
-	Update CommentUpdateWithoutPostDataInput `json:"update"`
-	Create CommentCreateWithoutPostInput     `json:"create"`
-}
-
-type CommentCreateInput struct {
-	ID          *string                           `json:"id,omitempty"`
-	UniqueName  string                            `json:"uniqueName"`
-	CommentText string                            `json:"commentText"`
-	User        UserCreateOneInput                `json:"user"`
-	Post        PostCreateOneWithoutCommentsInput `json:"Post"`
-}
-
-type CommentScalarWhereInput struct {
-	ID                       *string                   `json:"id,omitempty"`
-	IDNot                    *string                   `json:"id_not,omitempty"`
-	IDIn                     []string                  `json:"id_in,omitempty"`
-	IDNotIn                  []string                  `json:"id_not_in,omitempty"`
-	IDLt                     *string                   `json:"id_lt,omitempty"`
-	IDLte                    *string                   `json:"id_lte,omitempty"`
-	IDGt                     *string                   `json:"id_gt,omitempty"`
-	IDGte                    *string                   `json:"id_gte,omitempty"`
-	IDContains               *string                   `json:"id_contains,omitempty"`
-	IDNotContains            *string                   `json:"id_not_contains,omitempty"`
-	IDStartsWith             *string                   `json:"id_starts_with,omitempty"`
-	IDNotStartsWith          *string                   `json:"id_not_starts_with,omitempty"`
-	IDEndsWith               *string                   `json:"id_ends_with,omitempty"`
-	IDNotEndsWith            *string                   `json:"id_not_ends_with,omitempty"`
-	UniqueName               *string                   `json:"uniqueName,omitempty"`
-	UniqueNameNot            *string                   `json:"uniqueName_not,omitempty"`
-	UniqueNameIn             []string                  `json:"uniqueName_in,omitempty"`
-	UniqueNameNotIn          []string                  `json:"uniqueName_not_in,omitempty"`
-	UniqueNameLt             *string                   `json:"uniqueName_lt,omitempty"`
-	UniqueNameLte            *string                   `json:"uniqueName_lte,omitempty"`
-	UniqueNameGt             *string                   `json:"uniqueName_gt,omitempty"`
-	UniqueNameGte            *string                   `json:"uniqueName_gte,omitempty"`
-	UniqueNameContains       *string                   `json:"uniqueName_contains,omitempty"`
-	UniqueNameNotContains    *string                   `json:"uniqueName_not_contains,omitempty"`
-	UniqueNameStartsWith     *string                   `json:"uniqueName_starts_with,omitempty"`
-	UniqueNameNotStartsWith  *string                   `json:"uniqueName_not_starts_with,omitempty"`
-	UniqueNameEndsWith       *string                   `json:"uniqueName_ends_with,omitempty"`
-	UniqueNameNotEndsWith    *string                   `json:"uniqueName_not_ends_with,omitempty"`
-	CommentText              *string                   `json:"commentText,omitempty"`
-	CommentTextNot           *string                   `json:"commentText_not,omitempty"`
-	CommentTextIn            []string                  `json:"commentText_in,omitempty"`
-	CommentTextNotIn         []string                  `json:"commentText_not_in,omitempty"`
-	CommentTextLt            *string                   `json:"commentText_lt,omitempty"`
-	CommentTextLte           *string                   `json:"commentText_lte,omitempty"`
-	CommentTextGt            *string                   `json:"commentText_gt,omitempty"`
-	CommentTextGte           *string                   `json:"commentText_gte,omitempty"`
-	CommentTextContains      *string                   `json:"commentText_contains,omitempty"`
-	CommentTextNotContains   *string                   `json:"commentText_not_contains,omitempty"`
-	CommentTextStartsWith    *string                   `json:"commentText_starts_with,omitempty"`
-	CommentTextNotStartsWith *string                   `json:"commentText_not_starts_with,omitempty"`
-	CommentTextEndsWith      *string                   `json:"commentText_ends_with,omitempty"`
-	CommentTextNotEndsWith   *string                   `json:"commentText_not_ends_with,omitempty"`
-	CommentedAt              *string                   `json:"commentedAt,omitempty"`
-	CommentedAtNot           *string                   `json:"commentedAt_not,omitempty"`
-	CommentedAtIn            []string                  `json:"commentedAt_in,omitempty"`
-	CommentedAtNotIn         []string                  `json:"commentedAt_not_in,omitempty"`
-	CommentedAtLt            *string                   `json:"commentedAt_lt,omitempty"`
-	CommentedAtLte           *string                   `json:"commentedAt_lte,omitempty"`
-	CommentedAtGt            *string                   `json:"commentedAt_gt,omitempty"`
-	CommentedAtGte           *string                   `json:"commentedAt_gte,omitempty"`
-	And                      []CommentScalarWhereInput `json:"AND,omitempty"`
-	Or                       []CommentScalarWhereInput `json:"OR,omitempty"`
-	Not                      []CommentScalarWhereInput `json:"NOT,omitempty"`
-}
-
-type PostCreateWithoutOwnerInput struct {
-	ID       *string                            `json:"id,omitempty"`
-	FileName string                             `json:"fileName"`
-	Caption  string                             `json:"caption"`
-	Comments *CommentCreateManyWithoutPostInput `json:"comments,omitempty"`
-}
-
-type CommentUpdateManyWithWhereNestedInput struct {
-	Where CommentScalarWhereInput    `json:"where"`
-	Data  CommentUpdateManyDataInput `json:"data"`
-}
-
-type PostWhereUniqueInput struct {
-	ID *string `json:"id,omitempty"`
-}
-
-type PostUpdateManyWithWhereNestedInput struct {
-	Where PostScalarWhereInput    `json:"where"`
-	Data  PostUpdateManyDataInput `json:"data"`
 }
 
 type PostScalarWhereInput struct {
@@ -1211,21 +1184,245 @@ type PostScalarWhereInput struct {
 	Not                   []PostScalarWhereInput `json:"NOT,omitempty"`
 }
 
-type PostUpsertWithWhereUniqueWithoutOwnerInput struct {
-	Where  PostWhereUniqueInput            `json:"where"`
-	Update PostUpdateWithoutOwnerDataInput `json:"update"`
-	Create PostCreateWithoutOwnerInput     `json:"create"`
+type UserUpdateInput struct {
+	Name      *string                              `json:"name,omitempty"`
+	Email     *string                              `json:"email,omitempty"`
+	Password  *string                              `json:"password,omitempty"`
+	Phone     *string                              `json:"phone,omitempty"`
+	Posts     *PostUpdateManyWithoutOwnerInput     `json:"posts,omitempty"`
+	Followers *UserUpdateManyWithoutFollowingInput `json:"followers,omitempty"`
+	Following *UserUpdateManyWithoutFollowersInput `json:"following,omitempty"`
 }
 
-type CommentUpdateManyDataInput struct {
-	UniqueName  *string `json:"uniqueName,omitempty"`
-	CommentText *string `json:"commentText,omitempty"`
+type PostUpdateManyWithWhereNestedInput struct {
+	Where PostScalarWhereInput    `json:"where"`
+	Data  PostUpdateManyDataInput `json:"data"`
 }
 
-type UserWhereUniqueInput struct {
-	ID    *string `json:"id,omitempty"`
-	Name  *string `json:"name,omitempty"`
-	Email *string `json:"email,omitempty"`
+type PostCreateInput struct {
+	ID       *string                            `json:"id,omitempty"`
+	FileName string                             `json:"fileName"`
+	Caption  string                             `json:"caption"`
+	Owner    UserCreateOneWithoutPostsInput     `json:"owner"`
+	Comments *CommentCreateManyWithoutPostInput `json:"comments,omitempty"`
+}
+
+type PostUpdateManyDataInput struct {
+	FileName *string `json:"fileName,omitempty"`
+	Caption  *string `json:"caption,omitempty"`
+}
+
+type UserUpsertWithoutPostsInput struct {
+	Update UserUpdateWithoutPostsDataInput `json:"update"`
+	Create UserCreateWithoutPostsInput     `json:"create"`
+}
+
+type UserUpdateManyWithoutFollowingInput struct {
+	Create     []UserCreateWithoutFollowingInput                `json:"create,omitempty"`
+	Delete     []UserWhereUniqueInput                           `json:"delete,omitempty"`
+	Connect    []UserWhereUniqueInput                           `json:"connect,omitempty"`
+	Set        []UserWhereUniqueInput                           `json:"set,omitempty"`
+	Disconnect []UserWhereUniqueInput                           `json:"disconnect,omitempty"`
+	Update     []UserUpdateWithWhereUniqueWithoutFollowingInput `json:"update,omitempty"`
+	Upsert     []UserUpsertWithWhereUniqueWithoutFollowingInput `json:"upsert,omitempty"`
+	DeleteMany []UserScalarWhereInput                           `json:"deleteMany,omitempty"`
+	UpdateMany []UserUpdateManyWithWhereNestedInput             `json:"updateMany,omitempty"`
+}
+
+type CommentCreateInput struct {
+	ID          *string                           `json:"id,omitempty"`
+	UniqueName  string                            `json:"uniqueName"`
+	CommentText string                            `json:"commentText"`
+	User        UserCreateOneInput                `json:"user"`
+	Post        PostCreateOneWithoutCommentsInput `json:"Post"`
+}
+
+type UserUpdateWithWhereUniqueWithoutFollowingInput struct {
+	Where UserWhereUniqueInput                `json:"where"`
+	Data  UserUpdateWithoutFollowingDataInput `json:"data"`
+}
+
+type PostCreateWithoutOwnerInput struct {
+	ID       *string                            `json:"id,omitempty"`
+	FileName string                             `json:"fileName"`
+	Caption  string                             `json:"caption"`
+	Comments *CommentCreateManyWithoutPostInput `json:"comments,omitempty"`
+}
+
+type UserUpdateWithoutFollowingDataInput struct {
+	Name      *string                              `json:"name,omitempty"`
+	Email     *string                              `json:"email,omitempty"`
+	Password  *string                              `json:"password,omitempty"`
+	Phone     *string                              `json:"phone,omitempty"`
+	Posts     *PostUpdateManyWithoutOwnerInput     `json:"posts,omitempty"`
+	Followers *UserUpdateManyWithoutFollowingInput `json:"followers,omitempty"`
+}
+
+type UserCreateWithoutFollowingInput struct {
+	ID        *string                              `json:"id,omitempty"`
+	Name      string                               `json:"name"`
+	Email     string                               `json:"email"`
+	Password  string                               `json:"password"`
+	Phone     string                               `json:"phone"`
+	Posts     *PostCreateManyWithoutOwnerInput     `json:"posts,omitempty"`
+	Followers *UserCreateManyWithoutFollowingInput `json:"followers,omitempty"`
+}
+
+type UserUpsertWithWhereUniqueWithoutFollowingInput struct {
+	Where  UserWhereUniqueInput                `json:"where"`
+	Update UserUpdateWithoutFollowingDataInput `json:"update"`
+	Create UserCreateWithoutFollowingInput     `json:"create"`
+}
+
+type PostCreateWithoutCommentsInput struct {
+	ID       *string                        `json:"id,omitempty"`
+	FileName string                         `json:"fileName"`
+	Caption  string                         `json:"caption"`
+	Owner    UserCreateOneWithoutPostsInput `json:"owner"`
+}
+
+type UserScalarWhereInput struct {
+	ID                    *string                `json:"id,omitempty"`
+	IDNot                 *string                `json:"id_not,omitempty"`
+	IDIn                  []string               `json:"id_in,omitempty"`
+	IDNotIn               []string               `json:"id_not_in,omitempty"`
+	IDLt                  *string                `json:"id_lt,omitempty"`
+	IDLte                 *string                `json:"id_lte,omitempty"`
+	IDGt                  *string                `json:"id_gt,omitempty"`
+	IDGte                 *string                `json:"id_gte,omitempty"`
+	IDContains            *string                `json:"id_contains,omitempty"`
+	IDNotContains         *string                `json:"id_not_contains,omitempty"`
+	IDStartsWith          *string                `json:"id_starts_with,omitempty"`
+	IDNotStartsWith       *string                `json:"id_not_starts_with,omitempty"`
+	IDEndsWith            *string                `json:"id_ends_with,omitempty"`
+	IDNotEndsWith         *string                `json:"id_not_ends_with,omitempty"`
+	Name                  *string                `json:"name,omitempty"`
+	NameNot               *string                `json:"name_not,omitempty"`
+	NameIn                []string               `json:"name_in,omitempty"`
+	NameNotIn             []string               `json:"name_not_in,omitempty"`
+	NameLt                *string                `json:"name_lt,omitempty"`
+	NameLte               *string                `json:"name_lte,omitempty"`
+	NameGt                *string                `json:"name_gt,omitempty"`
+	NameGte               *string                `json:"name_gte,omitempty"`
+	NameContains          *string                `json:"name_contains,omitempty"`
+	NameNotContains       *string                `json:"name_not_contains,omitempty"`
+	NameStartsWith        *string                `json:"name_starts_with,omitempty"`
+	NameNotStartsWith     *string                `json:"name_not_starts_with,omitempty"`
+	NameEndsWith          *string                `json:"name_ends_with,omitempty"`
+	NameNotEndsWith       *string                `json:"name_not_ends_with,omitempty"`
+	Email                 *string                `json:"email,omitempty"`
+	EmailNot              *string                `json:"email_not,omitempty"`
+	EmailIn               []string               `json:"email_in,omitempty"`
+	EmailNotIn            []string               `json:"email_not_in,omitempty"`
+	EmailLt               *string                `json:"email_lt,omitempty"`
+	EmailLte              *string                `json:"email_lte,omitempty"`
+	EmailGt               *string                `json:"email_gt,omitempty"`
+	EmailGte              *string                `json:"email_gte,omitempty"`
+	EmailContains         *string                `json:"email_contains,omitempty"`
+	EmailNotContains      *string                `json:"email_not_contains,omitempty"`
+	EmailStartsWith       *string                `json:"email_starts_with,omitempty"`
+	EmailNotStartsWith    *string                `json:"email_not_starts_with,omitempty"`
+	EmailEndsWith         *string                `json:"email_ends_with,omitempty"`
+	EmailNotEndsWith      *string                `json:"email_not_ends_with,omitempty"`
+	Password              *string                `json:"password,omitempty"`
+	PasswordNot           *string                `json:"password_not,omitempty"`
+	PasswordIn            []string               `json:"password_in,omitempty"`
+	PasswordNotIn         []string               `json:"password_not_in,omitempty"`
+	PasswordLt            *string                `json:"password_lt,omitempty"`
+	PasswordLte           *string                `json:"password_lte,omitempty"`
+	PasswordGt            *string                `json:"password_gt,omitempty"`
+	PasswordGte           *string                `json:"password_gte,omitempty"`
+	PasswordContains      *string                `json:"password_contains,omitempty"`
+	PasswordNotContains   *string                `json:"password_not_contains,omitempty"`
+	PasswordStartsWith    *string                `json:"password_starts_with,omitempty"`
+	PasswordNotStartsWith *string                `json:"password_not_starts_with,omitempty"`
+	PasswordEndsWith      *string                `json:"password_ends_with,omitempty"`
+	PasswordNotEndsWith   *string                `json:"password_not_ends_with,omitempty"`
+	Phone                 *string                `json:"phone,omitempty"`
+	PhoneNot              *string                `json:"phone_not,omitempty"`
+	PhoneIn               []string               `json:"phone_in,omitempty"`
+	PhoneNotIn            []string               `json:"phone_not_in,omitempty"`
+	PhoneLt               *string                `json:"phone_lt,omitempty"`
+	PhoneLte              *string                `json:"phone_lte,omitempty"`
+	PhoneGt               *string                `json:"phone_gt,omitempty"`
+	PhoneGte              *string                `json:"phone_gte,omitempty"`
+	PhoneContains         *string                `json:"phone_contains,omitempty"`
+	PhoneNotContains      *string                `json:"phone_not_contains,omitempty"`
+	PhoneStartsWith       *string                `json:"phone_starts_with,omitempty"`
+	PhoneNotStartsWith    *string                `json:"phone_not_starts_with,omitempty"`
+	PhoneEndsWith         *string                `json:"phone_ends_with,omitempty"`
+	PhoneNotEndsWith      *string                `json:"phone_not_ends_with,omitempty"`
+	And                   []UserScalarWhereInput `json:"AND,omitempty"`
+	Or                    []UserScalarWhereInput `json:"OR,omitempty"`
+	Not                   []UserScalarWhereInput `json:"NOT,omitempty"`
+}
+
+type PostUpdateInput struct {
+	FileName *string                                 `json:"fileName,omitempty"`
+	Caption  *string                                 `json:"caption,omitempty"`
+	Owner    *UserUpdateOneRequiredWithoutPostsInput `json:"owner,omitempty"`
+	Comments *CommentUpdateManyWithoutPostInput      `json:"comments,omitempty"`
+}
+
+type UserUpdateManyWithWhereNestedInput struct {
+	Where UserScalarWhereInput    `json:"where"`
+	Data  UserUpdateManyDataInput `json:"data"`
+}
+
+type UserUpdateOneRequiredWithoutPostsInput struct {
+	Create  *UserCreateWithoutPostsInput     `json:"create,omitempty"`
+	Update  *UserUpdateWithoutPostsDataInput `json:"update,omitempty"`
+	Upsert  *UserUpsertWithoutPostsInput     `json:"upsert,omitempty"`
+	Connect *UserWhereUniqueInput            `json:"connect,omitempty"`
+}
+
+type UserUpdateWithoutFollowersDataInput struct {
+	Name      *string                              `json:"name,omitempty"`
+	Email     *string                              `json:"email,omitempty"`
+	Password  *string                              `json:"password,omitempty"`
+	Phone     *string                              `json:"phone,omitempty"`
+	Posts     *PostUpdateManyWithoutOwnerInput     `json:"posts,omitempty"`
+	Following *UserUpdateManyWithoutFollowersInput `json:"following,omitempty"`
+}
+
+type UserUpdateWithWhereUniqueWithoutFollowersInput struct {
+	Where UserWhereUniqueInput                `json:"where"`
+	Data  UserUpdateWithoutFollowersDataInput `json:"data"`
+}
+
+type UserUpdateManyWithoutFollowersInput struct {
+	Create     []UserCreateWithoutFollowersInput                `json:"create,omitempty"`
+	Delete     []UserWhereUniqueInput                           `json:"delete,omitempty"`
+	Connect    []UserWhereUniqueInput                           `json:"connect,omitempty"`
+	Set        []UserWhereUniqueInput                           `json:"set,omitempty"`
+	Disconnect []UserWhereUniqueInput                           `json:"disconnect,omitempty"`
+	Update     []UserUpdateWithWhereUniqueWithoutFollowersInput `json:"update,omitempty"`
+	Upsert     []UserUpsertWithWhereUniqueWithoutFollowersInput `json:"upsert,omitempty"`
+	DeleteMany []UserScalarWhereInput                           `json:"deleteMany,omitempty"`
+	UpdateMany []UserUpdateManyWithWhereNestedInput             `json:"updateMany,omitempty"`
+}
+
+type UserUpdateManyDataInput struct {
+	Name     *string `json:"name,omitempty"`
+	Email    *string `json:"email,omitempty"`
+	Password *string `json:"password,omitempty"`
+	Phone    *string `json:"phone,omitempty"`
+}
+
+type UserCreateInput struct {
+	ID        *string                              `json:"id,omitempty"`
+	Name      string                               `json:"name"`
+	Email     string                               `json:"email"`
+	Password  string                               `json:"password"`
+	Phone     string                               `json:"phone"`
+	Posts     *PostCreateManyWithoutOwnerInput     `json:"posts,omitempty"`
+	Followers *UserCreateManyWithoutFollowingInput `json:"followers,omitempty"`
+	Following *UserCreateManyWithoutFollowersInput `json:"following,omitempty"`
+}
+
+type PostUpsertWithoutCommentsInput struct {
+	Update PostUpdateWithoutCommentsDataInput `json:"update"`
+	Create PostCreateWithoutCommentsInput     `json:"create"`
 }
 
 type CommentSubscriptionWhereInput struct {
@@ -1239,20 +1436,21 @@ type CommentSubscriptionWhereInput struct {
 	Not                        []CommentSubscriptionWhereInput `json:"NOT,omitempty"`
 }
 
-type UserCreateInput struct {
-	ID       *string                          `json:"id,omitempty"`
-	Name     string                           `json:"name"`
-	Email    string                           `json:"email"`
-	Password string                           `json:"password"`
-	Phone    string                           `json:"phone"`
-	Posts    *PostCreateManyWithoutOwnerInput `json:"posts,omitempty"`
+type UserCreateWithoutFollowersInput struct {
+	ID        *string                              `json:"id,omitempty"`
+	Name      string                               `json:"name"`
+	Email     string                               `json:"email"`
+	Password  string                               `json:"password"`
+	Phone     string                               `json:"phone"`
+	Posts     *PostCreateManyWithoutOwnerInput     `json:"posts,omitempty"`
+	Following *UserCreateManyWithoutFollowersInput `json:"following,omitempty"`
 }
 
-type UserUpdateOneRequiredWithoutPostsInput struct {
-	Create  *UserCreateWithoutPostsInput     `json:"create,omitempty"`
-	Update  *UserUpdateWithoutPostsDataInput `json:"update,omitempty"`
-	Upsert  *UserUpsertWithoutPostsInput     `json:"upsert,omitempty"`
-	Connect *UserWhereUniqueInput            `json:"connect,omitempty"`
+type CommentCreateWithoutPostInput struct {
+	ID          *string            `json:"id,omitempty"`
+	UniqueName  string             `json:"uniqueName"`
+	CommentText string             `json:"commentText"`
+	User        UserCreateOneInput `json:"user"`
 }
 
 type UserPreviousValuesExec struct {
@@ -1293,6 +1491,54 @@ type UserPreviousValues struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Phone    string `json:"phone"`
+}
+
+type CommentEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *CommentEdgeExec) Node() *CommentExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Comment"},
+		"node",
+		[]string{"id", "uniqueName", "commentText", "commentedAt"})
+
+	return &CommentExec{ret}
+}
+
+func (instance CommentEdgeExec) Exec(ctx context.Context) (*CommentEdge, error) {
+	var v CommentEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance CommentEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type CommentEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance CommentEdgeExecArray) Exec(ctx context.Context) ([]CommentEdge, error) {
+	var v []CommentEdge
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var CommentEdgeFields = []string{"cursor"}
+
+type CommentEdge struct {
+	Node   Comment `json:"node"`
+	Cursor string  `json:"cursor"`
 }
 
 type PostExec struct {
@@ -1379,174 +1625,6 @@ type Post struct {
 	PostedAt string `json:"postedAt"`
 }
 
-type PostConnectionExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *PostConnectionExec) PageInfo() *PageInfoExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "PageInfo"},
-		"pageInfo",
-		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
-
-	return &PageInfoExec{ret}
-}
-
-func (instance *PostConnectionExec) Edges() *PostEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
-		instance.exec,
-		nil,
-		[3]string{"PostWhereInput", "PostOrderByInput", "PostEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "Post"},
-		"node",
-		PostFields)
-
-	return &PostEdgeExecArray{nodes}
-}
-
-func (instance *PostConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "AggregatePost"},
-		"aggregate",
-		[]string{"count"})
-
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return &v, err
-}
-
-func (instance PostConnectionExec) Exec(ctx context.Context) (*PostConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return &PostConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
-}
-
-func (instance PostConnectionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type PostConnectionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance PostConnectionExecArray) Exec(ctx context.Context) ([]PostConnection, error) {
-	var v []PostConnection
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var PostConnectionFields = []string{}
-
-type PostConnection struct {
-	PageInfo PageInfo   `json:"pageInfo"`
-	Edges    []PostEdge `json:"edges"`
-}
-
-type CommentConnectionExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *CommentConnectionExec) PageInfo() *PageInfoExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "PageInfo"},
-		"pageInfo",
-		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
-
-	return &PageInfoExec{ret}
-}
-
-func (instance *CommentConnectionExec) Edges() *CommentEdgeExecArray {
-	edges := instance.exec.Client.GetMany(
-		instance.exec,
-		nil,
-		[3]string{"CommentWhereInput", "CommentOrderByInput", "CommentEdge"},
-		"edges",
-		[]string{"cursor"})
-
-	nodes := edges.Client.GetOne(
-		edges,
-		nil,
-		[2]string{"", "Comment"},
-		"node",
-		CommentFields)
-
-	return &CommentEdgeExecArray{nodes}
-}
-
-func (instance *CommentConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "AggregateComment"},
-		"aggregate",
-		[]string{"count"})
-
-	var v Aggregate
-	_, err := ret.Exec(ctx, &v)
-	return &v, err
-}
-
-func (instance CommentConnectionExec) Exec(ctx context.Context) (*CommentConnection, error) {
-	edges, err := instance.Edges().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	pageInfo, err := instance.PageInfo().Exec(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return &CommentConnection{
-		Edges:    edges,
-		PageInfo: *pageInfo,
-	}, nil
-}
-
-func (instance CommentConnectionExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type CommentConnectionExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance CommentConnectionExecArray) Exec(ctx context.Context) ([]CommentConnection, error) {
-	var v []CommentConnection
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var CommentConnectionFields = []string{}
-
-type CommentConnection struct {
-	PageInfo PageInfo      `json:"pageInfo"`
-	Edges    []CommentEdge `json:"edges"`
-}
-
 type UserExec struct {
 	exec *prisma.Exec
 }
@@ -1585,6 +1663,74 @@ func (instance *UserExec) Posts(params *PostsParamsExec) *PostExecArray {
 	return &PostExecArray{ret}
 }
 
+type FollowersParamsExec struct {
+	Where   *UserWhereInput
+	OrderBy *UserOrderByInput
+	Skip    *int32
+	After   *string
+	Before  *string
+	First   *int32
+	Last    *int32
+}
+
+func (instance *UserExec) Followers(params *FollowersParamsExec) *UserExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
+		"followers",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserExecArray{ret}
+}
+
+type FollowingParamsExec struct {
+	Where   *UserWhereInput
+	OrderBy *UserOrderByInput
+	Skip    *int32
+	After   *string
+	Before  *string
+	First   *int32
+	Last    *int32
+}
+
+func (instance *UserExec) Following(params *FollowingParamsExec) *UserExecArray {
+	var wparams *prisma.WhereParams
+	if params != nil {
+		wparams = &prisma.WhereParams{
+			Where:   params.Where,
+			OrderBy: (*string)(params.OrderBy),
+			Skip:    params.Skip,
+			After:   params.After,
+			Before:  params.Before,
+			First:   params.First,
+			Last:    params.Last,
+		}
+	}
+
+	ret := instance.exec.Client.GetMany(
+		instance.exec,
+		wparams,
+		[3]string{"UserWhereInput", "UserOrderByInput", "User"},
+		"following",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserExecArray{ret}
+}
+
 func (instance UserExec) Exec(ctx context.Context) (*User, error) {
 	var v User
 	ok, err := instance.exec.Exec(ctx, &v)
@@ -1621,23 +1767,34 @@ type User struct {
 	Phone    string `json:"phone"`
 }
 
-type CommentEdgeExec struct {
+type PostSubscriptionPayloadExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *CommentEdgeExec) Node() *CommentExec {
+func (instance *PostSubscriptionPayloadExec) Node() *PostExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "Comment"},
+		[2]string{"", "Post"},
 		"node",
-		[]string{"id", "uniqueName", "commentText", "commentedAt"})
+		[]string{"id", "fileName", "caption", "postedAt"})
 
-	return &CommentExec{ret}
+	return &PostExec{ret}
 }
 
-func (instance CommentEdgeExec) Exec(ctx context.Context) (*CommentEdge, error) {
-	var v CommentEdge
+func (instance *PostSubscriptionPayloadExec) PreviousValues() *PostPreviousValuesExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PostPreviousValues"},
+		"previousValues",
+		[]string{"id", "fileName", "caption", "postedAt"})
+
+	return &PostPreviousValuesExec{ret}
+}
+
+func (instance PostSubscriptionPayloadExec) Exec(ctx context.Context) (*PostSubscriptionPayload, error) {
+	var v PostSubscriptionPayload
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1648,25 +1805,26 @@ func (instance CommentEdgeExec) Exec(ctx context.Context) (*CommentEdge, error) 
 	return &v, nil
 }
 
-func (instance CommentEdgeExec) Exists(ctx context.Context) (bool, error) {
+func (instance PostSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type CommentEdgeExecArray struct {
+type PostSubscriptionPayloadExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance CommentEdgeExecArray) Exec(ctx context.Context) ([]CommentEdge, error) {
-	var v []CommentEdge
+func (instance PostSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]PostSubscriptionPayload, error) {
+	var v []PostSubscriptionPayload
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var CommentEdgeFields = []string{"cursor"}
+var PostSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
 
-type CommentEdge struct {
-	Node   Comment `json:"node"`
-	Cursor string  `json:"cursor"`
+type PostSubscriptionPayload struct {
+	Mutation      MutationType `json:"mutation"`
+	Node          *Post        `json:"node,omitempty"`
+	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
 type UserConnectionExec struct {
@@ -1753,12 +1911,12 @@ type UserConnection struct {
 	Edges    []UserEdge `json:"edges"`
 }
 
-type PostPreviousValuesExec struct {
+type PageInfoExec struct {
 	exec *prisma.Exec
 }
 
-func (instance PostPreviousValuesExec) Exec(ctx context.Context) (*PostPreviousValues, error) {
-	var v PostPreviousValues
+func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
+	var v PageInfo
 	ok, err := instance.exec.Exec(ctx, &v)
 	if err != nil {
 		return nil, err
@@ -1769,27 +1927,159 @@ func (instance PostPreviousValuesExec) Exec(ctx context.Context) (*PostPreviousV
 	return &v, nil
 }
 
-func (instance PostPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type PostPreviousValuesExecArray struct {
+type PageInfoExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance PostPreviousValuesExecArray) Exec(ctx context.Context) ([]PostPreviousValues, error) {
-	var v []PostPreviousValues
+func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
+	var v []PageInfo
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var PostPreviousValuesFields = []string{"id", "fileName", "caption", "postedAt"}
+var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
 
-type PostPreviousValues struct {
-	ID       string `json:"id"`
-	FileName string `json:"fileName"`
-	Caption  string `json:"caption"`
-	PostedAt string `json:"postedAt"`
+type PageInfo struct {
+	HasNextPage     bool    `json:"hasNextPage"`
+	HasPreviousPage bool    `json:"hasPreviousPage"`
+	StartCursor     *string `json:"startCursor,omitempty"`
+	EndCursor       *string `json:"endCursor,omitempty"`
+}
+
+type PostEdgeExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *PostEdgeExec) Node() *PostExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Post"},
+		"node",
+		[]string{"id", "fileName", "caption", "postedAt"})
+
+	return &PostExec{ret}
+}
+
+func (instance PostEdgeExec) Exec(ctx context.Context) (*PostEdge, error) {
+	var v PostEdge
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PostEdgeExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostEdgeExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostEdgeExecArray) Exec(ctx context.Context) ([]PostEdge, error) {
+	var v []PostEdge
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var PostEdgeFields = []string{"cursor"}
+
+type PostEdge struct {
+	Node   Post   `json:"node"`
+	Cursor string `json:"cursor"`
+}
+
+type CommentConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *CommentConnectionExec) PageInfo() *PageInfoExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *CommentConnectionExec) Edges() *CommentEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"CommentWhereInput", "CommentOrderByInput", "CommentEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
+		nil,
+		[2]string{"", "Comment"},
+		"node",
+		CommentFields)
+
+	return &CommentEdgeExecArray{nodes}
+}
+
+func (instance *CommentConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "AggregateComment"},
+		"aggregate",
+		[]string{"count"})
+
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
+}
+
+func (instance CommentConnectionExec) Exec(ctx context.Context) (*CommentConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &CommentConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
+}
+
+func (instance CommentConnectionExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type CommentConnectionExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance CommentConnectionExecArray) Exec(ctx context.Context) ([]CommentConnection, error) {
+	var v []CommentConnection
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var CommentConnectionFields = []string{}
+
+type CommentConnection struct {
+	PageInfo PageInfo      `json:"pageInfo"`
+	Edges    []CommentEdge `json:"edges"`
 }
 
 type UserSubscriptionPayloadExec struct {
@@ -1850,6 +2140,67 @@ type UserSubscriptionPayload struct {
 	Mutation      MutationType `json:"mutation"`
 	Node          *User        `json:"node,omitempty"`
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
+}
+
+type CommentExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *CommentExec) User() *UserExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "User"},
+		"user",
+		[]string{"id", "name", "email", "password", "phone"})
+
+	return &UserExec{ret}
+}
+
+func (instance *CommentExec) Post() *PostExec {
+	ret := instance.exec.Client.GetOne(
+		instance.exec,
+		nil,
+		[2]string{"", "Post"},
+		"Post",
+		[]string{"id", "fileName", "caption", "postedAt"})
+
+	return &PostExec{ret}
+}
+
+func (instance CommentExec) Exec(ctx context.Context) (*Comment, error) {
+	var v Comment
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance CommentExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type CommentExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance CommentExecArray) Exec(ctx context.Context) ([]Comment, error) {
+	var v []Comment
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var CommentFields = []string{"id", "uniqueName", "commentText", "commentedAt"}
+
+type Comment struct {
+	ID          string `json:"id"`
+	UniqueName  string `json:"uniqueName"`
+	CommentText string `json:"commentText"`
+	CommentedAt string `json:"commentedAt"`
 }
 
 type CommentPreviousValuesExec struct {
@@ -1951,212 +2302,127 @@ type CommentSubscriptionPayload struct {
 	UpdatedFields []string     `json:"updatedFields,omitempty"`
 }
 
-type PostSubscriptionPayloadExec struct {
+type PostPreviousValuesExec struct {
 	exec *prisma.Exec
 }
 
-func (instance *PostSubscriptionPayloadExec) Node() *PostExec {
+func (instance PostPreviousValuesExec) Exec(ctx context.Context) (*PostPreviousValues, error) {
+	var v PostPreviousValues
+	ok, err := instance.exec.Exec(ctx, &v)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrNoResult
+	}
+	return &v, nil
+}
+
+func (instance PostPreviousValuesExec) Exists(ctx context.Context) (bool, error) {
+	return instance.exec.Exists(ctx)
+}
+
+type PostPreviousValuesExecArray struct {
+	exec *prisma.Exec
+}
+
+func (instance PostPreviousValuesExecArray) Exec(ctx context.Context) ([]PostPreviousValues, error) {
+	var v []PostPreviousValues
+	err := instance.exec.ExecArray(ctx, &v)
+	return v, err
+}
+
+var PostPreviousValuesFields = []string{"id", "fileName", "caption", "postedAt"}
+
+type PostPreviousValues struct {
+	ID       string `json:"id"`
+	FileName string `json:"fileName"`
+	Caption  string `json:"caption"`
+	PostedAt string `json:"postedAt"`
+}
+
+type PostConnectionExec struct {
+	exec *prisma.Exec
+}
+
+func (instance *PostConnectionExec) PageInfo() *PageInfoExec {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
+		nil,
+		[2]string{"", "PageInfo"},
+		"pageInfo",
+		[]string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"})
+
+	return &PageInfoExec{ret}
+}
+
+func (instance *PostConnectionExec) Edges() *PostEdgeExecArray {
+	edges := instance.exec.Client.GetMany(
+		instance.exec,
+		nil,
+		[3]string{"PostWhereInput", "PostOrderByInput", "PostEdge"},
+		"edges",
+		[]string{"cursor"})
+
+	nodes := edges.Client.GetOne(
+		edges,
 		nil,
 		[2]string{"", "Post"},
 		"node",
-		[]string{"id", "fileName", "caption", "postedAt"})
+		PostFields)
 
-	return &PostExec{ret}
+	return &PostEdgeExecArray{nodes}
 }
 
-func (instance *PostSubscriptionPayloadExec) PreviousValues() *PostPreviousValuesExec {
+func (instance *PostConnectionExec) Aggregate(ctx context.Context) (*Aggregate, error) {
 	ret := instance.exec.Client.GetOne(
 		instance.exec,
 		nil,
-		[2]string{"", "PostPreviousValues"},
-		"previousValues",
-		[]string{"id", "fileName", "caption", "postedAt"})
+		[2]string{"", "AggregatePost"},
+		"aggregate",
+		[]string{"count"})
 
-	return &PostPreviousValuesExec{ret}
+	var v Aggregate
+	_, err := ret.Exec(ctx, &v)
+	return &v, err
 }
 
-func (instance PostSubscriptionPayloadExec) Exec(ctx context.Context) (*PostSubscriptionPayload, error) {
-	var v PostSubscriptionPayload
-	ok, err := instance.exec.Exec(ctx, &v)
+func (instance PostConnectionExec) Exec(ctx context.Context) (*PostConnection, error) {
+	edges, err := instance.Edges().Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if !ok {
-		return nil, ErrNoResult
+
+	pageInfo, err := instance.PageInfo().Exec(ctx)
+	if err != nil {
+		return nil, err
 	}
-	return &v, nil
+
+	return &PostConnection{
+		Edges:    edges,
+		PageInfo: *pageInfo,
+	}, nil
 }
 
-func (instance PostSubscriptionPayloadExec) Exists(ctx context.Context) (bool, error) {
+func (instance PostConnectionExec) Exists(ctx context.Context) (bool, error) {
 	return instance.exec.Exists(ctx)
 }
 
-type PostSubscriptionPayloadExecArray struct {
+type PostConnectionExecArray struct {
 	exec *prisma.Exec
 }
 
-func (instance PostSubscriptionPayloadExecArray) Exec(ctx context.Context) ([]PostSubscriptionPayload, error) {
-	var v []PostSubscriptionPayload
+func (instance PostConnectionExecArray) Exec(ctx context.Context) ([]PostConnection, error) {
+	var v []PostConnection
 	err := instance.exec.ExecArray(ctx, &v)
 	return v, err
 }
 
-var PostSubscriptionPayloadFields = []string{"mutation", "updatedFields"}
+var PostConnectionFields = []string{}
 
-type PostSubscriptionPayload struct {
-	Mutation      MutationType `json:"mutation"`
-	Node          *Post        `json:"node,omitempty"`
-	UpdatedFields []string     `json:"updatedFields,omitempty"`
-}
-
-type PageInfoExec struct {
-	exec *prisma.Exec
-}
-
-func (instance PageInfoExec) Exec(ctx context.Context) (*PageInfo, error) {
-	var v PageInfo
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance PageInfoExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type PageInfoExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance PageInfoExecArray) Exec(ctx context.Context) ([]PageInfo, error) {
-	var v []PageInfo
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var PageInfoFields = []string{"hasNextPage", "hasPreviousPage", "startCursor", "endCursor"}
-
-type PageInfo struct {
-	HasNextPage     bool    `json:"hasNextPage"`
-	HasPreviousPage bool    `json:"hasPreviousPage"`
-	StartCursor     *string `json:"startCursor,omitempty"`
-	EndCursor       *string `json:"endCursor,omitempty"`
-}
-
-type PostEdgeExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *PostEdgeExec) Node() *PostExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "Post"},
-		"node",
-		[]string{"id", "fileName", "caption", "postedAt"})
-
-	return &PostExec{ret}
-}
-
-func (instance PostEdgeExec) Exec(ctx context.Context) (*PostEdge, error) {
-	var v PostEdge
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance PostEdgeExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type PostEdgeExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance PostEdgeExecArray) Exec(ctx context.Context) ([]PostEdge, error) {
-	var v []PostEdge
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var PostEdgeFields = []string{"cursor"}
-
-type PostEdge struct {
-	Node   Post   `json:"node"`
-	Cursor string `json:"cursor"`
-}
-
-type CommentExec struct {
-	exec *prisma.Exec
-}
-
-func (instance *CommentExec) User() *UserExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "User"},
-		"user",
-		[]string{"id", "name", "email", "password", "phone"})
-
-	return &UserExec{ret}
-}
-
-func (instance *CommentExec) Post() *PostExec {
-	ret := instance.exec.Client.GetOne(
-		instance.exec,
-		nil,
-		[2]string{"", "Post"},
-		"Post",
-		[]string{"id", "fileName", "caption", "postedAt"})
-
-	return &PostExec{ret}
-}
-
-func (instance CommentExec) Exec(ctx context.Context) (*Comment, error) {
-	var v Comment
-	ok, err := instance.exec.Exec(ctx, &v)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, ErrNoResult
-	}
-	return &v, nil
-}
-
-func (instance CommentExec) Exists(ctx context.Context) (bool, error) {
-	return instance.exec.Exists(ctx)
-}
-
-type CommentExecArray struct {
-	exec *prisma.Exec
-}
-
-func (instance CommentExecArray) Exec(ctx context.Context) ([]Comment, error) {
-	var v []Comment
-	err := instance.exec.ExecArray(ctx, &v)
-	return v, err
-}
-
-var CommentFields = []string{"id", "uniqueName", "commentText", "commentedAt"}
-
-type Comment struct {
-	ID          string `json:"id"`
-	UniqueName  string `json:"uniqueName"`
-	CommentText string `json:"commentText"`
-	CommentedAt string `json:"commentedAt"`
+type PostConnection struct {
+	PageInfo PageInfo   `json:"pageInfo"`
+	Edges    []PostEdge `json:"edges"`
 }
 
 type UserEdgeExec struct {

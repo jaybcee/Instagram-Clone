@@ -96,11 +96,16 @@ export default {
   mounted() {
    this.avatarURL = `${process.env.VUE_APP_ROOT_API}/photos/${this.$route.params.username}.jpg`
     axios
-      .get(`${process.env.VUE_APP_ROOT_API}/user/${this.$route.params.username}`)
+      .get(`${process.env.VUE_APP_ROOT_API}/user/${this.$route.params.username}/${localStorage.getItem("username")}`)
       .then(response => {
-        response.data.posts.map(p => p.src = `${process.env.VUE_APP_ROOT_API}/photos/${p.fileName}`)
+        if (response.data.posts){
+          response.data.posts.map(p => p.src = `${process.env.VUE_APP_ROOT_API}/photos/${p.fileName}`)
+        }
+        this.nbFollowing = response.data.following;
+        this.nbFollowers = response.data.followers;
         this.info = response.data.posts
         this.userNotFound = response.data.userNotFound;
+        this.following = response.data.alreadyFollowing;
         this.loaded = true;
       })
       .catch(error => {
@@ -117,25 +122,28 @@ export default {
       notTheSame(){
         return (localStorage.getItem("username") !== this.$route.params.username);
       },
-      follow(follow){
+      follow(followParam){
         axios({
             method: 'POST',
-            url: `${process.env.VUE_APP_ROOT_API}/api/followUser`,
+            url: `${process.env.VUE_APP_ROOT_API}/secure/api/followUser`,
+            headers: {
+              Authorization: `Bearer ${this.$cookies.get('token')}`,
+            },
             data: {
-              follow,
+              follow: followParam,
               follower: localStorage.getItem("username"),
               followee: this.$route.params.username
             }
           })
           .then(() => {
-            this.following = !this.following;
+          })
+          .catch(e => console.error(e))
+          this.following = !this.following;
             if(this.following){
               this.nbFollowers+=1;
             }else{
               this.nbFollowers-=1;
             }
-          })
-          .catch(e => console.error(e))
       },
       }
     }

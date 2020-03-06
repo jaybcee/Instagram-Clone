@@ -3,6 +3,7 @@ package main
 import (
 	"Nicolas-MacBeth/main/backend/generated/prisma-client"
 	"context"
+	"sort"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 )
@@ -40,6 +41,76 @@ func GetUser(email string) (*prisma.User, error) {
 
 }
 
+func unfollowAUser(unfollower string, unfollowee string) (*prisma.User, error, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	// remove the unfollower from followers for the unfollowee
+	unfolloweeUser, err1 := client.UpdateUser(prisma.UserUpdateParams{
+		Where: prisma.UserWhereUniqueInput{
+			Name: &unfollowee,
+		},
+		Data: prisma.UserUpdateInput{
+			Followers: &prisma.UserUpdateManyWithoutFollowingInput{
+				Disconnect: []prisma.UserWhereUniqueInput{
+					{Name: &unfollower},
+				},
+			},
+		},
+	}).Exec(ctx)
+
+	// remove the unfollowee from following for the unfollower
+	_, err2 := client.UpdateUser(prisma.UserUpdateParams{
+		Where: prisma.UserWhereUniqueInput{
+			Name: &unfollower,
+		},
+		Data: prisma.UserUpdateInput{
+			Following: &prisma.UserUpdateManyWithoutFollowersInput{
+				Disconnect: []prisma.UserWhereUniqueInput{
+					{Name: &unfollowee},
+				},
+			},
+		},
+	}).Exec(ctx)
+
+	return unfolloweeUser, err1, err2
+}
+
+func followAUser(follower string, followee string) (*prisma.User, error, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	// Add the follower as a follower for the followee
+	followeeUser, err1 := client.UpdateUser(prisma.UserUpdateParams{
+		Where: prisma.UserWhereUniqueInput{
+			Name: &followee,
+		},
+		Data: prisma.UserUpdateInput{
+			Followers: &prisma.UserUpdateManyWithoutFollowingInput{
+				Connect: []prisma.UserWhereUniqueInput{
+					{Name: &follower},
+				},
+			},
+		},
+	}).Exec(ctx)
+
+	//Add the followee as following for follower
+	_, err2 := client.UpdateUser(prisma.UserUpdateParams{
+		Where: prisma.UserWhereUniqueInput{
+			Name: &follower,
+		},
+		Data: prisma.UserUpdateInput{
+			Following: &prisma.UserUpdateManyWithoutFollowersInput{
+				Connect: []prisma.UserWhereUniqueInput{
+					{Name: &followee},
+				},
+			},
+		},
+	}).Exec(ctx)
+
+	return followeeUser, err1, err2
+}
+
 func getPostsByName(name string) ([]prisma.Post, error) {
 	client := prisma.New(nil)
 	ctx := context.TODO()
@@ -48,7 +119,83 @@ func getPostsByName(name string) ([]prisma.Post, error) {
 		Name: &name,
 	}).Posts(nil).Exec(ctx)
 
+	//Sort all the posts
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].PostedAt > posts[j].PostedAt
+	})
+
 	return posts, err
+}
+
+func getAlreadyFollowing(name string, selfName string) (bool, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	users, err := client.Users(&prisma.UsersParams{
+		Where: &prisma.UserWhereInput{
+			FollowersSome: &prisma.UserWhereInput{
+				Name: &selfName,
+			},
+		}}).Exec(ctx)
+
+	alreadyFollowing := false
+	for _, element := range users {
+		if element.Name == name {
+			alreadyFollowing = true
+		}
+	}
+
+	return alreadyFollowing, err
+}
+
+func getPersonalizedPosts(name string) ([]prisma.Post, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	users, err := client.Users(&prisma.UsersParams{
+		Where: &prisma.UserWhereInput{
+			FollowersSome: &prisma.UserWhereInput{
+				Name: &name,
+			},
+		}}).Exec(ctx)
+
+	var posts []prisma.Post
+
+	for _, element := range users {
+		tempPosts, _ := client.User(prisma.UserWhereUniqueInput{
+			Name: &element.Name,
+		}).Posts(nil).Exec(ctx)
+		posts = append(posts, tempPosts...)
+	}
+
+	//Sort all the posts
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].PostedAt > posts[j].PostedAt
+	})
+
+	return posts, err
+}
+
+func getFollowersByName(name string) ([]prisma.User, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	followers, err := client.User(prisma.UserWhereUniqueInput{
+		Name: &name,
+	}).Followers(nil).Exec(ctx)
+
+	return followers, err
+}
+
+func getFollowingByName(name string) ([]prisma.User, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	following, err := client.User(prisma.UserWhereUniqueInput{
+		Name: &name,
+	}).Following(nil).Exec(ctx)
+
+	return following, err
 }
 
 func AddUser(name string, email string, password string) (*prisma.User, error) {
