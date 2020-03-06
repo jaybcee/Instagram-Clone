@@ -5,7 +5,8 @@
     tile
   >
     <v-container fluid>
-      <v-row>
+      <h3 v-if="emptyFeed" >Sorry, no posts were found. Go ahead and follow people!</h3>
+      <v-row v-if="!emptyFeed">
         <v-col
           v-for="card in cards"
           :key="card.title"
@@ -26,21 +27,34 @@
 import axios from "axios";
   export default {
     data: () => ({
-      cards: [{}],
+      cards: [],
       user: localStorage.getItem("username"),
       loaded: false,
+      emptyFeed: true,
     }),
     mounted(){
+      console.log(this.user)
       axios({
             method: 'POST',
-            url: `${process.env.VUE_APP_ROOT_API}/api/infoHome`,
+            headers: {
+              Authorization: `Bearer ${this.$cookies.get('token')}`,
+            },
+            url: `${process.env.VUE_APP_ROOT_API}/secure/api/infoHome`,
             data: {
               user: this.user
             }
           })
-          .then(() => {
-            //this.cards =  
-            this.loaded = false;
+          .then(r => {
+            console.log('wtffff', this.user)
+            if (r.data.posts){
+              r.data.posts.map(p => p.src = `${process.env.VUE_APP_ROOT_API}/photos/${p.fileName}`)
+            }
+            console.log(r.data.posts);
+            this.cards = r.data.posts;
+            if (r.data.posts && r.data.posts.length){
+              this.emptyFeed = false;
+            }
+            this.loaded = true;
           })
           .catch(e => console.error(e))
     }

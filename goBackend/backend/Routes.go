@@ -2,6 +2,7 @@ package main
 
 import (
 	"Nicolas-MacBeth/main/backend/generated/prisma-client"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -28,6 +29,30 @@ func signupRoute(c *gin.Context) {
 	c.String(200, "Success")
 }
 
+func getHome(c *gin.Context) {
+	var req struct {
+		Name string `json:"name"`
+	}
+
+	err := c.BindJSON(&req)
+	check(err)
+
+	fmt.Println(123)
+
+	fmt.Println("my name is")
+	fmt.Println(req.Name)
+	posts, err1 := getPersonalizedPosts(req.Name)
+
+	if err != nil || err1 != nil {
+		c.String(500, "Posts are unretrievable")
+		return
+	}
+
+	c.JSON(200, struct {
+		Posts []prisma.Post `json:"posts"`
+	}{posts})
+}
+
 func userRoute(c *gin.Context) {
 	username := c.Param("id")
 
@@ -35,7 +60,9 @@ func userRoute(c *gin.Context) {
 	followers, err2 := getFollowersByName(username)
 	following, err3 := getFollowingByName(username)
 
-	if err1 != nil || posts == nil {
+	fmt.Println(followers)
+
+	if err1 != nil || err2 != nil || err3 != nil {
 		c.JSON(404, struct {
 			UserNotFound bool `json:"userNotFound"`
 		}{true})
@@ -47,7 +74,7 @@ func userRoute(c *gin.Context) {
 		Followers    int           `json:"followers"`
 		Following    int           `json:"following"`
 		UserNotFound bool          `json:"userNotFound"`
-	}{posts, followers, following, false})
+	}{posts, len(followers), len(following), false})
 }
 
 func testRoute(c *gin.Context) {
@@ -199,7 +226,7 @@ func postComment(c *gin.Context) {
 	}{"Thank you comment"})
 }
 
-func followUser(c *gin.Context) {
+func followOrUnfollowUser(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	email := claims["email"].(string)
 
@@ -219,10 +246,23 @@ func followUser(c *gin.Context) {
 	err := c.BindJSON(&req)
 	check(err)
 
-	followUser, err2 := followAUser(req.Follower, req.Followee)
+	var (
+		err2 error
+		err3 error
+	)
 
-	if err == nil && err2 == nil {
+	// for follows
+	if req.Follow == true {
+		_, err2, err3 = followAUser(req.Follower, req.Followee)
+	} else if req.Follow == false { // for unfollows
+		_, err2, err3 = unfollowAUser(req.Follower, req.Followee)
+	}
+
+	if err == nil && err2 == nil && err3 == nil {
 		c.String(200, "All good in the hood")
+	} else {
+		c.String(500, "Unable to follow/unfollow")
+		return
 	}
 }
 

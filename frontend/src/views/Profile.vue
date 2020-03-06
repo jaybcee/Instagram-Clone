@@ -102,6 +102,8 @@ export default {
         if (response.data.posts){
           response.data.posts.map(p => p.src = `${process.env.VUE_APP_ROOT_API}/photos/${p.fileName}`)
         }
+        this.nbFollowing = response.data.following;
+        this.nbFollowers = response.data.followers;
         this.info = response.data.posts
         this.userNotFound = response.data.userNotFound;
         this.loaded = true;
@@ -120,12 +122,15 @@ export default {
       notTheSame(){
         return (localStorage.getItem("username") !== this.$route.params.username);
       },
-      follow(follow){
+      follow(followParam){
         axios({
             method: 'POST',
-            url: `${process.env.VUE_APP_ROOT_API}/api/followUser`,
+            url: `${process.env.VUE_APP_ROOT_API}/secure/api/followUser`,
+            headers: {
+              Authorization: `Bearer ${this.$cookies.get('token')}`,
+            },
             data: {
-              follow,
+              follow: followParam,
               follower: localStorage.getItem("username"),
               followee: this.$route.params.username
             }
