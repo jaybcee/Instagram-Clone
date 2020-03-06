@@ -1,5 +1,5 @@
 <template>
-  <v-card
+  <v-card v-if="loaded"
     class="mx-auto"
     max-width="500"
     tile
@@ -23,35 +23,26 @@
 </template>
 
 <script>
+import axios from "axios";
   export default {
     data: () => ({
-      // this model of cards is wrong!!!
-      // please refer to Profile data flow
-      cards: [{
-        caption: "Jason is awesome!",
-        username: "Layteesha7",
-        CommentList: [],
-        postID: "-1",
-        src: "https://cdn.vuetifyjs.com/images/cards/house.jpg"
-      }, {
-        caption: "Jason is awesome!",
-        username: "Layteesha7",
-        CommentList: [],
-        postID: "-1",
-        src: "https://cdn.vuetifyjs.com/images/cards/road.jpg"
-      }, {
-        caption: "Jason is awesome!",
-        username: "Layteesha7",
-        CommentList: [],
-        postID: "-1",
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg"
-      }, {
-        caption: "Jason is awesome!",
-        username: "Layteesha7",
-        CommentList: [],
-        postID: "-1",
-        src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg"
-      }],
+      cards: [{}],
+      user: localStorage.getItem("username"),
+      loaded: false,
     }),
+    mounted(){
+      axios({
+            method: 'POST',
+            url: `${process.env.VUE_APP_ROOT_API}/api/infoHome`,
+            data: {
+              user: this.user
+            }
+          })
+          .then(() => {
+            //this.cards =  
+            this.loaded = false;
+          })
+          .catch(e => console.error(e))
+    }
   }
 </script>
