@@ -31,9 +31,11 @@ func signupRoute(c *gin.Context) {
 func userRoute(c *gin.Context) {
 	username := c.Param("id")
 
-	posts, err := getPostsByName(username)
+	posts, err1 := getPostsByName(username)
+	followers, err2 := getFollowersByName(username)
+	following, err3 := getFollowingByName(username)
 
-	if err != nil || posts == nil {
+	if err1 != nil || posts == nil {
 		c.JSON(404, struct {
 			UserNotFound bool `json:"userNotFound"`
 		}{true})
@@ -42,8 +44,10 @@ func userRoute(c *gin.Context) {
 
 	c.JSON(200, struct {
 		Posts        []prisma.Post `json:"posts"`
+		Followers    int           `json:"followers"`
+		Following    int           `json:"following"`
 		UserNotFound bool          `json:"userNotFound"`
-	}{posts, false})
+	}{posts, followers, following, false})
 }
 
 func testRoute(c *gin.Context) {
@@ -193,6 +197,33 @@ func postComment(c *gin.Context) {
 	c.JSON(200, struct {
 		Message string `json:"message"`
 	}{"Thank you comment"})
+}
+
+func followUser(c *gin.Context) {
+	claims := jwt.ExtractClaims(c)
+	email := claims["email"].(string)
+
+	if email == "" {
+		c.JSON(403, struct {
+			Authorized bool `json:"Authorized"`
+		}{false})
+		return
+	}
+
+	var req struct {
+		Follower string `json:"follower"`
+		Followee string `json:"followee"`
+		Follow   bool   `json:"follow"`
+	}
+
+	err := c.BindJSON(&req)
+	check(err)
+
+	followUser, err2 := followAUser(req.Follower, req.Followee)
+
+	if err == nil && err2 == nil {
+		c.String(200, "All good in the hood")
+	}
 }
 
 func getUserFromEmail(c *gin.Context) {

@@ -40,6 +40,42 @@ func GetUser(email string) (*prisma.User, error) {
 
 }
 
+func followAUser(follower string, followee string) (*prisma.User, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	// Add the follower as a follower for the followee
+	followeeUser, err := client.UpdateUser(prisma.UserUpdateParams{
+		Where: prisma.UserWhereUniqueInput{
+			Name: &followee,
+		},
+		Data: prisma.UserUpdateInput{
+			Followers: &prisma.UserUpdateManyWithoutFollowingInput{
+				Connect: []prisma.UserWhereUniqueInput{
+					{Name: &follower},
+				},
+			},
+		},
+	}).Exec(ctx)
+
+	//Add the followee as following for follower
+	// Add the follower as a follower for the followee
+	_, err := client.UpdateUser(prisma.UserUpdateParams{
+		Where: prisma.UserWhereUniqueInput{
+			Name: &follower,
+		},
+		Data: prisma.UserUpdateInput{
+			Followers: &prisma.UserUpdateManyWithoutFollowingInput{
+				Connect: []prisma.UserWhereUniqueInput{
+					{Name: &followee},
+				},
+			},
+		},
+	}).Exec(ctx)
+
+	return followeeUser, err
+}
+
 func getPostsByName(name string) ([]prisma.Post, error) {
 	client := prisma.New(nil)
 	ctx := context.TODO()
@@ -49,6 +85,28 @@ func getPostsByName(name string) ([]prisma.Post, error) {
 	}).Posts(nil).Exec(ctx)
 
 	return posts, err
+}
+
+func getFollowersByName(name string) (int, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	followers, err := client.User(prisma.UserWhereUniqueInput{
+		Name: &name,
+	}).Followers(nil).Exec(ctx)
+
+	return len(followers), err
+}
+
+func getFollowingByName(name string) (int, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	following, err := client.User(prisma.UserWhereUniqueInput{
+		Name: &name,
+	}).Following(nil).Exec(ctx)
+
+	return len(following), err
 }
 
 func AddUser(name string, email string, password string) (*prisma.User, error) {
