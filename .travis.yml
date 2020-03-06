@@ -14,6 +14,6 @@ matrix:
         go:
             - 1.x
         before_install:
-          - cd goBackend/backend && go generate
+          - cd goBackend/backend
         script:
           - go build
