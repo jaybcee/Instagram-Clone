@@ -98,7 +98,6 @@ export default {
     axios
       .get(`${process.env.VUE_APP_ROOT_API}/user/${this.$route.params.username}/${localStorage.getItem("username")}`)
       .then(response => {
-        console.log(response.data)
         if (response.data.posts){
           response.data.posts.map(p => p.src = `${process.env.VUE_APP_ROOT_API}/photos/${p.fileName}`)
         }

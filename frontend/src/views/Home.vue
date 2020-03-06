@@ -45,11 +45,9 @@ import axios from "axios";
             }
           })
           .then(r => {
-            console.log('wtffff', this.user)
             if (r.data.posts){
               r.data.posts.map(p => p.src = `${process.env.VUE_APP_ROOT_API}/photos/${p.fileName}`)
             }
-            console.log(r.data.posts);
             this.cards = r.data.posts;
             if (r.data.posts && r.data.posts.length){
               this.emptyFeed = false;
