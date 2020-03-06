@@ -131,6 +131,8 @@ export default {
             this.following = !this.following;
             if(this.following){
               this.nbFollowers+=1;
+            }else{
+              this.nbFollowers-=1;
             }
           })
           .catch(e => console.error(e))
