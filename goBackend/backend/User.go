@@ -312,3 +312,12 @@ func fetchUserFromComment(id string) (*prisma.User, error) {
 
 	return user, err
 }
+
+func fetchUserFromPost(id string) (*prisma.User, error) {
+	client := prisma.New(nil)
+	ctx := context.TODO()
+
+	user, err := client.Post(prisma.PostWhereUniqueInput{ID: &id}).Owner().Exec(ctx)
+
+	return user, err
+}

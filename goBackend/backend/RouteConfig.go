@@ -15,6 +15,8 @@ func createRoutes() *gin.Engine {
 
 	r.GET("/getUserFromComment/:id", getUserFromComment)
 
+	r.GET("/getUserFromPost/:id", getUserFromPost)
+
 	r.GET("/comments/:id", getComments)
 
 	r.POST("/signup", signupRoute)

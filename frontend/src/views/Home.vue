@@ -1,11 +1,14 @@
 <template>
-  <v-card v-if="loaded"
+  <v-card
+    v-if="loaded"
     class="mx-auto"
     max-width="500"
     tile
   >
     <v-container fluid>
-      <h3 v-if="emptyFeed" >Sorry, no posts were found. Go ahead and follow people!</h3>
+      <h3 v-if="emptyFeed">
+        Sorry, no posts were found. Go ahead and follow people!
+      </h3>
       <v-row v-if="!emptyFeed">
         <v-col
           v-for="card in cards"
@@ -15,7 +18,6 @@
           <!-- https://vuejs.org/v2/guide/components-props.html#Prop-Casing-camelCase-vs-kebab-case lol -->
           <IndividualPost
             v-bind="card"
-            show-username:true
           />
         </v-col>
       </v-row>

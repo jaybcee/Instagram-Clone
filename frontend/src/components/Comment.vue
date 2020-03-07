@@ -69,8 +69,15 @@
     ></v-divider>
     <v-list-item :key="uniqueName">
       <template>
-        <v-list-item-avatar>
-          <v-img :src="avatar"></v-img>
+        <v-list-item-avatar
+          class="cursor-pointer"
+          @click="handleClick"
+        >
+          <img
+            v-if="avatar"
+            :src="avatar"
+            @error="useDefaultAvatar"
+          />
         </v-list-item-avatar>
 
         <v-list-item-content>
@@ -134,7 +141,7 @@ export default {
   },
   data: () => ({
     //default avatar for now
-    avatar: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png",
+    avatar: null,
     enteredComment: "",
     dialog: false,
     warn: false,
@@ -154,9 +161,18 @@ export default {
       },
     }).then(r => {
       this.commenter = r.data.username
+      this.avatar = `${process.env.VUE_APP_ROOT_API}/photos/${this.commenter}.jpg`
+
     })
   },
   methods: {
+    handleClick() {
+      this.$router.push(`/user/${this.commenter}`)
+    },
+    useDefaultAvatar() {
+      this.avatar = `${window.location.origin}/${process.env.BASE_URL}/avatar.jpg`
+
+    },
     toggleWarn() {
       this.warn = !this.warn
     },
@@ -208,3 +224,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.cursor-pointer {
+  cursor: pointer;
+}
+</style>
