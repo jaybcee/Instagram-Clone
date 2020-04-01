@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
-   	"testing"
+	"testing"
 )
 
+func TestRGBAImage(t *testing.T) {
+	i, err := loadJpeg3("image.png")
 
-func TestLoadImage(t *testing.T) {
-	i, err := loadJpeg("image.png")
-
-	if comparator(rgbaToGray(i)) != 0 {
+	if comparator3(rgbaToGray3(i)) != 0 {
 		t.Error("not correct gray conversion")
 	}
 

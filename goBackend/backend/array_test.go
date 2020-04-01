@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
-   	"testing"
+	"testing"
 )
 
+func TestArrayImage(t *testing.T) {
+	i, err := loadJpeg1("image.png")
 
-func TestLoadImage(t *testing.T) {
-	i, err := loadJpeg("image.png")
-
-	if comparator(arrayToGray(rgbaToGray(i))) != 0 {
+	if comparator1(arrayToGray1(rgbaToGray1(i))) != 0 {
 		t.Error("not correct gray conversion")
 	}
 

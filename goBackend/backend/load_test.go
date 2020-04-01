@@ -7,9 +7,9 @@ import (
 
 func TestLoadImage(t *testing.T) {
 
-	i, err := loadJpeg("temporary.png")
+	i, err := loadJpeg2("temporary.png")
 	fmt.Println(err)
-	if sameThing("temporary.png", i) != 0 {
+	if sameThing2("temporary.png", i) != 0 {
 		t.Error("Expected 2 + 2 to equal 4")
 	}
 }
