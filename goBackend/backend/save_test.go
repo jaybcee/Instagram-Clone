@@ -10,8 +10,9 @@ func TestSaveImage(t *testing.T) {
 
 	saveImage4("nameTest.jpeg", i)
 
-	if sameThing4("nameTest.jpeg", i) != 0 {
-		t.Error("does not load the right image")
+	if sameThing4("nameTest.jpeg", i) > 1 {
+		fmt.Println(sameThing4("nameTest.jpeg", i))
+		t.Error("image quality difference exceeds 1 percent")
 	}
 	fmt.Println(err)
 }
