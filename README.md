@@ -1,5 +1,7 @@
 # SOEN 341 project (Instagram)  ![Build Status](https://travis-ci.com/Nicolas-MacBeth/SOEN341.svg?token=oeXpQTjd3iqt491nhsLk&branch=master)
 
+**Multiple screenshots can be found below**
+
 ## Description
 
 This repo is for our SOEN 341 class, where the objective will be to create a web-app that mimicks *Instagram* and some of its core features. It will be held over 4 **sprints** and we will need to implement core functionalities such as posting pictures, following friends and commenting on posted pictures. We'll then be pitching and implementing additional features that are TBD. Our team will need to document everything on GitHub through the use of **commits**, **issues** and **milestones**.
@@ -51,3 +53,15 @@ The frontend can be seen at http://localhost:8080/
 
 ## Block Diagram
 ![Capture](https://user-images.githubusercontent.com/43622634/76051349-7bea9580-5f38-11ea-8467-391cf2cea046.JPG)
+
+## Screenshots
+
+Here are screenshots of our project, with descriptions.
+
+### Login/signup pages
+
+![login](./readme_pictures/1.png) ![signup](./readme_pictures/2.png)
+
+### User's own profile with their posted pictures
+
+![user profile](./readme_pictures/3.png) ![more user profile](./readme_pictures/4.png)
