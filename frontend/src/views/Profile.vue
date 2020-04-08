@@ -23,43 +23,53 @@
                 class="headline mb-1"
                 v-text="this.$route.params.username"
               ></v-list-item-title>
-            <v-col cols="12">
-              <v-row justify="center">
-                <v-col
-                  cols="6"
-                  md="3"
-                >
-                  <v-text>Followers</v-text>
-                </v-col>
-                <v-col
-                  cols="6"
-                  md="3"
-                >
-                  <v-text>Following</v-text>
-                 </v-col>
-              </v-row>
-              <v-row justify="center">
-                <v-col
-                  cols="6"
-                  md="3"
-                >
-                  <v-text v-text="nbFollowers"></v-text>
-                </v-col>
-                <v-col
-                  cols="6"
-                  md="3"
-                >
-                  <v-text v-text="nbFollowing"></v-text>
-                 </v-col>
-              </v-row>
-            </v-col>
+              <v-col cols="12">
+                <v-row justify="center">
+                  <v-col
+                    cols="6"
+                    md="3"
+                  >
+                    <div>Followers</div>
+                  </v-col>
+                  <v-col
+                    cols="6"
+                    md="3"
+                  >
+                    <div>Following</div>
+                  </v-col>
+                </v-row>
+                <v-row justify="center">
+                  <v-col
+                    cols="6"
+                    md="3"
+                  >
+                    <div>{{ nbFollowers }}</div>
+                  </v-col>
+                  <v-col
+                    cols="6"
+                    md="3"
+                  >
+                    <div>{{ nbFollowing }}</div>
+                  </v-col>
+                </v-row>
+              </v-col>
               <v-list-item-subtitle>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
 
           <v-card-actions v-if="notTheSame()">
-            <v-btn v-if="!following" @click="follow(true)">Follow</v-btn>
-            <v-btn v-if="following" @click="follow(false)">Unfollow</v-btn>
+            <v-btn
+              v-if="!following"
+              @click="follow(true)"
+            >
+              Follow
+            </v-btn>
+            <v-btn
+              v-if="following"
+              @click="follow(false)"
+            >
+              Unfollow
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-container>
@@ -72,7 +82,6 @@
           >
             <IndividualPost
               v-bind="card"
-              :show-username="false"
             />
           </v-col>
         </v-row>
@@ -117,7 +126,7 @@ export default {
   },
     methods: {
       useDefaultAvatar () {
-        this.avatarURL = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+        this.avatarURL = `${window.location.origin}/${process.env.BASE_URL}/avatar.jpg`
       },
       notTheSame(){
         return (localStorage.getItem("username") !== this.$route.params.username);

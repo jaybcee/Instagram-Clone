@@ -322,6 +322,17 @@ func getUserFromComment(c *gin.Context) {
 		Username string `json:"username"`
 	}{user.Name})
 }
+func getUserFromPost(c *gin.Context) {
+
+	postID := c.Param("id")
+
+	user, err := fetchUserFromPost(postID)
+	check(err)
+
+	c.JSON(200, struct {
+		Username string `json:"username"`
+	}{user.Name})
+}
 
 func updateUserComment(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
