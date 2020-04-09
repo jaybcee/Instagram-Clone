@@ -69,28 +69,28 @@ Here are screenshots of our project, with descriptions.
 
 ### Login/signup pages
 
-![login](./readme_pictures/1.png) ![signup](./readme_pictures/2.png)
+![login](./readme_pictures/1.PNG) ![signup](./readme_pictures/2.PNG)
 
 ### User's own profile with their posted pictures
 
-![user profile](./readme_pictures/3.png) ![more user profile](./readme_pictures/4.png)
+![user profile](./readme_pictures/3.PNG) ![more user profile](./readme_pictures/4.PNG)
 
 ### Other user's profile and user's home feed when not following said user (Nic is not following Dina)
 
-![other user profile not following](./readme_pictures/5.png) ![home feed not following dina](./readme_pictures/11.png)
+![other user profile not following](./readme_pictures/5.PNG) ![home feed not following dina](./readme_pictures/11.PNG)
 
 ### Other user's profile and user's home feed when following said user (Nic is following Dina)
 
-![other user profile following](./readme_pictures/6.png) ![home feed following dina](./readme_pictures/7.png)
+![other user profile following](./readme_pictures/6.PNG) ![home feed following dina](./readme_pictures/7.PNG)
 
 ### Comments UI, delete a comment prompt and edit comment prompt
 
-![comments](./readme_pictures/8.png) ![delete comment prompt](./readme_pictures/9.png) ![edit comment prompt](./readme_pictures/10.png)
+![comments](./readme_pictures/8.PNG) ![delete comment prompt](./readme_pictures/9.PNG) ![edit comment prompt](./readme_pictures/10.PNG)
 
 ### Uploading a new picture to the website. Choosing the picture, caption and filter if wanted
 
-![choose picture](./readme_pictures/12.png) ![choose options](./readme_pictures/13.png)
+![choose picture](./readme_pictures/12.PNG) ![choose options](./readme_pictures/13.PNG)
 
 ### Picture posted on user profile with filter applied
 
-![picture posted](./readme_pictures/14.png)
+![picture posted](./readme_pictures/14.PNG)
