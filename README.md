@@ -1,5 +1,7 @@
 # SOEN 341 project (Instagram)  ![Build Status](https://travis-ci.com/Nicolas-MacBeth/SOEN341.svg?token=oeXpQTjd3iqt491nhsLk&branch=master)
 
+**Multiple screenshots can be found below**
+
 ## Description
 
 This repo is for our SOEN 341 class, where the objective will be to create a web-app that mimicks *Instagram* and some of its core features. It will be held over 4 **sprints** and we will need to implement core functionalities such as posting pictures, following friends and commenting on posted pictures. We'll then be pitching and implementing additional features that are TBD. Our team will need to document everything on GitHub through the use of **commits**, **issues** and **milestones**.
@@ -52,7 +54,6 @@ The frontend can be seen at http://localhost:8080/
 ## Block Diagram
 ![Capture](https://user-images.githubusercontent.com/43622634/76051349-7bea9580-5f38-11ea-8467-391cf2cea046.JPG)
 
-
 ## Code Style Guide
 Golang — Official Go Style Guide  [https://golang.org/doc/effective_go.html](https://golang.org/doc/effective_go.html)
 Go uses go-fmt tool to auto format the code.
@@ -61,3 +62,35 @@ As long as it's installed, the code is auto formatted for you.
 Javascript — ESLint recommended ruleset
 [https://eslint.org/docs/rules/](https://eslint.org/docs/rules/)
 Eslint is used to enforce this code style in our editor.
+
+## Screenshots
+
+Here are screenshots of our project, with descriptions.
+
+### Login/signup pages
+
+![login](./readme_pictures/1.png) ![signup](./readme_pictures/2.png)
+
+### User's own profile with their posted pictures
+
+![user profile](./readme_pictures/3.png) ![more user profile](./readme_pictures/4.png)
+
+### Other user's profile and user's home feed when not following said user (Nic is not following Dina)
+
+![other user profile not following](./readme_pictures/5.png) ![home feed not following dina](./readme_pictures/11.png)
+
+### Other user's profile and user's home feed when following said user (Nic is following Dina)
+
+![other user profile following](./readme_pictures/6.png) ![home feed following dina](./readme_pictures/7.png)
+
+### Comments UI, delete a comment prompt and edit comment prompt
+
+![comments](./readme_pictures/8.png) ![delete comment prompt](./readme_pictures/9.png) ![edit comment prompt](./readme_pictures/10.png)
+
+### Uploading a new picture to the website. Choosing the picture, caption and filter if wanted
+
+![choose picture](./readme_pictures/12.png) ![choose options](./readme_pictures/13.png)
+
+### Picture posted on user profile with filter applied
+
+![picture posted](./readme_pictures/14.png)
