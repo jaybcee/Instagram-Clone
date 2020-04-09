@@ -9,6 +9,9 @@ matrix:
             - 10
         before_install:
             - cd frontend
+        script:
+          - npm build
+          - npm test
   
       - language: go
         go:

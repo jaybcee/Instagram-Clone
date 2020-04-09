@@ -4,6 +4,9 @@ module.exports = {
         'eslint:recommended',
         'plugin:vue/recommended'
     ],
+    env: {
+        jest:true,
+    },
     rules: {
         // override/add rules settings here, such as:
         // "linebreak-style": ["warn", "windows"]
