@@ -65,3 +65,23 @@ Here are screenshots of our project, with descriptions.
 ### User's own profile with their posted pictures
 
 ![user profile](./readme_pictures/3.png) ![more user profile](./readme_pictures/4.png)
+
+### Other user's profile and user's home feed when not following said user (Nic is not following Dina)
+
+![other user profile not following](./readme_pictures/5.png) ![home feed not following dina](./readme_pictures/11.png)
+
+### Other user's profile and user's home feed when following said user (Nic is following Dina)
+
+![other user profile following](./readme_pictures/6.png) ![home feed following dina](./readme_pictures/7.png)
+
+### Comments UI, delete a comment prompt and edit comment prompt
+
+![comments](./readme_pictures/8.png) ![delete comment prompt](./readme_pictures/9.png) ![edit comment prompt](./readme_pictures/10.png)
+
+### Uploading a new picture to the website. Choosing the picture, caption and filter if wanted
+
+![choose picture](./readme_pictures/12.png) ![choose options](./readme_pictures/13.png)
+
+### Picture posted on user profile with filter applied
+
+![picture posted](./readme_pictures/14.png)
