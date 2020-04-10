@@ -59,7 +59,6 @@ Golang — Official Go Style Guide  [https://golang.org/doc/effective_go.html](h
 Go uses go-fmt tool to auto format the code.
 As long as it's installed, the code is auto formatted for you.
 
-[https://staticcheck.io/](https://staticcheck.io/)
 
 Javascript — ESLint recommended ruleset and Vue specific
 [https://eslint.org/docs/rules/](https://eslint.org/docs/rules/),
@@ -68,6 +67,7 @@ Eslint is used to enforce this code style in our editor.
 
 ## Static Analysis
 Static analysis of the backend is carried out via an open source tool called staticcheck that finds further errors and inefficiencies. 
+[https://staticcheck.io/](https://staticcheck.io/)
 
 ## Screenshots
 
