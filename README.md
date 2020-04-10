@@ -63,7 +63,7 @@ Furthermore, static analysis of the backend is carried out via an open source to
 [https://staticcheck.io/](https://staticcheck.io/)
 
 Javascript — ESLint recommended ruleset and Vue specific
-[https://eslint.org/docs/rules/](https://eslint.org/docs/rules/)
+[https://eslint.org/docs/rules/](https://eslint.org/docs/rules/),
 [https://eslint.vuejs.org/rules/](https://eslint.vuejs.org/rules/)
 Eslint is used to enforce this code style in our editor.
 
